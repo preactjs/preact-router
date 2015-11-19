@@ -60,9 +60,9 @@ export class Router extends Component {
 			if (matches) {
 				attributes.url = url;
 				attributes.matches = matches;
-				// copy matches onto props without overwriting anything already there
+				// copy matches onto props
 				for (let i in matches) {
-					if (matches.hasOwnProperty(i) && !attributes.hasOwnProperty(i)) {
+					if (matches.hasOwnProperty(i)) {
 						attributes[i] = matches[i];
 					}
 				}
