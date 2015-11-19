@@ -1,0 +1,40 @@
+{
+  "name": "preact-router",
+  "version": "0.1.0",
+  "description": "Connect your components up to that address bar.",
+  "main": "dist/preact-router.js",
+  "scripts": {
+    "build": "babel -f $npm_package_main -s -o $npm_package_main < src/index.js",
+    "prebuild": "mkdirp dist",
+    "test": "eslint {src,test} && mocha --compilers js:babel/register test/**/*.js",
+    "prepublish": "npm run build",
+    "release": "npm run build && git commit -am $npm_package_version && git tag $npm_package_version && git push && git push --tags && npm publish"
+  },
+  "keywords": [
+    "preact",
+    "router"
+  ],
+  "author": "Jason Miller <jason@developit.ca>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/developit/preact-router.git"
+  },
+  "bugs": {
+    "url": "https://github.com/developit/preact-router/issues"
+  },
+  "homepage": "https://github.com/developit/preact-router",
+  "peerDependencies": {
+    "preact": "^1.5.0 || ^2.1.0"
+  },
+  "devDependencies": {
+    "babel": "^5.8.23",
+    "babel-eslint": "^4.1.3",
+    "chai": "^3.3.0",
+    "eslint": "^1.7.1",
+    "mkdirp": "^0.5.1",
+    "mocha": "^2.3.3",
+    "sinon": "^1.17.1",
+    "sinon-chai": "^2.8.0"
+  }
+}
