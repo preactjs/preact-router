@@ -62,7 +62,7 @@ export class Router extends Component {
 				attributes.matches = matches;
 				return true;
 			}
-		})[0];
+		});
 		let previous = this.previousUrl;
 		if (url!==previous) {
 			this.previousUrl = url;
@@ -72,11 +72,11 @@ export class Router extends Component {
 					url,
 					previous,
 					active,
-					current: active
+					current: active[0]
 				});
 			}
 		}
-		return active || null;
+		return <router style="position:static;display:inline;">{ active }</router>;
 	}
 }
 
