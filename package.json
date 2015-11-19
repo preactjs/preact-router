@@ -1,6 +1,6 @@
 {
   "name": "preact-router",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Connect your components up to that address bar.",
   "main": "dist/preact-router.js",
   "scripts": {
