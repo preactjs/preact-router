@@ -82,7 +82,7 @@ export class Router extends Component {
 				});
 			}
 		}
-		return <router style="position:static;display:inline;">{ active }</router>;
+		return active[0] || null;
 	}
 }
 
