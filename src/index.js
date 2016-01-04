@@ -2,9 +2,18 @@ import { h, Component } from 'preact';
 
 const routers = [];
 
-export function route(url) {
+export function route(url, replace=false) {
+	if (typeof url!=='string' && url.url) {
+		replace = url.replace;
+		url = url.url;
+	}
 	if (history) {
-		history.pushState(null, null, url);
+		if (replace===true) {
+			history.replaceState(null, null, url);
+		}
+		else {
+			history.pushState(null, null, url);
+		}
 	}
 	routeTo(url);
 }
