@@ -1,6 +1,9 @@
 import { h, Component } from 'preact';
+import { exec, pathRankSort } from './util';
 
 const routers = [];
+
+const EMPTY = {};
 
 export function route(url, replace=false) {
 	if (typeof url!=='string' && url.url) {
@@ -23,7 +26,8 @@ function routeTo(url) {
 }
 
 function getCurrentUrl() {
-	return `${location.pathname || ''}${location.search || ''}`;
+	let url = typeof location!=='undefined' ? location : EMPTY;
+	return `${url.pathname || ''}${url.search || ''}`;
 }
 
 if (typeof addEventListener==='function') {
@@ -63,9 +67,9 @@ export class Router extends Component {
 	}
 
 	render({ children, onChange }, { url }) {
-		let active = children.filter( ({ attributes }) => {
+		let active = children.slice().sort(pathRankSort).filter( ({ attributes }) => {
 			let path = attributes.path,
-				matches = exec(url, path);
+				matches = exec(url, path, attributes);
 			if (matches) {
 				attributes.url = url;
 				attributes.matches = matches;
@@ -100,52 +104,8 @@ export const Route = ({ component:RoutedComponent, url, matches }) => (
 	<RoutedComponent {...{url, matches}} />
 );
 
-/*
-export class Route extends Component {
-	render({ component:RoutedComponent, url, matches }) {
-		return <RoutedComponent { ...{url, matches} } />;
-	}
-}
-*/
-
-
-function exec(url, route) {
-	if (route==='_') {
-		return {};
-	}
-	let reg = /(?:\?([^#]*))?(#.*)?$/,
-		c = url.match(reg),
-		matches = {};
-	if (c && c[1]) {
-		let p = c[1].split('&');
-		for (let i=0; i<p.length; i++) {
-			let r = p[i].split('=');
-			matches[decodeURIComponent(r[0])] = decodeURIComponent(r.slice(1).join('='));
-		}
-	}
-	url = segmentize(url.replace(reg, ''));
-	route = segmentize(route);
-	let max = Math.max(url.length, route.length);
-	for (let i=0; i<max; i++) {
-		if (route[i] && route[i].charAt(0)===':') {
-			matches[route[i].substring(1)] = decodeURIComponent(url[i] || '');
-		}
-		else {
-			if (route[i]!==url[i]) {
-				return false;
-			}
-		}
-	}
-	return matches;
-}
-
 
 Router.route = route;
 Router.Route = Route;
 Router.Link = Link;
 export default Router;
-
-
-let segmentize = url => strip(url).split('/');
-
-let strip = url => url.replace(/(^\/+|\/+$)/g, '');
