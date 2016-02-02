@@ -110,6 +110,9 @@ export class Route extends Component {
 
 
 function exec(url, route) {
+	if (route==='_') {
+		return {};
+	}
 	let reg = /(?:\?([^#]*))?(#.*)?$/,
 		c = url.match(reg),
 		matches = {};
