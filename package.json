@@ -1,11 +1,17 @@
 {
   "name": "preact-router",
+  "amdName": "preactRouter",
   "version": "1.2.0",
   "description": "Connect your components up to that address bar.",
   "main": "dist/preact-router.js",
+  "jsnext:main": "src/index.js",
+  "minified:main": "dist/preact-router.min.js",
   "scripts": {
-    "build": "babel -f $npm_package_main -s -o $npm_package_main < src/index.js",
-    "prebuild": "mkdirp dist",
+    "clean": "rimraf dist/",
+    "build": "npm-run-all clean transpile minify size",
+    "transpile": "rollup -c rollup.config.js -m ${npm_package_main}.map -f umd -n $npm_package_amdName $npm_package_jsnext_main -o $npm_package_main",
+    "minify": "uglifyjs $npm_package_main --mangle-regex=\"/^(classCallCheck|components|normalizeName|add|clean|process|collect|create|nodes|itemsOffline)$/\" --mangle-props -cm -o $npm_package_minified_main -p relative --in-source-map ${npm_package_main}.map --source-map ${npm_package_minified_main}.map",
+    "size": "size=$(gzip-size $npm_package_minified_main) && echo \"gzip size: $size / $(pretty-bytes $size)\"",
     "test": "eslint {src,test} && mocha --compilers js:babel/register test/**/*.js",
     "prepublish": "npm run build",
     "release": "npm run build && git commit -am $npm_package_version && git tag $npm_package_version && git push && git push --tags && npm publish"
@@ -34,8 +40,13 @@
     "eslint": "^1.7.1",
     "mkdirp": "^0.5.1",
     "mocha": "^2.4.5",
+    "npm-run-all": "^1.5.1",
     "preact": "^2.8.3",
+    "rimraf": "^2.5.1",
+    "rollup": "^0.25.2",
+    "rollup-plugin-babel": "^1.0.0",
     "sinon": "^1.17.3",
-    "sinon-chai": "^2.8.0"
+    "sinon-chai": "^2.8.0",
+    "uglify-js": "^2.6.1"
   }
 }
