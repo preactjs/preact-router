@@ -5,7 +5,7 @@ const routers = [];
 
 const EMPTY = {};
 
-export function route(url, replace=false) {
+function route(url, replace=false) {
 	if (typeof url!=='string' && url.url) {
 		replace = url.replace;
 		url = url.url;
@@ -44,12 +44,12 @@ function handleLinkClick(e) {
 }
 
 
-export const Link = ({ children, ...props }) => (
+const Link = ({ children, ...props }) => (
 	<a {...props} onClick={ handleLinkClick }>{ children }</a>
 );
 
 
-export class Router extends Component {
+class Router extends Component {
 	getInitialState() {
 		return { url: getCurrentUrl() };
 	}
@@ -100,12 +100,14 @@ export class Router extends Component {
 }
 
 
-export const Route = ({ component:RoutedComponent, url, matches }) => (
+const Route = ({ component:RoutedComponent, url, matches }) => (
 	<RoutedComponent {...{url, matches}} />
 );
 
 
 Router.route = route;
+Router.Router = Router;
 Router.Route = Route;
 Router.Link = Link;
+
 export default Router;
