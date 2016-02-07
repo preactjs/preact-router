@@ -34,7 +34,7 @@
     "preact": "^2 || ^3"
   },
   "devDependencies": {
-    "babel": "^5.8.23",
+    "babel": "^6.3.26",
     "babel-eslint": "^4.1.7",
     "chai": "^3.5.0",
     "eslint": "^1.7.1",
