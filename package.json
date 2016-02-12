@@ -42,7 +42,7 @@
     "mkdirp": "^0.5.1",
     "mocha": "^2.4.5",
     "npm-run-all": "^1.5.1",
-    "preact": "^2.8.3",
+    "preact": "^3.3.0",
     "pretty-bytes-cli": "^1.0.0",
     "rimraf": "^2.5.1",
     "rollup": "^0.25.2",
