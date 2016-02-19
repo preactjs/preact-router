@@ -43,6 +43,7 @@ You can even mix-and-match URL parameters and normal `props`.
   <A path="/" />
   <B path="/b" id="42" />
   <C path="/c/:id" />
+  <D default />
 </Router>
 ```
 
