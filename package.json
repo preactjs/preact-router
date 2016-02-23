@@ -46,7 +46,7 @@
     "pretty-bytes-cli": "^1.0.0",
     "rimraf": "^2.5.1",
     "rollup": "^0.25.2",
-    "rollup-plugin-babel": "^1.0.0",
+    "rollup-plugin-babel": "^2.4.0",
     "sinon": "^1.17.3",
     "sinon-chai": "^2.8.0",
     "uglify-js": "^2.6.1"
