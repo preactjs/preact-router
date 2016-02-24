@@ -31,7 +31,7 @@
   },
   "homepage": "https://github.com/developit/preact-router",
   "peerDependencies": {
-    "preact": "^2 || ^3"
+    "preact": "*"
   },
   "devDependencies": {
     "babel": "^5.8.23",
