@@ -37,7 +37,7 @@
     "babel": "^5.8.23",
     "babel-eslint": "^5.0.0",
     "chai": "^3.5.0",
-    "eslint": "^2.0.0",
+    "eslint": "^2.2.0",
     "gzip-size-cli": "^1.0.0",
     "mkdirp": "^0.5.1",
     "mocha": "^2.4.5",
