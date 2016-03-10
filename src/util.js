@@ -18,7 +18,20 @@ export function exec(url, route, opts=EMPTY) {
 	let max = Math.max(url.length, route.length);
 	for (let i=0; i<max; i++) {
 		if (route[i] && route[i].charAt(0)===':') {
-			matches[route[i].substring(1)] = decodeURIComponent(url[i] || '');
+			let param = route[i].replace(/(^\:|[+*?]+$)/g, ''),
+				flags = (route[i].match(/[+*?]+$/) || EMPTY)[0] || '',
+				plus = ~flags.indexOf('+'),
+				star = ~flags.indexOf('*'),
+				val = url[i] || '';
+			if (!val && !star && (flags.indexOf('?')<0 || plus)) {
+				ret = false;
+				break;
+			}
+			matches[param] = decodeURIComponent(val);
+			if (plus || star) {
+				matches[param] = url.slice(i).map(decodeURIComponent).join('/');
+				break;
+			}
 		}
 		else {
 			if (route[i]!==url[i]) {
