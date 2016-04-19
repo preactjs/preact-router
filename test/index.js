@@ -15,7 +15,7 @@ describe('preact-router', () => {
 
 	describe('Router', () => {
 		it('should filter children based on URL', () => {
-			let router = new Router();
+			let router = new Router({});
 			let children = [
 				<foo path="/" />,
 				<foo path="/foo" />,
@@ -36,7 +36,7 @@ describe('preact-router', () => {
 		});
 
 		it('should support nested parameterized routes', () => {
-			let router = new Router();
+			let router = new Router({});
 			let children = [
 				<foo path="/foo" />,
 				<foo path="/foo/:bar" />,
@@ -58,7 +58,7 @@ describe('preact-router', () => {
 		});
 
 		it('should support default routes', () => {
-			let router = new Router();
+			let router = new Router({});
 			let children = [
 				<foo default />,
 				<foo path="/" />,
@@ -76,6 +76,21 @@ describe('preact-router', () => {
 			expect(
 				router.render({ children }, { url:'/asdf/asdf' })
 			).to.equal(children[0]);
+		});
+
+		it('should support initial route prop', () => {
+			let router = new Router({ url:'/foo' });
+			let children = [
+				<foo default />,
+				<foo path="/" />,
+				<foo path="/foo" />
+			];
+
+			expect(
+				router.render({ children }, router.state)
+			).to.equal(children[2]);
+
+			expect(new Router({})).to.have.deep.property('state.url', '');
 		});
 	});
 });

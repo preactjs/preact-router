@@ -50,8 +50,11 @@ const Link = ({ children, ...props }) => (
 
 
 class Router extends Component {
-	getInitialState() {
-		return { url: getCurrentUrl() };
+	constructor(props) {
+		super();
+		this.state = {
+			url: props.url || getCurrentUrl()
+		};
 	}
 
 	routeTo(url) {
