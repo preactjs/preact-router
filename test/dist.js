@@ -12,7 +12,7 @@ describe('dist', () => {
 
 	describe('Router', () => {
 		it('should be instantiable', () => {
-			let router = new Router();
+			let router = new Router({});
 			let children = [
 				<foo path="/" />,
 				<foo path="/foo" />,
