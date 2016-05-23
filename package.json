@@ -40,7 +40,7 @@
     "eslint": "^2.2.0",
     "gzip-size-cli": "^1.0.0",
     "mkdirp": "^0.5.1",
-    "mocha": "^2.4.5",
+    "mocha": "^2.5.0",
     "npm-run-all": "^2.0.0",
     "preact": "^4.7.1",
     "pretty-bytes-cli": "^1.0.0",
