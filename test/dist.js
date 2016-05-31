@@ -1,6 +1,7 @@
-import { Router, Link, route } from '../';
 import { h } from 'preact';
 import { expect } from 'chai';
+const router = require('../'); // eslint-disable-line
+const { Router, Link, route } = router;
 /** @jsx h */
 
 describe('dist', () => {
@@ -8,6 +9,7 @@ describe('dist', () => {
 		expect(Router).to.be.a('function');
 		expect(Link).to.be.a('function');
 		expect(route).to.be.a('function');
+		expect(router).to.equal(Router);
 	});
 
 	describe('Router', () => {
