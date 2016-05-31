@@ -5,12 +5,15 @@ const routers = [];
 
 const EMPTY = {};
 
+const DOM = typeof document!=='undefined';
+
+
 function route(url, replace=false) {
 	if (typeof url!=='string' && url.url) {
 		replace = url.replace;
 		url = url.url;
 	}
-	if (history) {
+	if (DOM && typeof history!=='undefined') {
 		if (replace===true) {
 			history.replaceState(null, null, url);
 		}
