@@ -1,7 +1,7 @@
 import { h, Component } from 'preact';
 import { exec, pathRankSort } from './util';
 
-const routers = [];
+const ROUTERS = [];
 
 const EMPTY = {};
 
@@ -21,12 +21,20 @@ function route(url, replace=false) {
 			history.pushState(null, null, url);
 		}
 	}
-	routeTo(url);
+	return routeTo(url);
 }
 
+
 function routeTo(url) {
-	routers.forEach( router => router.routeTo(url) );
+	let didRoute = false;
+	ROUTERS.forEach( router => {
+		if (router.routeTo(url)===true) {
+			didRoute = true;
+		}
+	});
+	return didRoute;
 }
+
 
 function getCurrentUrl() {
 	let url = typeof location!=='undefined' ? location : EMPTY;
@@ -58,15 +66,18 @@ class Router extends Component {
 	};
 
 	routeTo(url) {
+		this._didRoute = false;
 		this.setState({ url });
+		this.forceUpdate();
+		return this._didRoute;
 	}
 
 	componentWillMount() {
-		routers.push(this);
+		ROUTERS.push(this);
 	}
 
 	componentWillUnmount() {
-		routers.splice(routers.indexOf(this), 1);
+		ROUTERS.splice(ROUTERS.indexOf(this), 1);
 	}
 
 	render({ children, onChange }, { url }) {
@@ -85,6 +96,10 @@ class Router extends Component {
 				return true;
 			}
 		});
+
+		let current = active[0] || null;
+		this._didRoute = !!current;
+
 		let previous = this.previousUrl;
 		if (url!==previous) {
 			this.previousUrl = url;
@@ -94,11 +109,12 @@ class Router extends Component {
 					url,
 					previous,
 					active,
-					current: active[0]
+					current
 				});
 			}
 		}
-		return active[0] || null;
+
+		return current;
 	}
 }
 

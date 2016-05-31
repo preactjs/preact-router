@@ -93,4 +93,62 @@ describe('preact-router', () => {
 			expect(new Router({})).to.have.deep.property('state.url', '');
 		});
 	});
+
+	describe('route()', () => {
+		let router;
+
+		before( () => {
+			router = new Router({
+				url: '/foo',
+				children: [
+					<foo path="/" />,
+					<foo path="/foo" />
+				]
+			}, {});
+
+			spy(router, 'routeTo');
+
+			router.componentWillMount();
+		});
+
+		after( () => {
+			router.componentWillUnmount();
+		});
+
+		it('should return true for existing route', () => {
+			router.routeTo.reset();
+			expect(route('/')).to.equal(true);
+			expect(router.routeTo)
+				.to.have.been.calledOnce
+				.and.calledWithExactly('/');
+
+			router.routeTo.reset();
+			expect(route('/foo')).to.equal(true);
+			expect(router.routeTo)
+				.to.have.been.calledOnce
+				.and.calledWithExactly('/foo');
+		});
+
+		it('should return false for missing route', () => {
+			router.routeTo.reset();
+			expect(route('/asdf')).to.equal(false);
+			expect(router.routeTo)
+				.to.have.been.calledOnce
+				.and.calledWithExactly('/asdf');
+		});
+
+		it('should return true for fallback route', () => {
+			let oldChildren = router.props.children;
+			router.props.children = [
+				<foo default />,
+				...oldChildren
+			];
+
+			router.routeTo.reset();
+			expect(route('/asdf')).to.equal(true);
+			expect(router.routeTo)
+				.to.have.been.calledOnce
+				.and.calledWithExactly('/asdf');
+		});
+	});
 });
