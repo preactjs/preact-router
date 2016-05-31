@@ -1,5 +1,5 @@
 import { Router, Link, route } from '../';
-import { h, Component } from 'preact';
+import { h } from 'preact';
 import { expect } from 'chai';
 /** @jsx h */
 

@@ -45,17 +45,14 @@ function handleLinkClick(e) {
 
 
 const Link = ({ children, ...props }) => (
-	<a {...props} onClick={ handleLinkClick }>{ children }</a>
+	<a {...props} onClick={handleLinkClick}>{ children }</a>
 );
 
 
 class Router extends Component {
-	constructor(props) {
-		super();
-		this.state = {
-			url: props.url || getCurrentUrl()
-		};
-	}
+	state = {
+		url: this.props.url || getCurrentUrl()
+	};
 
 	routeTo(url) {
 		this.setState({ url });
@@ -113,4 +110,5 @@ Router.Router = Router;
 Router.Route = Route;
 Router.Link = Link;
 
+export { route, Router, Route, Link };
 export default Router;

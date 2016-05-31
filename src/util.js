@@ -33,11 +33,9 @@ export function exec(url, route, opts=EMPTY) {
 				break;
 			}
 		}
-		else {
-			if (route[i]!==url[i]) {
-				ret = false;
-				break;
-			}
+		else if (route[i]!==url[i]) {
+			ret = false;
+			break;
 		}
 	}
 	if (opts.default!==true && ret===false) return false;

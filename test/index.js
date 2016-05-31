@@ -1,9 +1,9 @@
 import { Router, Link, route } from '../src';
-import { h, Component } from 'preact';
-import { expect, use } from 'chai';
-import { spy, match } from 'sinon';
+import { h } from 'preact';
+import chai, { expect } from 'chai';
+import { spy } from 'sinon';
 import sinonChai from 'sinon-chai';
-use(sinonChai);
+chai.use(sinonChai);
 /** @jsx h */
 
 describe('preact-router', () => {
