@@ -41,17 +41,33 @@ function getCurrentUrl() {
 	return `${url.pathname || ''}${url.search || ''}`;
 }
 
-if (typeof addEventListener==='function') {
-	addEventListener('popstate', () => routeTo(getCurrentUrl()));
+
+function handleLinkClick(e, target) {
+	target = target || (e && (e.currentTarget || e.target)) || this;
+	if (!target) return;
+	if (route(target.getAttribute('href'))===true) {
+		if (e.stopImmediatePropagation) e.stopImmediatePropagation();
+		e.stopPropagation();
+		e.preventDefault();
+		return false;
+	}
 }
 
 
-function handleLinkClick(e) {
-	route(this.getAttribute('href'));
-	if (e.stopImmediatePropagation) e.stopImmediatePropagation();
-	e.stopPropagation();
-	e.preventDefault();
-	return false;
+function linkHandler(e) {
+	let t = e.target;
+	do {
+		let href = String(t.nodeName).toUpperCase()==='A' && t.getAttribute('href');
+		if (href && href.match(/^\//g)) {
+			return handleLinkClick(e, t);
+		}
+	} while ((t=t.parentNode));
+}
+
+
+if (DOM) {
+	addEventListener('popstate', () => routeTo(getCurrentUrl()));
+	document.body.addEventListener('click', linkHandler);
 }
 
 
