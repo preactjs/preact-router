@@ -105,8 +105,12 @@ class Router extends Component {
 
 	routeTo(url) {
 		this._didRoute = false;
-		this.setState({ url });
-		this.forceUpdate();
+		if (url!==this.state.url) {
+			this.setState({ url });
+			if (!this._didRoute) {
+				this.forceUpdate();
+			}
+		}
 		return this._didRoute;
 	}
 
