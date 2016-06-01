@@ -103,6 +103,11 @@ class Router extends Component {
 		url: this.props.url || getCurrentUrl()
 	};
 
+	shouldComponentUpdate(props) {
+		if (props.static!==true) return true;
+		return props.url!==this.props.url || props.onChange!==this.props.onChange;
+	}
+
 	routeTo(url) {
 		this._didRoute = false;
 		if (url!==this.state.url) {
