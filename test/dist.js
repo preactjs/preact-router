@@ -1,8 +1,6 @@
 import { h } from 'preact';
-import { expect } from 'chai';
-const router = require('../'); // eslint-disable-line
+const router = require('../');
 const { Router, Link, route } = router;
-/** @jsx h */
 
 describe('dist', () => {
 	it('should export Router, Link and route', () => {

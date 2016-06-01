@@ -1,10 +1,5 @@
-import { Router, Link, route } from '../src';
+import { Router, Link, route } from 'src';
 import { h } from 'preact';
-import chai, { expect } from 'chai';
-import { spy } from 'sinon';
-import sinonChai from 'sinon-chai';
-chai.use(sinonChai);
-/** @jsx h */
 
 describe('preact-router', () => {
 	it('should export Router, Link and route', () => {
@@ -90,7 +85,7 @@ describe('preact-router', () => {
 				router.render({ children }, router.state)
 			).to.equal(children[2]);
 
-			expect(new Router({})).to.have.deep.property('state.url', '');
+			expect(new Router({})).to.have.deep.property('state.url', location.pathname + (location.search || ''));
 		});
 	});
 
@@ -106,7 +101,7 @@ describe('preact-router', () => {
 				]
 			}, {});
 
-			spy(router, 'routeTo');
+			sinon.spy(router, 'routeTo');
 
 			router.componentWillMount();
 		});

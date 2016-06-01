@@ -1,5 +1,4 @@
-import { exec, pathRankSort, segmentize, rank, strip } from '../src/util';
-import { expect } from 'chai';
+import { exec, pathRankSort, segmentize, rank, strip } from 'src/util';
 
 describe('util', () => {
 	describe('strip', () => {
