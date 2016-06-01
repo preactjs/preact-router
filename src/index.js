@@ -40,24 +40,48 @@ function getCurrentUrl() {
 }
 
 
-function handleLinkClick(e, target) {
-	target = target || (e && (e.currentTarget || e.target)) || this;
-	if (!target) return;
-	if (route(target.getAttribute('href'))===true) {
-		if (e.stopImmediatePropagation) e.stopImmediatePropagation();
-		e.stopPropagation();
-		e.preventDefault();
-		return false;
-	}
+function routeFromLink(node) {
+	// only valid elements
+	if (!node || !node.getAttribute) return;
+
+	let href = node.getAttribute('href'),
+		target = node.getAttribute('target');
+
+	// ignore links with targets and non-path URLs
+	if (!href || !href.match(/^\//g) || (target && !target.match(/^_?self$/i))) return;
+
+	// attempt to route, if no match simply cede control to browser
+	return route(href);
 }
 
 
-function linkHandler(e) {
+function handleLinkClick(e) {
+	routeFromLink(e.currentTarget || e.target || this);
+	return prevent(e);
+}
+
+
+function prevent(e) {
+	if (e) {
+		if (e.stopImmediatePropagation) e.stopImmediatePropagation();
+		if (e.stopPropagation) e.stopPropagation();
+		e.preventDefault();
+	}
+	return false;
+}
+
+
+function delegateLinkHandler(e) {
+	// ignore events the browser takes care of already:
+	if (e.ctrlKey || e.metaKey || e.altKey || e.shiftKey) return;
+
 	let t = e.target;
 	do {
-		let href = String(t.nodeName).toUpperCase()==='A' && t.getAttribute('href');
-		if (href && href.match(/^\//g)) {
-			return handleLinkClick(e, t);
+		if (String(t.nodeName).toUpperCase()==='A' && t.getAttribute('href')) {
+			// if link is handled by the router, prevent browser defaults
+			if (routeFromLink(t)) {
+				return prevent(e);
+			}
 		}
 	} while ((t=t.parentNode));
 }
