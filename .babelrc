@@ -1,3 +1,8 @@
 {
-  "presets": ["es2015", "stage-0", "react"]
+  "presets": ["es2015-minimal", "stage-0", "react"],
+  "plugins": [
+    "transform-class-properties",
+    ["transform-es2015-classes", { "loose":true }],
+    ["transform-react-jsx", { "pragma":"h" }]
+  ]
 }

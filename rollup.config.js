@@ -1,5 +1,8 @@
+import fs from 'fs';
 import babel from 'rollup-plugin-babel';
 import memory from 'rollup-plugin-memory';
+
+var babelRc = JSON.parse(fs.readFileSync('.babelrc','utf8')); // eslint-disable-line
 
 export default {
 	exports: 'default',
@@ -10,7 +13,8 @@ export default {
 		}),
 		babel({
 			babelrc: false,
-			presets: ['es2015-rollup', 'stage-0', 'react'],
+			presets: ['es2015-minimal-rollup'].concat(babelRc.presets.slice(1)),
+			plugins: babelRc.plugins,
 			exclude: 'node_modules/**'
 		})
 	]

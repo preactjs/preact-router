@@ -5,15 +5,13 @@ const ROUTERS = [];
 
 const EMPTY = {};
 
-const DOM = typeof document!=='undefined';
-
 
 function route(url, replace=false) {
 	if (typeof url!=='string' && url.url) {
 		replace = url.replace;
 		url = url.url;
 	}
-	if (DOM && typeof history!=='undefined') {
+	if (typeof history!=='undefined' && history.pushState) {
 		if (replace===true) {
 			history.replaceState(null, null, url);
 		}
@@ -65,9 +63,9 @@ function linkHandler(e) {
 }
 
 
-if (DOM) {
+if (typeof addEventListener==='function') {
 	addEventListener('popstate', () => routeTo(getCurrentUrl()));
-	document.body.addEventListener('click', linkHandler);
+	addEventListener('click', delegateLinkHandler);
 }
 
 
