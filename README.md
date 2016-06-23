@@ -5,7 +5,7 @@
 
 Connect your [Preact] components up to that address bar.
 
-`preact-router` provides a `<Router />` component that conditionally renders its children when the URL matches their `path`. It also includes a convenient `<Link />` component as a drop-in replacement for `<a />` wired up to the router.
+`preact-router` provides a `<Router />` component that conditionally renders its children when the URL matches their `path`. It also automatically wires up `<a />` elements up to the router.
 
 
 ---
