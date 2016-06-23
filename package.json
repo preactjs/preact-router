@@ -54,7 +54,7 @@
     "eslint": "^2.11.1",
     "eslint-plugin-react": "^5.1.1",
     "gzip-size-cli": "^1.0.0",
-    "karma": "^0.13.22",
+    "karma": "^1.0.0",
     "karma-chai-sinon": "^0.1.5",
     "karma-mocha": "^1.0.1",
     "karma-mocha-reporter": "^2.0.3",
