@@ -56,7 +56,7 @@
     "gzip-size-cli": "^1.0.0",
     "karma": "^1.0.0",
     "karma-chai-sinon": "^0.1.5",
-    "karma-mocha": "^1.0.1",
+    "karma-mocha": "^1.1.0",
     "karma-mocha-reporter": "^2.0.3",
     "karma-phantomjs-launcher": "^1.0.0",
     "karma-sourcemap-loader": "^0.3.7",
