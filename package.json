@@ -65,7 +65,7 @@
     "mocha": "^2.5.0",
     "npm-run-all": "^2.0.0",
     "phantomjs-prebuilt": "^2.1.7",
-    "preact": "^4.8.0",
+    "preact": "^5.3.0",
     "pretty-bytes-cli": "^1.0.0",
     "rimraf": "^2.5.1",
     "rollup": "^0.34.1",
