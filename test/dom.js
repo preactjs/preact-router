@@ -79,6 +79,22 @@ describe('dom', () => {
 				.to.have.been.calledOnce
 				.and.to.have.been.calledWithMatch({ url:'/foo' });
 		});
+
+		it('should not intercept non-preact elements', () => {
+			let onChange = sinon.spy();
+			mount(
+				<div>
+					<div dangerouslySetInnerHTML={{ __html: `<a href="#foo">foo</a>` }} />
+					<Router onChange={onChange}>
+						<div default />
+					</Router>
+				</div>
+			);
+			onChange.reset();
+			$('a').click();
+			expect(onChange).not.to.have.been.called;
+			expect(location.href).to.contain('#foo');
+		});
 	});
 
 	describe('Router', () => {
