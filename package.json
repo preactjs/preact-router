@@ -62,7 +62,7 @@
     "karma-sourcemap-loader": "^0.3.7",
     "karma-webpack": "^1.7.0",
     "mkdirp": "^0.5.1",
-    "mocha": "^2.5.0",
+    "mocha": "^3.0.0",
     "npm-run-all": "^2.0.0",
     "phantomjs-prebuilt": "^2.1.7",
     "preact": "^5.3.1",
