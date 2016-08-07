@@ -16,7 +16,7 @@ function isPreactElement(node) {
 }
 
 function pushUrl(url) {
-	if (customHistory) {
+	if (customHistory && customHistory.push) {
 		customHistory.push(url);
 	} else if (typeof history!=='undefined' && history.pushState) {
 		history.pushState(null, null, url);
@@ -24,7 +24,7 @@ function pushUrl(url) {
 }
 
 function replaceUrl(url) {
-	if (customHistory) {
+	if (customHistory && customHistory.replace) {
 		customHistory.replace(url);
 	} else if (typeof history!=='undefined' && history.pushState) {
 		history.replaceState(null, null, url);
@@ -34,7 +34,7 @@ function replaceUrl(url) {
 
 function getCurrentUrl() {
 	let url;
-	if (customHistory) {
+	if (customHistory && customHistory.getCurrentLocation) {
 		url = customHistory.getCurrentLocation();
 	} else {
 		url = typeof location!=='undefined' ? location : EMPTY;
