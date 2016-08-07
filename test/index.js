@@ -87,6 +87,27 @@ describe('preact-router', () => {
 
 			expect(new Router({})).to.have.deep.property('state.url', location.pathname + (location.search || ''));
 		});
+
+		it('should support custom history', () => {
+			let push = sinon.spy();
+			let replace = sinon.spy();
+			let getCurrentLocation = sinon.spy(() => ({pathname: '/initial'}));
+			let router = new Router({
+				history: { push, replace, getCurrentLocation }
+			});
+
+			router.render({children: [<foo path="/"/>]}, router.state);
+			expect(getCurrentLocation).to.have.been.calledOnce;
+			expect(router).to.have.deep.property('state.url', '/initial');
+
+			route('/foo');
+			expect(push).to.have.been.calledOnce;
+			expect(push).to.have.been.calledWith('/foo');
+
+			route('/bar', true);
+			expect(replace).to.have.been.calledOnce;
+			expect(replace).to.have.been.calledWith('/bar');
+		});
 	});
 
 	describe('route()', () => {
