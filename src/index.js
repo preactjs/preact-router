@@ -15,19 +15,12 @@ function isPreactElement(node) {
 	return ATTR_KEY in node;
 }
 
-function pushUrl(url) {
-	if (customHistory && customHistory.push) {
-		customHistory.push(url);
-	} else if (typeof history!=='undefined' && history.pushState) {
-		history.pushState(null, null, url);
+function setUrl(url, type='push') {
+	if (customHistory && customHistory[type]) {
+		customHistory[type](url);
 	}
-}
-
-function replaceUrl(url) {
-	if (customHistory && customHistory.replace) {
-		customHistory.replace(url);
-	} else if (typeof history!=='undefined' && history.pushState) {
-		history.replaceState(null, null, url);
+	else if (typeof history!=='undefined' && history[type+'State']) {
+		history[type+'State'](null, null, url);
 	}
 }
 
@@ -36,7 +29,8 @@ function getCurrentUrl() {
 	let url;
 	if (customHistory && customHistory.getCurrentLocation) {
 		url = customHistory.getCurrentLocation();
-	} else {
+	}
+	else {
 		url = typeof location!=='undefined' ? location : EMPTY;
 	}
 	return `${url.pathname || ''}${url.search || ''}`;
@@ -48,12 +42,7 @@ function route(url, replace=false) {
 		replace = url.replace;
 		url = url.url;
 	}
-	if (replace===true) {
-		replaceUrl(url);
-	}
-	else {
-		pushUrl(url);
-	}
+	setUrl(url, replace ? 'replace' : 'push');
 	return routeTo(url);
 }
 
