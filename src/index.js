@@ -1,6 +1,8 @@
 import { h, Component } from 'preact';
 import { exec, pathRankSort } from './util';
 
+let customHistory = null;
+
 const ROUTERS = [];
 
 const EMPTY = {};
@@ -13,19 +15,44 @@ function isPreactElement(node) {
 	return ATTR_KEY in node;
 }
 
+function pushUrl(url) {
+	if (customHistory && customHistory.push) {
+		customHistory.push(url);
+	} else if (typeof history!=='undefined' && history.pushState) {
+		history.pushState(null, null, url);
+	}
+}
+
+function replaceUrl(url) {
+	if (customHistory && customHistory.replace) {
+		customHistory.replace(url);
+	} else if (typeof history!=='undefined' && history.pushState) {
+		history.replaceState(null, null, url);
+	}
+}
+
+
+function getCurrentUrl() {
+	let url;
+	if (customHistory && customHistory.getCurrentLocation) {
+		url = customHistory.getCurrentLocation();
+	} else {
+		url = typeof location!=='undefined' ? location : EMPTY;
+	}
+	return `${url.pathname || ''}${url.search || ''}`;
+}
+
 
 function route(url, replace=false) {
 	if (typeof url!=='string' && url.url) {
 		replace = url.replace;
 		url = url.url;
 	}
-	if (typeof history!=='undefined' && history.pushState) {
-		if (replace===true) {
-			history.replaceState(null, null, url);
-		}
-		else {
-			history.pushState(null, null, url);
-		}
+	if (replace===true) {
+		replaceUrl(url);
+	}
+	else {
+		pushUrl(url);
 	}
 	return routeTo(url);
 }
@@ -39,12 +66,6 @@ function routeTo(url) {
 		}
 	});
 	return didRoute;
-}
-
-
-function getCurrentUrl() {
-	let url = typeof location!=='undefined' ? location : EMPTY;
-	return `${url.pathname || ''}${url.search || ''}`;
 }
 
 
@@ -109,9 +130,16 @@ const Link = ({ children, ...props }) => (
 
 
 class Router extends Component {
-	state = {
-		url: this.props.url || getCurrentUrl()
-	};
+	constructor(props) {
+		super(props);
+		if (props.history) {
+			customHistory = props.history;
+		}
+
+		this.state = {
+			url: this.props.url || getCurrentUrl()
+		};
+	}
 
 	shouldComponentUpdate(props) {
 		if (props.static!==true) return true;
