@@ -159,16 +159,33 @@ class Router extends Component {
 	routeTo(url) {
 		this._didRoute = false;
 		this.setState({ url });
+
+		// if we're in the middle of an update, don't synchronously re-route.
+		if (this.updating) return this.canRoute(url);
+
 		this.forceUpdate();
 		return this._didRoute;
 	}
 
 	componentWillMount() {
 		ROUTERS.push(this);
+		this.updating = true;
+	}
+
+	componentDidMount() {
+		this.updating = false;
 	}
 
 	componentWillUnmount() {
 		ROUTERS.splice(ROUTERS.indexOf(this), 1);
+	}
+
+	componentWillUpdate() {
+		this.updating = true;
+	}
+
+	componentDidUpdate() {
+		this.updating = false;
 	}
 
 	getMatchingChildren(children, url, invoke) {
