@@ -93,20 +93,27 @@ describe('preact-router', () => {
 			let replace = sinon.spy();
 			let getCurrentLocation = sinon.spy(() => ({pathname: '/initial'}));
 			let router = new Router({
-				history: { push, replace, getCurrentLocation }
+				history: { push, replace, getCurrentLocation },
+				children: [
+					<index path="/" />,
+					<foo path="/foo" />,
+					<bar path="/bar" />
+				]
 			});
 
-			router.render({children: [<foo path="/"/>]}, router.state);
-			expect(getCurrentLocation).to.have.been.calledOnce;
+			router.componentWillMount();
+
+			router.render(router.props, router.state);
+			expect(getCurrentLocation, 'getCurrentLocation').to.have.been.calledOnce;
 			expect(router).to.have.deep.property('state.url', '/initial');
 
 			route('/foo');
-			expect(push).to.have.been.calledOnce;
-			expect(push).to.have.been.calledWith('/foo');
+			expect(push, 'push').to.have.been.calledOnce.and.calledWith('/foo');
 
 			route('/bar', true);
-			expect(replace).to.have.been.calledOnce;
-			expect(replace).to.have.been.calledWith('/bar');
+			expect(replace, 'replace').to.have.been.calledOnce.and.calledWith('/bar');
+
+			router.componentWillUnmount();
 		});
 	});
 

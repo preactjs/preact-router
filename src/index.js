@@ -42,18 +42,33 @@ function route(url, replace=false) {
 		replace = url.replace;
 		url = url.url;
 	}
-	setUrl(url, replace ? 'replace' : 'push');
+
+	// only push URL into history if we can handle it
+	if (canRoute(url)) {
+		setUrl(url, replace ? 'replace' : 'push');
+	}
+
 	return routeTo(url);
 }
 
 
+/** Check if the given URL can be handled by any router instances. */
+function canRoute(url) {
+	for (let i=ROUTERS.length; i--; ) {
+		if (ROUTERS[i].canRoute(url)) return true;
+	}
+	return false;
+}
+
+
+/** Tell all router instances to handle the given URL.  */
 function routeTo(url) {
 	let didRoute = false;
-	ROUTERS.forEach( router => {
-		if (router.routeTo(url)===true) {
+	for (let i=0; i<ROUTERS.length; i++) {
+		if (ROUTERS[i].routeTo(url)===true) {
 			didRoute = true;
 		}
-	});
+	}
 	return didRoute;
 }
 
@@ -135,6 +150,12 @@ class Router extends Component {
 		return props.url!==this.props.url || props.onChange!==this.props.onChange;
 	}
 
+	/** Check if the given URL can be matched against any children */
+	canRoute(url) {
+		return this.getMatchingChildren(this.props.children, url, false).length > 0;
+	}
+
+	/** Re-render children with a new URL to match against. */
 	routeTo(url) {
 		this._didRoute = false;
 		this.setState({ url });
@@ -150,22 +171,28 @@ class Router extends Component {
 		ROUTERS.splice(ROUTERS.indexOf(this), 1);
 	}
 
-	render({ children, onChange }, { url }) {
-		let active = children.slice().sort(pathRankSort).filter( ({ attributes }) => {
+	getMatchingChildren(children, url, invoke) {
+		return children.slice().sort(pathRankSort).filter( ({ attributes }) => {
 			let path = attributes.path,
 				matches = exec(url, path, attributes);
 			if (matches) {
-				attributes.url = url;
-				attributes.matches = matches;
-				// copy matches onto props
-				for (let i in matches) {
-					if (matches.hasOwnProperty(i)) {
-						attributes[i] = matches[i];
+				if (invoke!==false) {
+					attributes.url = url;
+					attributes.matches = matches;
+					// copy matches onto props
+					for (let i in matches) {
+						if (matches.hasOwnProperty(i)) {
+							attributes[i] = matches[i];
+						}
 					}
 				}
 				return true;
 			}
 		});
+	}
+
+	render({ children, onChange }, { url }) {
+		let active = this.getMatchingChildren(children, url, true);
 
 		let current = active[0] || null;
 		this._didRoute = !!current;
