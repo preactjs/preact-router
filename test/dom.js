@@ -119,5 +119,37 @@ describe('dom', () => {
 			expect(A.prototype.componentWillMount).to.have.been.calledOnce;
 			expect(A.prototype.componentWillUnmount).to.have.been.calledOnce;
 		});
+
+		it('should support re-routing', done => {
+			class A {
+				componentWillMount() {
+					route('/b');
+				}
+				render(){ return <div class="a" />; }
+			}
+			class B {
+				componentWillMount(){}
+				render(){ return <div class="b" />; }
+			}
+			sinon.spy(A.prototype, 'componentWillMount');
+			sinon.spy(B.prototype, 'componentWillMount');
+			mount(
+				<Router>
+					<A path="/a" />
+					<B path="/b" />
+				</Router>
+			);
+			expect(A.prototype.componentWillMount).not.to.have.been.called;
+			route('/a');
+			expect(A.prototype.componentWillMount).to.have.been.calledOnce;
+			A.prototype.componentWillMount.reset();
+			expect(location.pathname).to.equal('/b');
+			setTimeout( () => {
+				expect(A.prototype.componentWillMount).not.to.have.been.called;
+				expect(B.prototype.componentWillMount).to.have.been.calledOnce;
+				expect(scratch).to.have.deep.property('firstElementChild.className', 'b');
+				done();
+			}, 10);
+		});
 	});
 });
