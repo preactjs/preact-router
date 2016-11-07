@@ -27,7 +27,10 @@ function setUrl(url, type='push') {
 
 function getCurrentUrl() {
 	let url;
-	if (customHistory && customHistory.getCurrentLocation) {
+	if (customHistory && customHistory.location) {
+		url = customHistory.location;
+	}
+	else if (customHistory && customHistory.getCurrentLocation) {
 		url = customHistory.getCurrentLocation();
 	}
 	else {
