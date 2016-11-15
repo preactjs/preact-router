@@ -131,9 +131,9 @@ if (typeof addEventListener==='function') {
 }
 
 
-const Link = ({ children, ...props }) => (
-	<a {...props} onClick={handleLinkClick}>{ children }</a>
-);
+const Link = (props) => {
+	return h('a', Object.assign({}, props, { onClick: handleLinkClick }));
+}
 
 
 class Router extends Component {
@@ -236,9 +236,9 @@ class Router extends Component {
 }
 
 
-const Route = ({ component:RoutedComponent, url, matches }) => (
-	<RoutedComponent {...{url, matches}} />
-);
+const Route = ({ component: RoutedComponent, url, matches }) => {
+	return h(RoutedComponent, { url, matches });
+}
 
 
 Router.route = route;
