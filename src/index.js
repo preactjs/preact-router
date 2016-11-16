@@ -236,8 +236,8 @@ class Router extends Component {
 }
 
 
-const Route = ({ component: RoutedComponent, url, matches }) => {
-	return h(RoutedComponent, { url, matches });
+const Route = ({ component, url, matches }) => {
+	return h(component, { url, matches });
 }
 
 
