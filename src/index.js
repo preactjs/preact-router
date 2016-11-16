@@ -133,7 +133,7 @@ if (typeof addEventListener==='function') {
 
 const Link = (props) => {
 	return h('a', Object.assign({}, props, { onClick: handleLinkClick }));
-}
+};
 
 
 class Router extends Component {
@@ -238,7 +238,7 @@ class Router extends Component {
 
 const Route = ({ component, url, matches }) => {
 	return h(component, { url, matches });
-}
+};
 
 
 Router.route = route;
