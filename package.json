@@ -8,7 +8,8 @@
   "minified:main": "dist/preact-router.min.js",
   "scripts": {
     "clean": "rimraf dist/",
-    "build": "npm-run-all clean transpile minify size",
+    "copy-typescript-definition": "copyfiles -f src/index.d.ts dist",
+    "build": "npm-run-all clean transpile copy-typescript-definition minify size",
     "transpile": "rollup -c rollup.config.js -m ${npm_package_main}.map -f umd -n $npm_package_amdName $npm_package_jsnext_main -o $npm_package_main",
     "minify": "uglifyjs $npm_package_main -cm -o $npm_package_minified_main -p relative --in-source-map ${npm_package_main}.map --source-map ${npm_package_minified_main}.map",
     "size": "size=$(gzip-size $npm_package_minified_main) && echo \"gzip size: $size / $(pretty-bytes $size)\"",
@@ -19,6 +20,7 @@
     "prepublish": "npm-run-all build test",
     "release": "npm run build && git commit -am $npm_package_version && git tag $npm_package_version && git push && git push --tags && npm publish"
   },
+  "typings": "./dist/index.d.ts",
   "keywords": [
     "preact",
     "router"
@@ -49,6 +51,7 @@
     "babel-preset-react": "^6.5.0",
     "babel-preset-stage-0": "^6.5.0",
     "chai": "^3.5.0",
+    "copyfiles": "^1.0.0",
     "diff": "^3.0.0",
     "eslint": "^3.0.0",
     "eslint-plugin-react": "^6.0.0",
