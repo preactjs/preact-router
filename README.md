@@ -32,6 +32,7 @@ const Main = () => (
 render(<Main />, document.body);
 ```
 
+If there is an error rendering the destination route, a 404 will be displayed.
 
 ### Handling URLS
 
