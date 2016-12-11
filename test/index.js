@@ -75,6 +75,27 @@ describe('preact-router', () => {
 			).to.be.cloneOf(children[0], { matches: {}, url:'/asdf/asdf' });
 		});
 
+		it('should support nested routes', () => {
+			let router = new Router({}, {'preact-router-baseUrl': '/foo'});
+			let children = [
+				<foo default />,
+				<foo path="/" />,
+				<foo path="/foo" />
+			];
+
+			expect(
+				router.render({ children }, { url:'/foo' })
+			).to.equal(children[1]);
+
+			expect(
+				router.render({ children }, { url:'/' })
+			).to.equal(children[0]);
+
+			expect(
+				router.render({ children }, { url:'/asdf/asdf' })
+			).to.equal(children[0]);
+		});
+
 		it('should support initial route prop', () => {
 			let router = new Router({ url:'/foo' });
 			let children = [
