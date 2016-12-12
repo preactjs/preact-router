@@ -74,7 +74,7 @@ describe('preact-router', () => {
 		});
 
 		it('should support nested routes', () => {
-			let router = new Router({}, {'preact-router-baseUrl': '/foo'});
+			let router = new Router({}, {'preact-router-base': '/foo'});
 			let children = [
 				<foo default />,
 				<foo path="/" />,

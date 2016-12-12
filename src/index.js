@@ -10,7 +10,7 @@ const EMPTY = {};
 // hangs off all elements created by preact
 const ATTR_KEY = typeof Symbol!=='undefined' ? Symbol.for('preactattr') : '__preactattr_';
 
-const CONTEXT_KEY = 'preact-router-baseUrl';
+const CONTEXT_KEY = 'preact-router-base';
 
 function isPreactElement(node) {
 	return ATTR_KEY in node;
@@ -140,22 +140,21 @@ const Link = (props) => {
 class Router extends Component {
 	constructor(props, context) {
 		super(props);
-		let baseUrl = this.props.base || '';
+		this.props.base = this.props.base || '';
 		if (props.history) {
 			customHistory = props.history;
 		}
 		if (context && context[CONTEXT_KEY]) {
-			baseUrl = context[CONTEXT_KEY] + baseUrl;
+			this.props.base = context[CONTEXT_KEY] + this.props.base;
 		}
 
 		this.state = {
-			baseUrl,
 			url: this.props.url || getCurrentUrl()
 		};
 	}
 
 	getChildContext() {
-		return {CONTEXT_KEY: this.state.baseUrl};
+		return {CONTEXT_KEY: this.props.base};
 	}
 
 	shouldComponentUpdate(props) {
@@ -203,7 +202,7 @@ class Router extends Component {
 
 	getMatchingChildren(children, url, invoke) {
 		return children.slice().sort(pathRankSort).filter( ({ attributes }) => {
-			let path = this.state.baseUrl + attributes.path,
+			let path = this.props.base + attributes.path,
 				matches = exec(url, path, attributes);
 			if (matches) {
 				if (invoke!==false) {
