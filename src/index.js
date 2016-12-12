@@ -8,7 +8,7 @@ const ROUTERS = [];
 const subscribers = [];
 
 const EMPTY = {};
-const CONTEXT_KEY = 'preact-router-baseUrl';
+const CONTEXT_KEY = 'preact-router-base';
 
 function isPreactElement(node) {
 	return node.__preactattr_!=null || typeof Symbol!=='undefined' && node[Symbol.for('preactattr')]!=null;
@@ -149,16 +149,15 @@ function initEventListeners() {
 class Router extends Component {
 	constructor(props, context) {
 		super(props);
-		let baseUrl = this.props.base || '';
+		this.props.base = this.props.base || '';
 		if (props.history) {
 			customHistory = props.history;
 		}
 		if (context && context[CONTEXT_KEY]) {
-			baseUrl = context[CONTEXT_KEY] + baseUrl;
+			this.props.base = context[CONTEXT_KEY] + this.props.base;
 		}
 
 		this.state = {
-			baseUrl,
 			url: props.url || getCurrentUrl()
 		};
 
@@ -166,7 +165,7 @@ class Router extends Component {
 	}
 
 	getChildContext() {
-		return {CONTEXT_KEY: this.state.baseUrl};
+		return {CONTEXT_KEY: this.props.base};
 	}
 
 	shouldComponentUpdate(props) {
@@ -223,7 +222,7 @@ class Router extends Component {
 			.filter(prepareVNodeForRanking)
 			.sort(pathRankSort)
 			.map( vnode => {
-				let matches = exec(url, this.state.baseUrl + vnode.attributes.path, vnode.attributes);
+				let matches = exec(url, this.props.base + vnode.attributes.path, vnode.attributes);
 				if (matches) {
 					if (invoke !== false) {
 						let newProps = { url, matches };
