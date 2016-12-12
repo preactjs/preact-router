@@ -149,12 +149,12 @@ function initEventListeners() {
 class Router extends Component {
 	constructor(props, context) {
 		super(props);
-		this.props.base = this.props.base || '';
+		this.baseUrl = this.props.base || '';
 		if (props.history) {
 			customHistory = props.history;
 		}
 		if (context && context[CONTEXT_KEY]) {
-			this.props.base = context[CONTEXT_KEY] + this.props.base;
+			this.baseUrl = context[CONTEXT_KEY] + this.baseUrl;
 		}
 
 		this.state = {
@@ -165,7 +165,7 @@ class Router extends Component {
 	}
 
 	getChildContext() {
-		return {CONTEXT_KEY: this.props.base};
+		return {CONTEXT_KEY: this.baseUrl};
 	}
 
 	shouldComponentUpdate(props) {
@@ -222,7 +222,7 @@ class Router extends Component {
 			.filter(prepareVNodeForRanking)
 			.sort(pathRankSort)
 			.map( vnode => {
-				let matches = exec(url, this.props.base + vnode.attributes.path, vnode.attributes);
+				let matches = exec(url, this.baseUrl + vnode.attributes.path, vnode.attributes);
 				if (matches) {
 					if (invoke !== false) {
 						let newProps = { url, matches };
