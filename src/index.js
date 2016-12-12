@@ -140,12 +140,12 @@ const Link = (props) => {
 class Router extends Component {
 	constructor(props, context) {
 		super(props);
-		this.props.base = this.props.base || '';
+		this.baseUrl = this.props.base || '';
 		if (props.history) {
 			customHistory = props.history;
 		}
 		if (context && context[CONTEXT_KEY]) {
-			this.props.base = context[CONTEXT_KEY] + this.props.base;
+			this.baseUrl = context[CONTEXT_KEY] + this.baseUrl;
 		}
 
 		this.state = {
@@ -154,7 +154,7 @@ class Router extends Component {
 	}
 
 	getChildContext() {
-		return {CONTEXT_KEY: this.props.base};
+		return {CONTEXT_KEY: this.baseUrl};
 	}
 
 	shouldComponentUpdate(props) {
@@ -202,7 +202,7 @@ class Router extends Component {
 
 	getMatchingChildren(children, url, invoke) {
 		return children.slice().sort(pathRankSort).filter( ({ attributes }) => {
-			let path = this.props.base + attributes.path,
+			let path = this.baseUrl + attributes.path,
 				matches = exec(url, path, attributes);
 			if (matches) {
 				if (invoke!==false) {
