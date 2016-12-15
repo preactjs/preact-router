@@ -76,24 +76,44 @@ describe('preact-router', () => {
 		});
 
 		it('should support nested routes', () => {
-			let router = new Router({}, {'preact-router-base': '/foo'});
 			let children = [
-				<foo default />,
-				<foo path="/" />,
-				<foo path="/foo" />
+				<some path='/b'>
+				  <Router url='/c'>
+					  <bar default />
+						<bar path='/d' />
+						<bar path='/e' />
+				  </Router>
+				</some>,
+				<other path='/f' />,
+				<other path='/g' />
 			];
+			// let grandchildren = [
+			// 	<bar default />,
+			// 	<bar path="/" />,
+			// 	<bar path="/bar" />
+			// ]
+			// let grandChildren = [
+			// 	<foo default />,
+			// 	<foo path="/fee" />,
+			// 	<foo path="/bee" />
+			// ];
+			// let children = [new Router({children: grandChildren, path: '/'})];
+			let router = new Router({}, {'preact-router-base': '/a'});
 
 			expect(
-				router.render({ children }, { url:'/foo' })
+				router.render({ children }, { url:'/a/f' })
 			).to.equal(children[1]);
 
 			expect(
-				router.render({ children }, { url:'/' })
-			).to.equal(children[0]);
+				router.render({ children }, { url:'/a/g' })
+			).to.equal(children[2]);
 
-			expect(
-				router.render({ children }, { url:'/asdf/asdf' })
-			).to.equal(children[0]);
+			// let temp = router.render({ children }, { url:'/a/b/c/e' });
+			// let util = require('util');
+			// console.log(util.inspect(temp,4));
+			// expect(
+			// 	temp
+			// ).to.equal(<Router><bar path='/e' /></Router>);
 		});
 
 		it('should support initial route prop', () => {

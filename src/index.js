@@ -150,11 +150,17 @@ class Router extends Component {
 	constructor(props, context) {
 		super(props);
 		this.baseUrl = this.props.base || '';
+		if (props.path) {
+			this.baseUrl = this.baseUrl + this.props.path;
+		}
 		if (props.history) {
 			customHistory = props.history;
 		}
 		if (context && context[CONTEXT_KEY]) {
 			this.baseUrl = context[CONTEXT_KEY] + this.baseUrl;
+		}
+		if (this.baseUrl) {
+			console.log('baseUrl on new is:', this.baseUrl);
 		}
 
 		this.state = {
@@ -165,7 +171,9 @@ class Router extends Component {
 	}
 
 	getChildContext() {
-		return {CONTEXT_KEY: this.baseUrl};
+		let result = {[CONTEXT_KEY]: this.baseUrl};
+		console.log('result', result);
+		return result;
 	}
 
 	shouldComponentUpdate(props) {
