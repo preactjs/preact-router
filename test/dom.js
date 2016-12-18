@@ -137,10 +137,10 @@ describe('dom', () => {
 			sinon.spy(Y.prototype, 'componentWillMount');
 			sinon.spy(Y.prototype, 'componentWillUnmount');
 			mount(
-				<Router base='/app'>
+				<Router base="/app">
 					<X path="/x" />
 					<Router default>
-					  <Y path='/y'/>
+					  <Y path="/y"/>
 					</Router>
 				</Router>
 			);
@@ -176,9 +176,11 @@ describe('dom', () => {
 			mount(
 				<Router base='/baz'>
 					<X path="/j" />
-					<Router path='/box'>
-					  <Y path='/k'/>
-					</Router>
+					<z path="/box/:bar*">
+						<Router base="/box">
+							<Y path="/k"/>
+						</Router>
+					</z>
 				</Router>
 			);
 			expect(X.prototype.componentWillMount).not.to.have.been.called;
