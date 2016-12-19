@@ -299,8 +299,8 @@ class Match extends Component {
 		return result;
 	}
 
-	render({ children }) {
-		return children[0];
+	render({ children, url, matches }) {
+		return cloneElement(children[0], {url, matches});
 	}
 
 }
