@@ -282,8 +282,8 @@ class Match extends Component {
 		return result;
 	}
 
-	render({ children, url, matches }) {
-		return h(children[0], { url, matches });
+	render({ children }) {
+		return children[0];
 	}
 
 }
@@ -292,8 +292,8 @@ class Match extends Component {
 Router.route = route;
 Router.Router = Router;
 Router.Route = Route;
-Router.Match = Match;
 Router.Link = Link;
+Router.Match = Match;
 
-export { route, Router, Route, Match, Link };
+export { route, Router, Route, Link, Match };
 export default Router;
