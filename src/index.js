@@ -1,4 +1,4 @@
-import { h, Component } from 'preact';
+import { h, Component, cloneElement } from 'preact';
 import { exec, pathRankSort, segmentize } from './util';
 
 let customHistory = null;
@@ -282,8 +282,8 @@ class Match extends Component {
 		return result;
 	}
 
-	render({ children }) {
-		return children[0];
+	render({ children, url, matches }) {
+		return cloneElement(children[0], {url, matches});
 	}
 
 }
