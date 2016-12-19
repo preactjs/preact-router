@@ -162,7 +162,7 @@ class Router extends Component {
 		if (props.history) {
 			customHistory = props.history;
 		}
-		if (context && context[CONTEXT_KEY]) {
+		if (context && context[CONTEXT_KEY] && !this.props.base) {
 			this.baseUrl = context[CONTEXT_KEY] + this.baseUrl;
 		}
 
