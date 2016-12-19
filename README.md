@@ -62,15 +62,13 @@ Routers will append the parent Routers' URLs together to come up with the matchi
 
 ```js
 <Router>
-  <A path="/" />          //will route '/'
-  <Wrapper path="/app">   //will route '/app'
-    <Router>
-      <B path="/b"/>      //will route '/app/b'
-      <C path="/c" />     //will route '/app/c'
-    </Router>
-  </Wrapper>
-  <D path="/d" />         //will route '/d'
-  <E default />           //will route anything not listed above
+  <A path="/" />                 //will route '/'
+  <Router path="/app/:bar*">     //will route '/app/*' (could also use default here)
+    <B path="/b"/>               //will route '/app/b'
+    <C path="/c" />              //will route '/app/c'
+  </Router>
+  <D path="/d" />                //will route '/d'
+  <E default />                  //will route anything not listed above
 </Router>
 ```
 
