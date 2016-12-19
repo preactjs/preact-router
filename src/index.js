@@ -1,5 +1,5 @@
 import { cloneElement, h, Component } from 'preact';
-import { exec, pathRankSort, assign } from './util';
+import { exec, pathRankSort, assign, segmentize } from './util';
 
 let customHistory = null;
 
@@ -8,8 +8,8 @@ const ROUTERS = [];
 const subscribers = [];
 
 const EMPTY = {};
+//a key for the context to carry baseUrl to nested Router instances
 const CONTEXT_KEY = 'preact-router-baseUrl';
-const CONTEXT_KEY = 'preact-router-base';
 
 function isPreactElement(node) {
 	return node.__preactattr_!=null || typeof Symbol!=='undefined' && node[Symbol.for('preactattr')]!=null;
@@ -152,16 +152,18 @@ class Router extends Component {
 		super(props);
 		this.baseUrl = this.props.base || '';
 		if (props.path) {
-			this.baseUrl = this.baseUrl + this.props.path;
+			let segments = segmentize(props.path);
+			segments.forEach(segment => {
+				if (segment.indexOf(':') == -1) {
+					this.baseUrl = this.baseUrl + '/' + segment;
+				}
+			});
 		}
 		if (props.history) {
 			customHistory = props.history;
 		}
 		if (context && context[CONTEXT_KEY]) {
 			this.baseUrl = context[CONTEXT_KEY] + this.baseUrl;
-		}
-		if (this.baseUrl) {
-			console.log('baseUrl on new is:', this.baseUrl);
 		}
 
 		this.state = {
@@ -173,7 +175,6 @@ class Router extends Component {
 
 	getChildContext() {
 		let result = {[CONTEXT_KEY]: this.baseUrl};
-		console.log('result', result);
 		return result;
 	}
 
@@ -275,12 +276,43 @@ const Link = (props) => (
 
 const Route = props => h(props.component, props);
 
+class Match extends Component {
+
+	constructor(props, context) {
+		super(props);
+		this.baseUrl = this.props.base || '';
+		if (props.path) {
+			let segments = segmentize(props.path);
+			segments.forEach(segment => {
+				if (segment.indexOf(':') == -1) {
+					this.baseUrl = this.baseUrl + '/' + segment;
+				}
+			});
+		}
+		if (context && context[CONTEXT_KEY]) {
+			this.baseUrl = context[CONTEXT_KEY] + this.baseUrl;
+		}
+	}
+
+	getChildContext() {
+		let result = {[CONTEXT_KEY]: this.baseUrl};
+		return result;
+	}
+
+	render({ children, url, matches }) {
+		return h(children[0], { url, matches });
+	}
+
+}
+
+
 Router.subscribers = subscribers;
 Router.getCurrentUrl = getCurrentUrl;
 Router.route = route;
 Router.Router = Router;
 Router.Route = Route;
+Router.Match = Match;
 Router.Link = Link;
 
-export { subscribers, getCurrentUrl, route, Router, Route, Link };
+export { subscribers, getCurrentUrl, route, Router, Route, Match, Link };
 export default Router;
