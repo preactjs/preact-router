@@ -253,7 +253,6 @@ describe('dom', () => {
 				<Router base='/ccc'>
 					<X path="/jjj" />
 					<Match path="/xxx/:bar*">
-						<div>test</div>
 						<Router>
 							<Y path="/kkk"/>
 						</Router>
