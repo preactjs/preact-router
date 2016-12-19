@@ -213,7 +213,7 @@ describe('dom', () => {
 				<Router base='/baz'>
 					<X path="/j" />
 					<z path="/box/:bar*">
-						<Router base="/box">
+						<Router path="/box">
 							<Y path="/k"/>
 						</Router>
 					</z>
@@ -266,6 +266,43 @@ describe('dom', () => {
 			expect(Y.prototype.componentWillMount).not.to.have.been.called;
 			expect(Y.prototype.componentWillUnmount).not.to.have.been.called;
 			route('/ccc/xxx/kkk');
+			expect(X.prototype.componentWillMount).to.have.been.calledOnce;
+			expect(X.prototype.componentWillUnmount).to.have.been.calledOnce;
+			expect(Y.prototype.componentWillMount).to.have.been.calledOnce;
+			expect(Y.prototype.componentWillUnmount).not.to.have.been.called;
+		});
+
+		it('should support nested router reset via base attr', () => {
+			class X {
+				componentWillMount() {}
+				componentWillUnmount() {}
+				render(){ return <div />; }
+			}
+			sinon.spy(X.prototype, 'componentWillMount');
+			sinon.spy(X.prototype, 'componentWillUnmount');
+			class Y {
+				componentWillMount() {}
+				componentWillUnmount() {}
+				render(){ return <div />; }
+			}
+			sinon.spy(Y.prototype, 'componentWillMount');
+			sinon.spy(Y.prototype, 'componentWillUnmount');
+			mount(
+				<Router base='/baz'>
+					<X path="/j" />
+					<Router path="/:bar*" base="/baz/foo">
+						<Y path="/k"/>
+					</Router>
+				</Router>
+			);
+			expect(X.prototype.componentWillMount).not.to.have.been.called;
+			expect(Y.prototype.componentWillMount).not.to.have.been.called;
+			route('/baz/j');
+			expect(X.prototype.componentWillMount).to.have.been.calledOnce;
+			expect(X.prototype.componentWillUnmount).not.to.have.been.called;
+			expect(Y.prototype.componentWillMount).not.to.have.been.called;
+			expect(Y.prototype.componentWillUnmount).not.to.have.been.called;
+			route('/baz/foo/k');
 			expect(X.prototype.componentWillMount).to.have.been.calledOnce;
 			expect(X.prototype.componentWillUnmount).to.have.been.calledOnce;
 			expect(Y.prototype.componentWillMount).to.have.been.calledOnce;
