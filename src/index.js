@@ -125,9 +125,17 @@ function delegateLinkHandler(e) {
 }
 
 
-if (typeof addEventListener==='function') {
-	addEventListener('popstate', () => routeTo(getCurrentUrl()));
-	addEventListener('click', delegateLinkHandler);
+let eventListenersInitialized = false;
+
+function initEventListeners() {
+	if (eventListenersInitialized){
+		return;
+	}
+
+	if (typeof addEventListener==='function') {
+		addEventListener('click', delegateLinkHandler);
+	}
+	eventListenersInitialized = true;
 }
 
 
@@ -146,6 +154,8 @@ class Router extends Component {
 		this.state = {
 			url: this.props.url || getCurrentUrl()
 		};
+
+		initEventListeners();
 	}
 
 	shouldComponentUpdate(props) {
@@ -176,10 +186,16 @@ class Router extends Component {
 	}
 
 	componentDidMount() {
+		if (customHistory) {
+			this.unlisten = customHistory.listen((location) => {
+				this.routeTo(`${location.pathname || ''}${location.search || ''}`);
+			});
+		}
 		this.updating = false;
 	}
 
 	componentWillUnmount() {
+		if (typeof this.unlisten==='function') this.unlisten();
 		ROUTERS.splice(ROUTERS.indexOf(this), 1);
 	}
 
