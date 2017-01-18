@@ -125,9 +125,18 @@ function delegateLinkHandler(e) {
 }
 
 
-if (typeof addEventListener==='function') {
-	addEventListener('popstate', () => routeTo(getCurrentUrl()));
-	addEventListener('click', delegateLinkHandler);
+let eventListenersInitialized = false;
+
+function initEventListeners() {
+	if (eventListenersInitialized){
+		return;
+	}
+	
+	if (typeof addEventListener==='function') {
+		addEventListener('popstate', () => routeTo(getCurrentUrl()));
+		addEventListener('click', delegateLinkHandler);
+	}
+	eventListenersInitialized = true;
 }
 
 
@@ -146,6 +155,8 @@ class Router extends Component {
 		this.state = {
 			url: this.props.url || getCurrentUrl()
 		};
+		
+		initEventListeners();
 	}
 
 	shouldComponentUpdate(props) {
