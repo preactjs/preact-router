@@ -18,7 +18,7 @@ Connect your [Preact] components up to that address bar.
 
 ```js
 import Router from 'preact-router';
-import { h } from 'preact';
+import { h, render } from 'preact';
 /** @jsx h */
 
 const Main = () => (
