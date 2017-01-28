@@ -2,24 +2,22 @@
 const EMPTY = {};
 
 export function exec(url, route, opts=EMPTY) {
-	let reg = /(?:\?([^#]*))?(#.*)?$/,
-		c = url.match(reg),
+	let reg = /^([^?]*)(?:\?([^#]*))?(#.*)?$/,
+		[, pathname, searcn] = (url.match(reg) || []),
 		matches = {},
 		ret;
-	if (c && c[1]) {
-		let p = c[1].split('&');
-		for (let i=0; i<p.length; i++) {
-			let r = p[i].split('=');
-			matches[decodeURIComponent(r[0])] = decodeURIComponent(r.slice(1).join('='));
-		}
+	if (searcn) {
+		searcn.split('&').forEach(parameter => {
+			let [name, ...value] = parameter.split('=');
+			matches[decodeURIComponent(name)] = decodeURIComponent(value.join('='));
+		});
 	}
-	url = segmentize(url.replace(reg, ''));
+	url = segmentize(pathname);
 	route = segmentize(route || '');
 	let max = Math.max(url.length, route.length);
 	for (let i=0; i<max; i++) {
 		if (route[i] && route[i].charAt(0)===':') {
-			let param = route[i].replace(/(^\:|[+*?]+$)/g, ''),
-				flags = (route[i].match(/[+*?]+$/) || EMPTY)[0] || '',
+			let [, param, flags] = /^:(.*?)([+*?]*)$/.exec(route[i]),
 				plus = ~flags.indexOf('+'),
 				star = ~flags.indexOf('*'),
 				val = url[i] || '';
@@ -27,11 +25,11 @@ export function exec(url, route, opts=EMPTY) {
 				ret = false;
 				break;
 			}
-			matches[param] = decodeURIComponent(val);
-			if (plus || star) {
-				matches[param] = url.slice(i).map(decodeURIComponent).join('/');
+			else if (plus || star) {
+				matches[param] = decodeURIComponent(url.slice(i).join('/'));
 				break;
 			}
+			matches[param] = decodeURIComponent(val);
 		}
 		else if (route[i]!==url[i]) {
 			ret = false;

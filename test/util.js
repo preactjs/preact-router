@@ -101,5 +101,10 @@ describe('util', () => {
 			expect(exec('/a/b', '/:foo+')).to.eql({ foo:'a/b' });
 			expect(exec('/a/b/c', '/:foo+')).to.eql({ foo:'a/b/c' });
 		});
+
+		it('should handle query-string', () => {
+			expect(exec('/?foo=bar', '/')).to.eql({ foo: 'bar' });
+			expect(exec('/a?foo=bar', '/:foo')).to.eql({ foo: 'a' });
+		});
 	});
 });
