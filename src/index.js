@@ -133,6 +133,9 @@ function initEventListeners() {
 	}
 
 	if (typeof addEventListener==='function') {
+		if (!customHistory) {
+			addEventListener('popstate', () => routeTo(getCurrentUrl()));
+		}
 		addEventListener('click', delegateLinkHandler);
 	}
 	eventListenersInitialized = true;
