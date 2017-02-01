@@ -24,11 +24,7 @@ import { h, render } from 'preact';
 /** @jsx h */
 
 function getProfile(){
-	return new Promise(resolve=>{
-		setTimeout(function(){
-			resolve(Profile)
-		}, 2000);
-	});
+	return System.import('../component/Profile/Profile.jsx').then(module => module.default);
 }
 
 const Main = () => (
