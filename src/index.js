@@ -268,20 +268,22 @@ class AsyncRoute extends Component {
 	}
 	componentDidMount(){
 		const componentData = this.props.component();
-		if (componentData instanceof Promise) {
-			componentData.then(promiseData => {
+		if (componentData && componentData.then) {
+			componentData.then(component => {
 				this.setState({
-					componentData: h(promiseData, { url: this.props.url, matches: this.props.matches })
+					componentData: component
 				});
 			});
 		} else {
 			this.setState({
-				componentData: h(componentData, { url: this.props.url, matches: this.props.matches })
+				componentData
 			});
 		}
 	}
 	render(){
-		return this.state.componentData;
+		return this.state.componentData ?
+			h(this.state.componentData, { url: this.props.url, matches: this.props.matches }) :
+			null;
 	}
 }
 
