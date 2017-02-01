@@ -259,11 +259,38 @@ const Route = ({ component, url, matches }) => {
 	return h(component, { url, matches });
 };
 
+class AsyncRoute extends Component {
+	constructor() {
+		super();
+		this.state = {
+			componentData: null
+		};
+	}
+	componentDidMount(){
+		const componentData = this.props.component();
+		if (componentData instanceof Promise) {
+			componentData.then(promiseData => {
+				this.setState({
+					componentData: h(promiseData, { url: this.props.url, matches: this.props.matches })
+				});
+			});
+		} else {
+			this.setState({
+				componentData: h(componentData, { url: this.props.url, matches: this.props.matches })
+			});
+		}
+	}
+	render(){
+		return this.state.componentData;
+	}
+}
+
 
 Router.route = route;
 Router.Router = Router;
 Router.Route = Route;
+Router.AsyncRoute = AsyncRoute;
 Router.Link = Link;
 
-export { route, Router, Route, Link };
+export { route, Router, Route, Link, AsyncRoute };
 export default Router;
