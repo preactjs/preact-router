@@ -18,14 +18,26 @@ Connect your [Preact] components up to that address bar.
 
 ```js
 import Router from 'preact-router';
+import Terms from './Components/Terms/Terms.jsx';
+import Profile from './Components/Profile/Profile.jsx';
 import { h, render } from 'preact';
 /** @jsx h */
+
+function getProfile(){
+	return new Promise(resolve=>{
+		setTimeout(function(){
+			resolve(Profile)
+		}, 2000);
+	});
+}
 
 const Main = () => (
 	<Router>
 		<Home path="/" />
 		<About path="/about" />
 		<Search path="/search/:query" />
+		<Route path="/terms" component={Terms} />
+		<AsyncRoute path="/profile/:userid" component={Profile} />
 	</Router>
 );
 
