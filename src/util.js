@@ -3,15 +3,9 @@ const EMPTY = {};
 
 export function exec(url, route, opts=EMPTY) {
 	let reg = /^([^?]*)(?:\?([^#]*))?(#.*)?$/,
-		[, pathname, searcn] = (url.match(reg) || []),
+		[, pathname, search] = (url.match(reg) || []),
 		matches = {},
 		ret;
-	if (searcn) {
-		searcn.split('&').forEach(parameter => {
-			let [name, ...value] = parameter.split('=');
-			matches[decodeURIComponent(name)] = decodeURIComponent(value.join('='));
-		});
-	}
 	url = segmentize(pathname);
 	route = segmentize(route || '');
 	let max = Math.max(url.length, route.length);
@@ -37,6 +31,18 @@ export function exec(url, route, opts=EMPTY) {
 		}
 	}
 	if (opts.default!==true && ret===false) return false;
+
+	if (search) {
+		const queryParams = {};
+		search.split('&').forEach(parameter => {
+			let [name, ...value] = parameter.split('=');
+			queryParams[decodeURIComponent(name)] = decodeURIComponent(value.join('='));
+		});
+		matches = {
+			...queryParams,
+			...matches
+		};
+	}
 	return matches;
 }
 
@@ -45,16 +51,45 @@ export function pathRankSort(a, b) {
 		bAttr = b.attributes || EMPTY;
 	if (aAttr.default) return 1;
 	if (bAttr.default) return -1;
-	let diff = rank(aAttr.path) - rank(bAttr.path);
-	return diff || (aAttr.path.length - bAttr.path.length);
+	let aRank = rank(aAttr.path),
+		bRank = rank(bAttr.path);
+	return (aRank < bRank) ? 1 :
+		(aRank == bRank) ? 0 :
+		-1;
 }
 
 export function segmentize(url) {
 	return strip(url).split('/');
 }
 
-export function rank(url) {
-	return (strip(url).match(/\/+/g) || '').length;
+export function rank(path) {
+	return strip(path).
+	        replace(/(:)?([^\/]*?)([*+?])?(?:\/+|$)/g, (match, isParam, segment, flag) => {
+		if (isParam) {
+			if (flag === '*') {
+				return '1';
+			} else if (flag === '+') {
+				return '2';
+			} else if (flag === '?') {
+				return '3';
+			}
+			return '4';
+		} else if (segment) {
+			return '5';
+		}
+		return '';
+	}) || '5';
+}
+
+// export const rank = (path) => (
+// 	strip(path).
+// 	        replace(/(:)?([^\/]*?)([*+?]?)(?:\/+|$)/g, (match, isParam, segment, flag) => (
+// 			isParam ? ('0*+?'.indexOf(flag) || 4) : (segment ? 5 : '')
+// 		)) || '5'
+// );
+
+export function rankChild({ attributes=EMPTY }) {
+	return attributes.default ? '0' : rank(attributes.path);
 }
 
 export function strip(url) {

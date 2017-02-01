@@ -19,12 +19,13 @@ describe('util', () => {
 	});
 
 	describe('rank', () => {
-		it('should return number of path segments', () => {
-			expect(rank('')).to.equal(0);
-			expect(rank('/')).to.equal(0);
-			expect(rank('//')).to.equal(0);
-			expect(rank('a/b/c')).to.equal(2);
-			expect(rank('/a/b/c/')).to.equal(2);
+		it('should return rank of path segments', () => {
+			expect(rank('')).to.eql('5');
+			expect(rank('/')).to.eql('5');
+			expect(rank('//')).to.eql('5');
+			expect(rank('a/b/c')).to.eql('555');
+			expect(rank('/a/b/c/')).to.eql('555');
+			expect(rank('/:a/b?/:c?/:d*/:e+')).to.eql('45312');
 		});
 	});
 
@@ -39,13 +40,13 @@ describe('util', () => {
 	});
 
 	describe('pathRankSort', () => {
-		it('should sort by segment count', () => {
+		it('should sort by highest rank first', () => {
 			let paths = arr => arr.map( path => ({attributes:{path}}) );
 
 			expect(
-				paths(['/a/b/','/a/b','/','b']).sort(pathRankSort)
+				paths(['/:a*','/a','/:a+','/:a?','/a/:b*']).sort(pathRankSort)
 			).to.eql(
-				paths(['/','b','/a/b','/a/b/'])
+				paths(['/a/:b*','/a','/:a?','/:a+','/:a*'])
 			);
 		});
 
@@ -59,7 +60,7 @@ describe('util', () => {
 			expect(
 				p.sort(pathRankSort)
 			).to.eql(
-				paths(['/','b','/a/b','/a/b/']).concat(defaultPath)
+				paths(['/a/b/','/a/b','/','b']).concat(defaultPath)
 			);
 		});
 	});

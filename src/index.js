@@ -1,5 +1,5 @@
 import { h, Component } from 'preact';
-import { exec, pathRankSort } from './util';
+import { exec, rankChild } from './util';
 
 let customHistory = null;
 
@@ -157,7 +157,7 @@ class Router extends Component {
 
 	/** Check if the given URL can be matched against any children */
 	canRoute(url) {
-		return this.getMatchingChildren(this.props.children, url, false).length > 0;
+		return this.props.children.some(({ attributes=EMPTY }) => !!exec(url, attributes.path, attributes));
 	}
 
 	/** Re-render children with a new URL to match against. */
@@ -200,17 +200,25 @@ class Router extends Component {
 	}
 
 	getMatchingChildren(children, url, invoke) {
-		return children.slice().sort(pathRankSort).filter( ({ attributes }) => {
-			let path = attributes.path,
-				matches = exec(url, path, attributes);
-			if (matches) {
-				if (invoke!==false) {
-					// copy matches onto props
-					Object.assign(attributes, { url, matches }, matches);
+		return children
+			.map((child, index) => ({ child, index, rank: rankChild(child) }))
+			.sort((a, b) => (
+				(a.rank < b.rank) ? 1 :
+				(a.rank > b.rank) ? -1 :
+				(a.index - b.index)
+			))
+			.map(({ child }) => child)
+			.filter(({ attributes=EMPTY }) => {
+				let path = attributes.path,
+					matches = exec(url, path, attributes);
+				if (matches) {
+					if (invoke!==false) {
+						// copy matches onto props
+						Object.assign(attributes, { url, matches }, matches);
+					}
+					return true;
 				}
-				return true;
-			}
-		});
+			});
 	}
 
 	render({ children, onChange }, { url }) {
