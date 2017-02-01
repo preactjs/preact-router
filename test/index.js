@@ -1,5 +1,5 @@
-import { Router, Link, route } from 'src';
-import { h } from 'preact';
+import { Router, Link, route, AsyncRoute } from 'src';
+import { h, render, Component } from 'preact';
 
 describe('preact-router', () => {
 	it('should export Router, Link and route', () => {
@@ -172,6 +172,58 @@ describe('preact-router', () => {
 			expect(router.routeTo)
 				.to.have.been.calledOnce
 				.and.calledWithExactly('/asdf');
+		});
+	});
+
+	describe('Async Route', () => {
+		class SampleTag extends Component {
+			render(){
+				return (<h1>hi</h1>);
+			}
+		}
+
+		it('should call the given function on mount', () => {
+			let getComponent = sinon.spy();
+			render(<AsyncRoute component={getComponent} />, document.createElement('div'));
+			expect(getComponent).called;
+		});
+
+		it('should render component when returned from a function', (done) => {
+			let containerTag = document.createElement('div');
+			let getComponent = function() {
+				return SampleTag;
+			};
+			render(<AsyncRoute component={getComponent} />, containerTag);
+
+			setTimeout(() => {
+				expect(containerTag.innerHTML).equal('<h1>hi</h1>');
+				done();
+			},10);
+		});
+
+		it('should render component when resolved through a promise from a function', (done) => {
+			let containerTag = document.createElement('div');
+			const startTime = Date.now();
+			const componentPromise = new Promise(resolve=>{
+				setTimeout(()=>{
+					resolve(SampleTag);
+				},800);
+			});
+
+			let getComponent = function() {
+				return componentPromise;
+			};
+
+			render(<AsyncRoute component={getComponent} />, containerTag);
+
+			componentPromise.then(()=>{
+				const endTime = Date.now();
+				setTimeout(() => {
+					expect(endTime - startTime).to.be.greaterThan(800);
+					expect(containerTag.innerHTML).equal('<h1>hi</h1>');
+					done();
+				},10);
+			});
 		});
 	});
 });
