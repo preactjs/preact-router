@@ -81,5 +81,8 @@
     "sinon-chai": "^2.8.0",
     "uglify-js": "^2.6.1",
     "webpack": "^1.13.1"
+  },
+  "dependencies": {
+    "Promise": "^1.0.5"
   }
 }

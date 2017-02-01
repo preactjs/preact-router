@@ -1,5 +1,6 @@
 import { Router, Link, route, AsyncRoute } from 'src';
 import { h, render, Component } from 'preact';
+import Promise from 'Promise';
 
 describe('preact-router', () => {
 	it('should export Router, Link and route', () => {
