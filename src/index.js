@@ -267,16 +267,20 @@ class AsyncRoute extends Component {
 		};
 	}
 	componentDidMount(){
-		const componentData = this.props.component();
+		const componentData = this.props.component(this.props.url, ({component}) => { // Named param for making callback future proof
+			if (component) {
+				this.setState({
+					componentData: component
+				});
+			}
+		});
+
+		// In case returned value was a promise
 		if (componentData && componentData.then) {
 			componentData.then(component => {
 				this.setState({
 					componentData: component
 				});
-			});
-		} else {
-			this.setState({
-				componentData
 			});
 		}
 	}

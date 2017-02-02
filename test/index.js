@@ -192,10 +192,10 @@ describe('preact-router', () => {
 			expect(getComponent).called;
 		});
 
-		it('should render component when returned from a function', () => {
+		it('should render component when returned from the callback', () => {
 			let containerTag = document.createElement('div');
-			let getComponent = function() {
-				return SampleTag;
+			let getComponent = function(url, cb) {
+				cb({component: SampleTag});
 			};
 			render(<AsyncRoute component={getComponent} />, containerTag);
 			expect(containerTag.innerHTML).equal('<h1>hi</h1>');
