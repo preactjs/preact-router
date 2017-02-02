@@ -1,5 +1,5 @@
 import { Router, Link, route, AsyncRoute } from 'src';
-import { h, render, Component } from 'preact';
+import { h, render, Component, options } from 'preact';
 import Promise from 'Promise';
 
 describe('preact-router', () => {
@@ -177,6 +177,9 @@ describe('preact-router', () => {
 	});
 
 	describe('Async Route', () => {
+		// These tests require sync rendering
+		options.syncComponentUpdates = false;
+		options.debounceRendering = f => f();
 		class SampleTag extends Component {
 			render(){
 				return (<h1>hi</h1>);
@@ -189,20 +192,16 @@ describe('preact-router', () => {
 			expect(getComponent).called;
 		});
 
-		it('should render component when returned from a function', (done) => {
+		it('should render component when returned from a function', () => {
 			let containerTag = document.createElement('div');
 			let getComponent = function() {
 				return SampleTag;
 			};
 			render(<AsyncRoute component={getComponent} />, containerTag);
-
-			setTimeout(() => {
-				expect(containerTag.innerHTML).equal('<h1>hi</h1>');
-				done();
-			},10);
+			expect(containerTag.innerHTML).equal('<h1>hi</h1>');
 		});
 
-		it('should render component when resolved through a promise from a function', (done) => {
+		it('should render component when resolved through a promise from a function', () => {
 			let containerTag = document.createElement('div');
 			const startTime = Date.now();
 			const componentPromise = new Promise(resolve=>{
@@ -219,11 +218,8 @@ describe('preact-router', () => {
 
 			componentPromise.then(()=>{
 				const endTime = Date.now();
-				setTimeout(() => {
-					expect(endTime - startTime).to.be.greaterThan(800);
-					expect(containerTag.innerHTML).equal('<h1>hi</h1>');
-					done();
-				},10);
+				expect(endTime - startTime).to.be.greaterThan(800);
+				expect(containerTag.innerHTML).equal('<h1>hi</h1>');
 			});
 		});
 	});
