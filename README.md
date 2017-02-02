@@ -27,6 +27,12 @@ function getProfile(){
 	return System.import('../component/Profile/Profile.jsx').then(module => module.default);
 }
 
+function getFriendsComponent(url, cb){
+	System.import('../component/Profile/Profile.jsx').then(module => {
+		cb(null, module.default);
+	});
+}
+
 const Main = () => (
 	<Router>
 		<Home path="/" />
@@ -34,6 +40,7 @@ const Main = () => (
 		<Search path="/search/:query" />
 		<Route path="/terms" component={Terms} />
 		<AsyncRoute path="/profile/:userid" component={Profile} />
+		<AsyncRoute path="/friends/:userid" component={getFriendsComponent} />
 	</Router>
 );
 
