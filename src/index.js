@@ -25,26 +25,60 @@ function setUrl(url, type='push') {
 }
 
 
+function getCurrentLocation() {
+	return (customHistory && customHistory.location) ||
+		(customHistory && customHistory.getCurrentLocation && customHistory.getCurrentLocation()) ||
+                (typeof location!=='undefined' ? location : EMPTY);
+}
+
 function getCurrentUrl() {
-	let url;
-	if (customHistory && customHistory.location) {
-		url = customHistory.location;
-	}
-	else if (customHistory && customHistory.getCurrentLocation) {
-		url = customHistory.getCurrentLocation();
-	}
-	else {
-		url = typeof location!=='undefined' ? location : EMPTY;
-	}
+	let url = getCurrentLocation();
 	return `${url.pathname || ''}${url.search || ''}`;
 }
 
+
+// Lifted from https://tools.ietf.org/html/rfc3986#appendix-B
+const uriRegex = new RegExp('^(([^:/?#]+):)?(//([^/?#]*))?([^?#]*)(\\?([^#]*))?(#(.*))?');
+
+/* Resolve URL relative to current location */
+function resolve(url) {
+	let current = getCurrentLocation();
+	let [,
+		protocol,,
+		,hostname,
+		pathname,
+		search,,
+		// hash,,
+	] = uriRegex.exec(url);
+	if (
+		(protocol && protocol !== current.protocol) ||
+		(hostname && hostname !== current.hostname)
+	) {
+		return;
+	}
+	if (pathname.charAt(0) !== '/') {
+		let stack = (current.pathname||'/').split("/"),
+			segments = pathname.split("/");
+		stack.pop();
+		for (let i=0; i<segments.length; i++) {
+			if (segments[i] === "..")
+				stack.pop();
+			else if (segments[i] !== ".")
+				stack.push(segments[i]);
+		}
+		pathname = stack.join("/");
+	}
+	return `${pathname}${search || ''}`;
+}
 
 function route(url, replace=false) {
 	if (typeof url!=='string' && url.url) {
 		replace = url.replace;
 		url = url.url;
 	}
+
+	url = resolve(url);
+	if (!url) return;
 
 	// only push URL into history if we can handle it
 	if (canRoute(url)) {
@@ -83,8 +117,8 @@ function routeFromLink(node) {
 	let href = node.getAttribute('href'),
 		target = node.getAttribute('target');
 
-	// ignore links with targets and non-path URLs
-	if (!href || !href.match(/^\//g) || (target && !target.match(/^_?self$/i))) return;
+	// ignore links with targets
+	if (!href || (target && !target.match(/^_?self$/i))) return;
 
 	// attempt to route, if no match simply cede control to browser
 	return route(href);
