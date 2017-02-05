@@ -62,31 +62,14 @@ export function segmentize(url) {
 	return strip(url).split('/');
 }
 
-export function rank(path) {
-	return strip(path).
-	        replace(/(:)?([^\/]*?)([*+?])?(?:\/+|$)/g, (match, isParam, segment, flag) => {
-		if (isParam) {
-			if (flag === '*') {
-				return '1';
-			} else if (flag === '+') {
-				return '2';
-			} else if (flag === '?') {
-				return '3';
-			}
-			return '4';
-		} else if (segment) {
-			return '5';
-		}
-		return '';
-	}) || '5';
-}
+export const rankSegment = (segment) => {
+	let [, isParam, , flag] = /^(:?)(.*?)([*+?]?)$/.exec(segment);
+	return isParam ? ('0*+?'.indexOf(flag) || 4) : 5;
+};
 
-// export const rank = (path) => (
-// 	strip(path).
-// 	        replace(/(:)?([^\/]*?)([*+?]?)(?:\/+|$)/g, (match, isParam, segment, flag) => (
-// 			isParam ? ('0*+?'.indexOf(flag) || 4) : (segment ? 5 : '')
-// 		)) || '5'
-// );
+export const rank = (path) => (
+	segmentize(path).map(rankSegment).join('')
+);
 
 export function rankChild({ attributes=EMPTY }) {
 	return attributes.default ? '0' : rank(attributes.path);
