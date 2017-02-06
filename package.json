@@ -1,7 +1,7 @@
 {
   "name": "preact-router",
   "amdName": "preactRouter",
-  "version": "2.4.0",
+  "version": "2.4.1",
   "description": "Connect your components up to that address bar.",
   "main": "dist/preact-router.js",
   "jsnext:main": "src/index.js",
@@ -24,7 +24,7 @@
     "src",
     "dist"
   ],
-  "typings": "./dist/index.d.ts",
+  "x-typings": "./dist/index.d.ts",
   "keywords": [
     "preact",
     "router"
