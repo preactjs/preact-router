@@ -43,6 +43,7 @@
     "preact": "*"
   },
   "devDependencies": {
+    "Promise": "^1.0.5",
     "babel-cli": "^6.9.0",
     "babel-core": "^6.9.1",
     "babel-eslint": "^7.0.0",
@@ -81,8 +82,5 @@
     "sinon-chai": "^2.8.0",
     "uglify-js": "^2.6.1",
     "webpack": "^1.13.1"
-  },
-  "dependencies": {
-    "Promise": "^1.0.5"
   }
 }
