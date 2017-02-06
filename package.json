@@ -6,6 +6,7 @@
   "main": "dist/preact-router.js",
   "jsnext:main": "src/index.js",
   "minified:main": "dist/preact-router.min.js",
+  "module": "src/index.js",
   "scripts": {
     "clean": "rimraf dist/",
     "copy-typescript-definition": "copyfiles -f src/index.d.ts dist",
