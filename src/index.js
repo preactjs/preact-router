@@ -231,6 +231,10 @@ class Router extends Component {
 	}
 
 	render({ children, onChange }, { url }) {
+		if (customHistory && customHistory.location) {
+			url = `${customHistory.location.pathname || ''}${customHistory.location.search || ''}`;
+		}
+
 		let active = this.getMatchingChildren(children, url, true);
 
 		let current = active[0] || null;
