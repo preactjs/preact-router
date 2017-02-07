@@ -1,4 +1,5 @@
-import { Router, Link, route, AsyncRoute } from 'src';
+import { Router, Link, route } from 'src';
+import AsyncRoute from 'src/AsyncRoute';
 import { h, render, Component, options } from 'preact';
 import Promise from 'Promise';
 
