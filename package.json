@@ -9,7 +9,8 @@
   "scripts": {
     "clean": "rimraf dist/",
     "copy-typescript-definition": "copyfiles -f src/index.d.ts dist",
-    "build": "npm-run-all clean transpile copy-typescript-definition minify size",
+    "build": "npm-run-all clean transpile transpile-async copy-typescript-definition minify size",
+    "transpile-async": "rollup -c rollup.async.config.js",
     "transpile": "rollup -c rollup.config.js -m ${npm_package_main}.map -f umd -n $npm_package_amdName $npm_package_jsnext_main -o $npm_package_main",
     "minify": "uglifyjs $npm_package_main -cm -o $npm_package_minified_main -p relative --in-source-map ${npm_package_main}.map --source-map ${npm_package_minified_main}.map",
     "size": "size=$(gzip-size $npm_package_minified_main) && echo \"gzip size: $size / $(pretty-bytes $size)\"",
@@ -22,7 +23,8 @@
   },
   "files": [
     "src",
-    "dist"
+    "dist",
+    "async"
   ],
   "x-typings": "./dist/index.d.ts",
   "keywords": [
@@ -78,6 +80,7 @@
     "rollup": "^0.36.3",
     "rollup-plugin-babel": "^2.4.0",
     "rollup-plugin-memory": "^2.0.0",
+    "rollup-plugin-minify": "^1.0.3",
     "sinon": "^1.17.4",
     "sinon-chai": "^2.8.0",
     "uglify-js": "^2.6.1",

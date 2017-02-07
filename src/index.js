@@ -259,44 +259,11 @@ const Route = ({ component, url, matches }) => {
 	return h(component, { url, matches });
 };
 
-class AsyncRoute extends Component {
-	constructor() {
-		super();
-		this.state = {
-			componentData: null
-		};
-	}
-	componentDidMount(){
-		const componentData = this.props.component(this.props.url, ({component}) => { // Named param for making callback future proof
-			if (component) {
-				this.setState({
-					componentData: component
-				});
-			}
-		});
-
-		// In case returned value was a promise
-		if (componentData && componentData.then) {
-			componentData.then(component => {
-				this.setState({
-					componentData: component
-				});
-			});
-		}
-	}
-	render(){
-		return this.state.componentData ?
-			h(this.state.componentData, { url: this.props.url, matches: this.props.matches }) :
-			null;
-	}
-}
-
 
 Router.route = route;
 Router.Router = Router;
 Router.Route = Route;
-Router.AsyncRoute = AsyncRoute;
 Router.Link = Link;
 
-export { route, Router, Route, Link, AsyncRoute };
+export { route, Router, Route, Link };
 export default Router;
