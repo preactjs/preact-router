@@ -19,7 +19,6 @@ Connect your [Preact] components up to that address bar.
 ```js
 import Router from 'preact-router';
 import Terms from './Components/Terms/Terms.jsx';
-import Profile from './Components/Profile/Profile.jsx';
 import { h, render } from 'preact';
 import AsyncRoute from 'preact-router/async';
 /** @jsx h */
