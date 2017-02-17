@@ -256,7 +256,14 @@ class Router extends Component {
 
 
 const Route = ({ component, url, matches }) => {
-	return h(component, { url, matches });
+	let attr = {};
+	for (let a in matches) {
+		if (matches.hasOwnProperty(a)) {
+			attr[a] = matches[a];
+		}
+	}
+	attr["url"] = url;
+	return h(component, attr);
 };
 
 
