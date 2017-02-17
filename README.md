@@ -53,17 +53,21 @@ You can even mix-and-match URL parameters and normal `props`.
 
 ### Lazy Loading
 
-Lazy loading/ code splitting can be achieved with `preact-router` with [AsyncRoute](https://www.npmjs.com/package/preact-async-route) external package
+Lazy loading (code splitting) with `preact-router` can be implemented easily using the [AsyncRoute](https://www.npmjs.com/package/preact-async-route) module:
 
 ```js
 import AsyncRoute from 'preact-async-route';
 <Router>
-  <A path="/" />
-  <B path="/b" id="42" />
-  <AsyncRoute path="/c/:id"
-	  component={()=>import('./friend')}
-	  loading={()=><div>loading...</div>}/>
-  <D default />
+  <Home path="/" />
+  <AsyncRoute
+    path="/friends"
+    component={ () => import('./friends') }
+  />
+  <AsyncRoute
+    path="/friends/:id"
+    component={ () => import('./friend') }
+    loading={ () => <div>loading...</div> }
+  />
 </Router>
 ```
 
