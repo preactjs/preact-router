@@ -1,5 +1,5 @@
 import { h, Component } from 'preact';
-import { exec, pathRankSort } from './util';
+import { exec, rankChild } from './util';
 
 let customHistory = null;
 
@@ -57,22 +57,13 @@ function route(url, replace=false) {
 
 /** Check if the given URL can be handled by any router instances. */
 function canRoute(url) {
-	for (let i=ROUTERS.length; i--; ) {
-		if (ROUTERS[i].canRoute(url)) return true;
-	}
-	return false;
+	return ROUTERS.some(router => router.canRoute(url));
 }
 
 
 /** Tell all router instances to handle the given URL.  */
 function routeTo(url) {
-	let didRoute = false;
-	for (let i=0; i<ROUTERS.length; i++) {
-		if (ROUTERS[i].routeTo(url)===true) {
-			didRoute = true;
-		}
-	}
-	return didRoute;
+	return ROUTERS.reduce((didRoute, router) => (router.routeTo(url) === true || didRoute), false);
 }
 
 
@@ -84,7 +75,7 @@ function routeFromLink(node) {
 		target = node.getAttribute('target');
 
 	// ignore links with targets and non-path URLs
-	if (!href || !href.match(/^\//g) || (target && !target.match(/^_?self$/i))) return;
+	if (!/^\//.test(href) || (target && !target.match(/^_?self$/i))) return;
 
 	// attempt to route, if no match simply cede control to browser
 	return route(href);
@@ -110,12 +101,11 @@ function prevent(e) {
 
 function delegateLinkHandler(e) {
 	// ignore events the browser takes care of already:
-	if (e.ctrlKey || e.metaKey || e.altKey || e.shiftKey) return;
+	if (e.ctrlKey || e.metaKey || e.altKey || e.shiftKey || e.button !== 0) return;
 
 	let t = e.target;
 	do {
 		if (String(t.nodeName).toUpperCase()==='A' && t.getAttribute('href') && isPreactElement(t)) {
-			if (e.button !== 0) return;
 			// if link is handled by the router, prevent browser defaults
 			if (routeFromLink(t)) {
 				return prevent(e);
@@ -162,13 +152,12 @@ class Router extends Component {
 	}
 
 	shouldComponentUpdate(props) {
-		if (props.static!==true) return true;
-		return props.url!==this.props.url || props.onChange!==this.props.onChange;
+		return props.static!==true || props.url!==this.props.url || props.onChange!==this.props.onChange;
 	}
 
 	/** Check if the given URL can be matched against any children */
 	canRoute(url) {
-		return this.getMatchingChildren(this.props.children, url, false).length > 0;
+		return this.props.children.some(({ attributes=EMPTY }) => !!exec(url, attributes.path, attributes));
 	}
 
 	/** Re-render children with a new URL to match against. */
@@ -211,23 +200,26 @@ class Router extends Component {
 	}
 
 	getMatchingChildren(children, url, invoke) {
-		return children.slice().sort(pathRankSort).filter( ({ attributes }) => {
-			let path = attributes.path,
-				matches = exec(url, path, attributes);
-			if (matches) {
-				if (invoke!==false) {
-					attributes.url = url;
-					attributes.matches = matches;
-					// copy matches onto props
-					for (let i in matches) {
-						if (matches.hasOwnProperty(i)) {
-							attributes[i] = matches[i];
-						}
+		return children
+			.filter(({ attributes }) => !!attributes)
+			.map((child, index) => ({ child, index, rank: rankChild(child) }))
+			.sort((a, b) => (
+				(a.rank < b.rank) ? 1 :
+				(a.rank > b.rank) ? -1 :
+				(a.index - b.index)
+			))
+			.map(({ child }) => child)
+			.filter(({ attributes }) => {
+				let path = attributes.path,
+					matches = exec(url, path, attributes);
+				if (matches) {
+					if (invoke!==false) {
+						// copy matches onto props
+						Object.assign(attributes, { url, matches }, matches);
 					}
+					return true;
 				}
-				return true;
-			}
-		});
+			});
 	}
 
 	render({ children, onChange }, { url }) {
