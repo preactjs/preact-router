@@ -28,7 +28,7 @@ function setUrl(url, type='push') {
 function getCurrentLocation() {
 	return (customHistory && customHistory.location) ||
 		(customHistory && customHistory.getCurrentLocation && customHistory.getCurrentLocation()) ||
-                (typeof location!=='undefined' ? location : EMPTY);
+		(typeof location!=='undefined' ? location : EMPTY);
 }
 
 function getCurrentUrl() {
@@ -36,39 +36,26 @@ function getCurrentUrl() {
 	return `${url.pathname || ''}${url.search || ''}`;
 }
 
+const a = typeof document!=='undefined' && document.createElement('a');
 
-// Lifted from https://tools.ietf.org/html/rfc3986#appendix-B
-const uriRegex = new RegExp('^(([^:/?#]+):)?(//([^/?#]*))?([^?#]*)(\\?([^#]*))?(#(.*))?');
+// Based on https://tools.ietf.org/html/rfc3986#appendix-B
+const uriRegex = new RegExp('^([^:/?#]+:)?(?://([^/?#]*))?([^?#]*)((?:\\?[^#]*)?)((?:#.*)?)');
 
 /* Resolve URL relative to current location */
 function resolve(url) {
 	let current = getCurrentLocation();
-	let [,
-		protocol,,
-		,hostname,
-		pathname,
-		search,,
-		// hash,,
-	] = uriRegex.exec(url);
+	if (a) {
+		a.setAttribute('href', url);
+		url = a.href;
+	}
+	let [,protocol,host,pathname,search] = uriRegex.exec(url);
 	if (
-		(protocol && protocol !== current.protocol) ||
-		(hostname && hostname !== current.hostname)
+		(current.protocol && protocol !== current.protocol) ||
+		(current.host && host !== current.host)
 	) {
 		return;
 	}
-	if (pathname.charAt(0) !== '/') {
-		let stack = (current.pathname||'/').split("/"),
-			segments = pathname.split("/");
-		stack.pop();
-		for (let i=0; i<segments.length; i++) {
-			if (segments[i] === "..")
-				stack.pop();
-			else if (segments[i] !== ".")
-				stack.push(segments[i]);
-		}
-		pathname = stack.join("/");
-	}
-	return `${pathname}${search || ''}`;
+	return `${pathname}${search}`;
 }
 
 function route(url, replace=false) {
