@@ -25,7 +25,7 @@ function setUrl(url, type='push') {
 }
 
 
-function getCurrentUrl() {
+function getCurrentUrl(search=true) {
 	let url;
 	if (customHistory && customHistory.location) {
 		url = customHistory.location;
@@ -36,8 +36,9 @@ function getCurrentUrl() {
 	else {
 		url = typeof location!=='undefined' ? location : EMPTY;
 	}
-	return `${url.pathname || ''}${url.search || ''}`;
+	return search?`${url.pathname || ''}${url.search || ''}` : `${url.pathname || ''}`;
 }
+
 
 
 function route(url, replace=false) {
@@ -143,6 +144,9 @@ function initEventListeners() {
 
 
 const Link = (props) => {
+	// if(getCurrentUrl(false)===props.href && props.activeClassName){
+	// 	props.class += " "+props.activeClassName
+	// }
 	return h('a', Object.assign({}, props, { onClick: handleLinkClick }));
 };
 
