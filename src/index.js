@@ -144,9 +144,9 @@ function initEventListeners() {
 
 
 const Link = (props) => {
-	// if(getCurrentUrl(false)===props.href && props.activeClassName){
-	// 	props.class += " "+props.activeClassName
-	// }
+	if(getCurrentUrl(false)===props.href && props.activeClassName){
+		props.class += " "+props.activeClassName
+	}
 	return h('a', Object.assign({}, props, { onClick: handleLinkClick }));
 };
 
