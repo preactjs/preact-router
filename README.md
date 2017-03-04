@@ -18,7 +18,7 @@ Connect your [Preact] components up to that address bar.
 
 ```js
 import Router from 'preact-router';
-import { h } from 'preact';
+import { h, render } from 'preact';
 /** @jsx h */
 
 const Main = () => (
@@ -64,6 +64,26 @@ Routers will append the parent Routers' URLs together to come up with the matchi
   </Router>
   <D path="/d" />                //will route '/d'
   <E default />                  //will route anything not listed above
+</Router>
+```
+
+### Lazy Loading
+
+Lazy loading (code splitting) with `preact-router` can be implemented easily using the [AsyncRoute](https://www.npmjs.com/package/preact-async-route) module:
+
+```js
+import AsyncRoute from 'preact-async-route';
+<Router>
+  <Home path="/" />
+  <AsyncRoute
+    path="/friends"
+    component={ () => import('./friends') }
+  />
+  <AsyncRoute
+    path="/friends/:id"
+    component={ () => import('./friend') }
+    loading={ () => <div>loading...</div> }
+  />
 </Router>
 ```
 
