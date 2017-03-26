@@ -39,7 +39,7 @@ describe('dom', () => {
 			expect(
 				mount(<Link href="/foo" bar="baz">hello</Link>)
 			).to.eql(
-				mount(<a href="/foo" bar="baz">hello</a>)
+				mount(<a href="/food" bar="baz">hello</a>)
 			);
 		});
 
