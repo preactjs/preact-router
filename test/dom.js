@@ -37,9 +37,9 @@ describe('dom', () => {
 	describe('<Link />', () => {
 		it('should render a normal link', () => {
 			expect(
-				mount(<Link href="/foo" bar="baz">hello</Link>)
+				mount(<Link href="/foo" bar="baz">hello</Link>).outerHTML
 			).to.eql(
-				mount(<a href="/foo" bar="baz">hello</a>)
+				mount(<a href="/foo" bar="baz">hello</a>).outerHTML
 			);
 		});
 
