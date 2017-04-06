@@ -250,9 +250,7 @@ class Router extends Component {
 	}
 }
 
-const Route = ({ component, ...props }) => {
-	return h(component, props);
-};
+const Route = props => h(props.component, props);
 
 Router.route = route;
 Router.Router = Router;
