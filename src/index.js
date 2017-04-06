@@ -7,12 +7,8 @@ const ROUTERS = [];
 
 const EMPTY = {};
 
-// hangs off all elements created by preact
-const ATTR_KEY = typeof Symbol!=='undefined' ? Symbol.for('preactattr') : '__preactattr_';
-
-
 function isPreactElement(node) {
-	return ATTR_KEY in node;
+	return node.__preactattr_!=null || typeof Symbol!=='undefined' && node[Symbol.for('preactattr')]!=null;
 }
 
 function setUrl(url, type='push') {
