@@ -1,4 +1,4 @@
-import { h, Component } from 'preact';
+import { cloneElement, h, Component } from 'preact';
 import { exec, pathRankSort } from './util';
 
 let customHistory = null;
@@ -207,23 +207,24 @@ class Router extends Component {
 	}
 
 	getMatchingChildren(children, url, invoke) {
-		return children.slice().sort(pathRankSort).filter( ({ attributes }) => {
-			let path = attributes.path,
-				matches = exec(url, path, attributes);
+		return children.slice().sort(pathRankSort).map( vnode => {
+			let path = vnode.attributes.path,
+				matches = exec(url, path, vnode.attributes);
 			if (matches) {
 				if (invoke!==false) {
-					attributes.url = url;
-					attributes.matches = matches;
+					let newProps = { url, matches };
 					// copy matches onto props
 					for (let i in matches) {
 						if (matches.hasOwnProperty(i)) {
-							attributes[i] = matches[i];
+							newProps[i] = matches[i];
 						}
 					}
+					return cloneElement(vnode, newProps);
 				}
-				return true;
+				return vnode;
 			}
-		});
+			return false;
+		}).filter(Boolean);
 	}
 
 	render({ children, onChange }, { url }) {
