@@ -1,6 +1,10 @@
 import { h } from 'preact';
+import assertCloneOf from '../test_helpers/assert-clone-of';
+
 const router = require('../');
 const { Router, Link, route } = router;
+
+chai.use(assertCloneOf);
 
 describe('dist', () => {
 	it('should export Router, Link and route', () => {
@@ -21,15 +25,15 @@ describe('dist', () => {
 
 			expect(
 				router.render({ children }, { url:'/foo' })
-			).to.equal(children[1]);
+			).to.be.cloneOf(children[1]);
 
 			expect(
 				router.render({ children }, { url:'/' })
-			).to.equal(children[0]);
+			).to.be.cloneOf(children[0]);
 
 			expect(
 				router.render({ children }, { url:'/foo/bar' })
-			).to.equal(children[2]);
+			).to.be.cloneOf(children[2]);
 		});
 	});
 });
