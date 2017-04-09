@@ -151,5 +151,23 @@ describe('dom', () => {
 				done();
 			}, 10);
 		});
+
+		it('should not carry over the previous value of a query parameter', () => {
+			class A {
+				render({ bar }){ return <p>bar is {bar}</p>; }
+			}
+			let routerRef;
+			mount(
+				<Router ref={r => routerRef = r}>
+					<A path="/foo" />
+				</Router>
+			);
+			route('/foo');
+			expect(routerRef.base.outerHTML).to.eql('<p>bar is </p>');
+			route('/foo?bar=5');
+			expect(routerRef.base.outerHTML).to.eql('<p>bar is 5</p>');
+			route('/foo');
+			expect(routerRef.base.outerHTML).to.eql('<p>bar is </p>');
+		});
 	});
 });
