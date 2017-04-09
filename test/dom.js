@@ -37,9 +37,9 @@ describe('dom', () => {
 	describe('<Link />', () => {
 		it('should render a normal link', () => {
 			expect(
-				mount(<Link href="/foo" bar="baz">hello</Link>)
+				mount(<Link href="/foo" bar="baz">hello</Link>).outerHTML
 			).to.eql(
-				mount(<a href="/foo" bar="baz">hello</a>)
+				mount(<a href="/foo" bar="baz">hello</a>).outerHTML
 			);
 		});
 
@@ -150,6 +150,24 @@ describe('dom', () => {
 				expect(scratch).to.have.deep.property('firstElementChild.className', 'b');
 				done();
 			}, 10);
+		});
+
+		it('should not carry over the previous value of a query parameter', () => {
+			class A {
+				render({ bar }){ return <p>bar is {bar}</p>; }
+			}
+			let routerRef;
+			mount(
+				<Router ref={r => routerRef = r}>
+					<A path="/foo" />
+				</Router>
+			);
+			route('/foo');
+			expect(routerRef.base.outerHTML).to.eql('<p>bar is </p>');
+			route('/foo?bar=5');
+			expect(routerRef.base.outerHTML).to.eql('<p>bar is 5</p>');
+			route('/foo');
+			expect(routerRef.base.outerHTML).to.eql('<p>bar is </p>');
 		});
 	});
 });

@@ -17,6 +17,7 @@
     }
   },
   "globals": {
+    "chai": true,
     "sinon": true,
     "expect": true
   },

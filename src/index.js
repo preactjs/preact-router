@@ -1,4 +1,4 @@
-import { h, Component } from 'preact';
+import { cloneElement, h, Component } from 'preact';
 import { exec, rankChild } from './util';
 
 let customHistory = null;
@@ -7,12 +7,8 @@ const ROUTERS = [];
 
 const EMPTY = {};
 
-// hangs off all elements created by preact
-const ATTR_KEY = typeof Symbol!=='undefined' ? Symbol.for('preactattr') : '__preactattr_';
-
-
 function isPreactElement(node) {
-	return ATTR_KEY in node;
+	return node.__preactattr_!=null || typeof Symbol!=='undefined' && node[Symbol.for('preactattr')]!=null;
 }
 
 function setUrl(url, type='push') {
@@ -122,11 +118,12 @@ function prevent(e) {
 
 function delegateLinkHandler(e) {
 	// ignore events the browser takes care of already:
-	if (e.ctrlKey || e.metaKey || e.altKey || e.shiftKey || e.button !== 0) return;
+	if (e.ctrlKey || e.metaKey || e.altKey || e.shiftKey || e.button!==0) return;
 
 	let t = e.target;
 	do {
 		if (String(t.nodeName).toUpperCase()==='A' && t.getAttribute('href') && isPreactElement(t)) {
+			if (t.hasAttribute('native')) return;
 			// if link is handled by the router, prevent browser defaults
 			if (routeFromLink(t)) {
 				return prevent(e);
@@ -229,18 +226,24 @@ class Router extends Component {
 				(a.rank > b.rank) ? -1 :
 				(a.index - b.index)
 			))
-			.map(({ child }) => child)
-			.filter(({ attributes }) => {
-				let path = attributes.path,
-					matches = exec(url, path, attributes);
-				if (matches) {
-					if (invoke!==false) {
-						// copy matches onto props
-						Object.assign(attributes, { url, matches }, matches);
-					}
-					return true;
-				}
-			});
+			.map( vnode => {
+        let path = vnode.attributes.path,
+          matches = exec(url, path, vnode.attributes);
+        if (matches) {
+          if (invoke!==false) {
+            let newProps = { url, matches };
+            // copy matches onto props
+            for (let i in matches) {
+              if (matches.hasOwnProperty(i)) {
+                newProps[i] = matches[i];
+              }
+            }
+            return cloneElement(vnode, newProps);
+          }
+          return vnode;
+        }
+        return false;
+      }).filter(Boolean);
 	}
 
 	render({ children, onChange }, { url }) {
@@ -267,9 +270,7 @@ class Router extends Component {
 	}
 }
 
-const Route = ({ component, ...props }) => {
-	return h(component, props);
-};
+const Route = props => h(props.component, props);
 
 Router.route = route;
 Router.Router = Router;

@@ -7,7 +7,9 @@ Connect your [Preact] components up to that address bar.
 
 `preact-router` provides a `<Router />` component that conditionally renders its children when the URL matches their `path`. It also automatically wires up `<a />` elements to the router.
 
-> **Note:** `preact-router` is simple and does not do orchestration for you. If you're looking for more complex solutions like nested routes and view composition, [react-router](https://github.com/ReactTraining/react-router) works with preact as long as you alias in [preact-compat](https://github.com/developit/preact-compat).
+> 💁 **Note:** This is not a preact-compatible version of React Router. `preact-router` is a simple URL wiring and does no orchestration for you.
+>
+> If you're looking for more complex solutions like nested routes and view composition, [react-router](https://github.com/ReactTraining/react-router) works great with preact as long as you alias in [preact-compat](https://github.com/developit/preact-compat).  React Router 4 even [works directly with Preact](http://codepen.io/developit/pen/BWxepY?editors=0010), no compatibility layer needed!
 
 #### [See a Real-world Example :arrow_right:](http://jsfiddle.net/developit/qc73v9va/)
 
