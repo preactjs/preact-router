@@ -2,10 +2,22 @@ import fs from 'fs';
 import babel from 'rollup-plugin-babel';
 import memory from 'rollup-plugin-memory';
 
-var babelRc = JSON.parse(fs.readFileSync('.babelrc','utf8')); // eslint-disable-line
+let pkg = JSON.parse(fs.readFileSync('./package.json'));
+
+let babelRc = JSON.parse(fs.readFileSync('.babelrc','utf8')); // eslint-disable-line
+
+let format = process.env.FORMAT;
 
 export default {
-	exports: 'default',
+	entry: 'src/index.js',
+	moduleName: pkg.amdName,
+	dest: format==='es' ? pkg.module : pkg.main,
+	sourceMap: true,
+	format,
+	external: ['preact'],
+	globals: {
+		preact: 'preact'
+	},
 	plugins: [
 		memory({
 			path: 'src/index',
