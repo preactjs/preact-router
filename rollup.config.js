@@ -19,7 +19,7 @@ export default {
 		preact: 'preact'
 	},
 	plugins: [
-		memory({
+		format!=='es' && memory({
 			path: 'src/index',
 			contents: "export { default } from './index';"
 		}),
@@ -31,5 +31,5 @@ export default {
 			plugins: babelRc.plugins,
 			exclude: 'node_modules/**'
 		})
-	]
+	].filter(Boolean)
 };
