@@ -1,5 +1,5 @@
 import { cloneElement, h, Component } from 'preact';
-import { exec, pathRankSort } from './util';
+import { exec, rankChild } from './util';
 
 let customHistory = null;
 
@@ -21,26 +21,47 @@ function setUrl(url, type='push') {
 }
 
 
+function getCurrentLocation() {
+	return (customHistory && customHistory.location) ||
+		(customHistory && customHistory.getCurrentLocation && customHistory.getCurrentLocation()) ||
+		(typeof location!=='undefined' ? location : EMPTY);
+}
+
 function getCurrentUrl() {
-	let url;
-	if (customHistory && customHistory.location) {
-		url = customHistory.location;
-	}
-	else if (customHistory && customHistory.getCurrentLocation) {
-		url = customHistory.getCurrentLocation();
-	}
-	else {
-		url = typeof location!=='undefined' ? location : EMPTY;
-	}
+	let url = getCurrentLocation();
 	return `${url.pathname || ''}${url.search || ''}`;
 }
 
+const a = typeof document!=='undefined' && document.createElement('a');
+
+// Based on https://tools.ietf.org/html/rfc3986#appendix-B
+const uriRegex = new RegExp('^([^:/?#]+:)?(?://([^/?#]*))?([^?#]*)((?:\\?[^#]*)?)((?:#.*)?)');
+
+/* Resolve URL relative to current location */
+function resolve(url) {
+	let current = getCurrentLocation();
+	if (a) {
+		a.setAttribute('href', url);
+		url = a.href;
+	}
+	let [,protocol,host,pathname,search] = uriRegex.exec(url);
+	if (
+		(current.protocol && protocol !== current.protocol) ||
+		(current.host && host !== current.host)
+	) {
+		return;
+	}
+	return `${pathname}${search}`;
+}
 
 function route(url, replace=false) {
 	if (typeof url!=='string' && url.url) {
 		replace = url.replace;
 		url = url.url;
 	}
+
+	url = resolve(url);
+	if (!url) return;
 
 	// only push URL into history if we can handle it
 	if (canRoute(url)) {
@@ -53,22 +74,13 @@ function route(url, replace=false) {
 
 /** Check if the given URL can be handled by any router instances. */
 function canRoute(url) {
-	for (let i=ROUTERS.length; i--; ) {
-		if (ROUTERS[i].canRoute(url)) return true;
-	}
-	return false;
+	return ROUTERS.some(router => router.canRoute(url));
 }
 
 
 /** Tell all router instances to handle the given URL.  */
 function routeTo(url) {
-	let didRoute = false;
-	for (let i=0; i<ROUTERS.length; i++) {
-		if (ROUTERS[i].routeTo(url)===true) {
-			didRoute = true;
-		}
-	}
-	return didRoute;
+	return ROUTERS.reduce((didRoute, router) => (router.routeTo(url) === true || didRoute), false);
 }
 
 
@@ -79,8 +91,8 @@ function routeFromLink(node) {
 	let href = node.getAttribute('href'),
 		target = node.getAttribute('target');
 
-	// ignore links with targets and non-path URLs
-	if (!href || !href.match(/^\//g) || (target && !target.match(/^_?self$/i))) return;
+	// ignore links with targets
+	if (!href || (target && !target.match(/^_?self$/i))) return;
 
 	// attempt to route, if no match simply cede control to browser
 	return route(href);
@@ -158,13 +170,12 @@ class Router extends Component {
 	}
 
 	shouldComponentUpdate(props) {
-		if (props.static!==true) return true;
-		return props.url!==this.props.url || props.onChange!==this.props.onChange;
+		return props.static!==true || props.url!==this.props.url || props.onChange!==this.props.onChange;
 	}
 
 	/** Check if the given URL can be matched against any children */
 	canRoute(url) {
-		return this.getMatchingChildren(this.props.children, url, false).length > 0;
+		return this.props.children.some(({ attributes=EMPTY }) => !!exec(url, attributes.path, attributes));
 	}
 
 	/** Re-render children with a new URL to match against. */
@@ -207,24 +218,32 @@ class Router extends Component {
 	}
 
 	getMatchingChildren(children, url, invoke) {
-		return children.slice().sort(pathRankSort).map( vnode => {
-			let path = vnode.attributes.path,
-				matches = exec(url, path, vnode.attributes);
-			if (matches) {
-				if (invoke!==false) {
-					let newProps = { url, matches };
-					// copy matches onto props
-					for (let i in matches) {
-						if (matches.hasOwnProperty(i)) {
-							newProps[i] = matches[i];
-						}
-					}
-					return cloneElement(vnode, newProps);
-				}
-				return vnode;
-			}
-			return false;
-		}).filter(Boolean);
+		return children
+			.filter(({ attributes }) => !!attributes)
+			.map((child, index) => ({ child, index, rank: rankChild(child) }))
+			.sort((a, b) => (
+				(a.rank < b.rank) ? 1 :
+				(a.rank > b.rank) ? -1 :
+				(a.index - b.index)
+			))
+			.map( vnode => {
+        let path = vnode.attributes.path,
+          matches = exec(url, path, vnode.attributes);
+        if (matches) {
+          if (invoke!==false) {
+            let newProps = { url, matches };
+            // copy matches onto props
+            for (let i in matches) {
+              if (matches.hasOwnProperty(i)) {
+                newProps[i] = matches[i];
+              }
+            }
+            return cloneElement(vnode, newProps);
+          }
+          return vnode;
+        }
+        return false;
+      }).filter(Boolean);
 	}
 
 	render({ children, onChange }, { url }) {
