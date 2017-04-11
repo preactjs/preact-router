@@ -26,6 +26,7 @@
     "dist"
   ],
   "x-typings": "./dist/index.d.ts",
+  "typings": "./dist/index.d.ts",
   "keywords": [
     "preact",
     "router"

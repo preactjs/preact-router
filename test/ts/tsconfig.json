@@ -1,0 +1,25 @@
+{
+	"compilerOptions": {
+		"module": "commonjs",
+		"lib": [
+			"es6",
+			"dom"
+		],
+		"noImplicitAny": true,
+		"noImplicitThis": true,
+		"strictNullChecks": false,
+		"typeRoots": [
+			"../../"
+		],
+		"types": [],
+		"noEmit": true,
+		"forceConsistentCasingInFileNames": true,
+		"jsx": "react",
+		"jsxFactory": "h"
+	},
+	"files": [
+        "demo.tsx",
+        "../../src/index.d.ts",
+        "../../node_modules/preact"
+	]
+}
