@@ -1,14 +1,14 @@
 export function route(url: string, replace?: boolean): boolean;
 
 export interface RouterProps extends JSX.HTMLAttributes {
-    path: string;
+    path?: string;
 }
 
 export class Router extends preact.Component<{}, {}> {
     canRoute(url: string): boolean;
     getMatchingChildren(children: preact.VNode[], url: string, invoke: boolean): preact.VNode[];
     routeTo(url: string): boolean;
-    render(props: RouterProps & preact.ComponentProps, {}): preact.VNode;
+    render(props: RouterProps & preact.ComponentProps<any>, {}): preact.VNode;
 }
 
 export interface RouteArgs<PropsType, StateType> {
@@ -23,7 +23,7 @@ export function Link(props: any): preact.VNode;
 
 export namespace Router {
     var route: ((url: string, replace?: boolean) => boolean);
-    var Route: (({component, url, matches}) => preact.VNode);
+    var Route: (args: RouteArgs<any, any>) => preact.VNode;
     var Link: ((props: any) => preact.VNode);
 }
 
