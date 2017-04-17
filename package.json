@@ -9,8 +9,9 @@
   "scripts": {
     "clean": "rimraf dist/",
     "copy-typescript-definition": "copyfiles -f src/index.d.ts dist",
-    "build": "npm-run-all --silent clean transpile copy-typescript-definition size",
+    "build": "npm-run-all --silent clean transpile transpile:match copy-typescript-definition size",
     "transpile": "rollup -c --environment FORMAT:umd && rollup -c --environment FORMAT:es",
+    "transpile:match": "babel src/match.js -o match.js -f umd",
     "size": "size=$(gzip-size $npm_package_main) && echo \"gzip size: $size / $(pretty-bytes $size)\"",
     "test": "npm-run-all lint build test:karma",
     "lint": "eslint {src,test,test_helpers}",

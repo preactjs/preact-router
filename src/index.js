@@ -5,6 +5,8 @@ let customHistory = null;
 
 const ROUTERS = [];
 
+const subscribers = [];
+
 const EMPTY = {};
 
 function isPreactElement(node) {
@@ -68,6 +70,9 @@ function routeTo(url) {
 		if (ROUTERS[i].routeTo(url)===true) {
 			didRoute = true;
 		}
+	}
+	for (let i=subscribers.length; i--; ) {
+		subscribers[i](url);
 	}
 	return didRoute;
 }
@@ -254,10 +259,12 @@ const Link = (props) => (
 
 const Route = props => h(props.component, props);
 
+Router.subscribers = subscribers;
+Router.getCurrentUrl = getCurrentUrl;
 Router.route = route;
 Router.Router = Router;
 Router.Route = Route;
 Router.Link = Link;
 
-export { route, Router, Route, Link };
+export { subscribers, getCurrentUrl, route, Router, Route, Link };
 export default Router;
