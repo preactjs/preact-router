@@ -21,7 +21,7 @@ function setUrl(url, type='push') {
 }
 
 
-function getCurrentUrl(search=true) {
+function getCurrentUrl() {
 	let url;
 	if (customHistory && customHistory.location) {
 		url = customHistory.location;
@@ -32,7 +32,7 @@ function getCurrentUrl(search=true) {
 	else {
 		url = typeof location!=='undefined' ? location : EMPTY;
 	}
-	return search?`${url.pathname || ''}${url.search || ''}` : `${url.pathname || ''}`;
+	return `${url.pathname || ''}${url.search || ''}`;
 }
 
 
@@ -137,14 +137,6 @@ function initEventListeners() {
 	}
 	eventListenersInitialized = true;
 }
-
-
-const Link = (props) => {
-	if(getCurrentUrl(false)===props.href && props.activeClassName){
-		props.class += " "+props.activeClassName
-	}
-	return h('a', Object.assign({}, props, { onClick: handleLinkClick }));
-};
 
 
 class Router extends Component {
@@ -254,6 +246,10 @@ class Router extends Component {
 		return current;
 	}
 }
+
+const Link = (props) => (
+	h('a', Object.assign({}, props, { onClick: handleLinkClick }))
+);
 
 const Route = props => h(props.component, props);
 
