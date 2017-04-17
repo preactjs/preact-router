@@ -1,20 +1,32 @@
 export function route(url: string, replace?: boolean): boolean;
 
-export interface RouterProps extends JSX.HTMLAttributes {
-    path: string;
+export interface CustomHistory {
+    getCurrentLocation?: () => string;
+    location?: string;
+    listen(callback: (url: string) => void): () => void;
+    push?: (url: string) => void;
+    replace?: (url: string) => void;
 }
 
-export class Router extends preact.Component<{}, {}> {
+export interface RouterProps extends JSX.HTMLAttributes, preact.ComponentProps {
+    history?: CustomHistory;
+    path?: string;
+    static?: boolean;
+    url?: string;
+}
+
+export class Router extends preact.Component<RouterProps, {}> {
     canRoute(url: string): boolean;
     getMatchingChildren(children: preact.VNode[], url: string, invoke: boolean): preact.VNode[];
     routeTo(url: string): boolean;
-    render(props: RouterProps & preact.ComponentProps, {}): preact.VNode;
+    render(props: RouterProps, {}): preact.VNode;
 }
 
 export interface RouteArgs<PropsType, StateType> {
     component: preact.Component<PropsType, StateType>;
-    matches: boolean;
-    url: string;
+    path: string;
+    matches?: boolean;
+    url?: string;
 }
 
 export function Route<PropsType, StateType>({component, url, matches}: RouteArgs<PropsType, StateType>): preact.VNode;
