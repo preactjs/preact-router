@@ -73,6 +73,65 @@ import AsyncRoute from 'preact-async-route';
 </Router>
 ```
 
+### Active Matching & Links
+
+`preact-router` includes an add-on module called `match` that lets you wire your components up to Router changes.
+
+Here's a demo of `<Match>`, which invokes the function you pass it (as its only child) in response to any routing:
+
+```js
+import Router from 'preact-router';
+import Match from 'preact-router/match';
+
+render(
+  <div>
+    <Match path="/">
+      { ({ matches, path, url }) => (
+        <pre>{url}</pre>
+      ) }
+    </Match>
+    <Router>
+      <div default>demo fallback route</div>
+    </Router>
+  </div>
+)
+
+// another example: render only if at a given URL:
+
+render(
+  <div>
+    <Match path="/">
+      { ({ matches }) => matches && (
+        <h1>You are Home!</h1>
+      ) }
+    </Match>
+    <Router />
+  </div>
+)
+```
+
+`<Link>` is just a normal link, but it automatically adds and removes an "active" classname to itself based on whether it matches the current URL.
+
+```js
+import { Router } from 'preact-router';
+import { Link } from 'preact-router/match';
+
+render(
+  <div>
+    <nav>
+      <Link activeClassName="active" href="/">Home</Link>
+      <Link activeClassName="active" href="/foo">Foo</Link>
+      <Link activeClassName="active" href="/bar">Bar</Link>
+    </nav>
+    <Router>
+      <div default>
+        this is a demo route that always matches
+      </div>
+    </Router>
+  </div>
+)
+```
+
 ---
 
 
