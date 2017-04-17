@@ -5,15 +5,13 @@
   "description": "Connect your components up to that address bar.",
   "main": "dist/preact-router.js",
   "jsnext:main": "dist/preact-router.es.js",
-  "minified:main": "dist/preact-router.min.js",
   "module": "dist/preact-router.es.js",
   "scripts": {
     "clean": "rimraf dist/",
     "copy-typescript-definition": "copyfiles -f src/index.d.ts dist",
-    "build": "npm-run-all --silent clean transpile copy-typescript-definition minify size",
+    "build": "npm-run-all --silent clean transpile copy-typescript-definition size",
     "transpile": "rollup -c --environment FORMAT:umd && rollup -c --environment FORMAT:es",
-    "minify": "uglifyjs $npm_package_main -cm -o $npm_package_minified_main -p relative --in-source-map ${npm_package_main}.map --source-map ${npm_package_minified_main}.map",
-    "size": "size=$(gzip-size $npm_package_minified_main) && echo \"gzip size: $size / $(pretty-bytes $size)\"",
+    "size": "size=$(gzip-size $npm_package_main) && echo \"gzip size: $size / $(pretty-bytes $size)\"",
     "test": "npm-run-all lint build test:karma",
     "lint": "eslint {src,test,test_helpers}",
     "test:karma": "karma start --single-run",
@@ -76,11 +74,13 @@
     "pretty-bytes-cli": "^1.0.0",
     "rimraf": "^2.5.1",
     "rollup": "^0.41.6",
-    "rollup-plugin-babel": "^2.4.0",
+    "rollup-plugin-buble": "^0.15.0",
+    "rollup-plugin-es3": "^1.0.3",
     "rollup-plugin-memory": "^2.0.0",
+    "rollup-plugin-post-replace": "^1.0.0",
+    "rollup-plugin-uglify": "^1.0.1",
     "sinon": "^1.17.4",
     "sinon-chai": "^2.8.0",
-    "uglify-js": "^2.6.1",
     "webpack": "^1.13.1"
   }
 }

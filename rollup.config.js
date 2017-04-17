@@ -1,10 +1,11 @@
 import fs from 'fs';
-import babel from 'rollup-plugin-babel';
+import buble from 'rollup-plugin-buble';
 import memory from 'rollup-plugin-memory';
+import uglify from 'rollup-plugin-uglify';
+import es3 from 'rollup-plugin-es3';
+import replace from 'rollup-plugin-post-replace';
 
 let pkg = JSON.parse(fs.readFileSync('./package.json'));
-
-let babelRc = JSON.parse(fs.readFileSync('.babelrc','utf8')); // eslint-disable-line
 
 let format = process.env.FORMAT;
 
@@ -13,6 +14,7 @@ export default {
 	moduleName: pkg.amdName,
 	dest: format==='es' ? pkg.module : pkg.main,
 	sourceMap: true,
+	useStrict: false,
 	format,
 	external: ['preact'],
 	globals: {
@@ -23,13 +25,32 @@ export default {
 			path: 'src/index',
 			contents: "export { default } from './index';"
 		}),
-		babel({
-			babelrc: false,
-			presets: [
-				['es2015', { loose:true, modules:false }]
-			].concat(babelRc.presets.slice(1)),
-			plugins: babelRc.plugins,
-			exclude: 'node_modules/**'
+
+		buble({
+			jsx: 'h'
+		}),
+
+		// strip Object.freeze()
+		es3(),
+
+		// remove Babel helpers
+		replace({
+			'throw ': 'return; throw '
+		}),
+
+		format!=='es' && uglify({
+			output: { comments: false },
+			mangle: {
+				topLevel: true
+			},
+			compress: {
+				unsafe: true,
+				dead_code: true,
+				pure_getters: true,
+				pure_funcs: [
+					'_classCallCheck'
+				]
+			}
 		})
 	].filter(Boolean)
 };
