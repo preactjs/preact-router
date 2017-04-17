@@ -1,5 +1,5 @@
 import { h, Component } from 'preact';
-import { subscribers, getCurrentUrl } from 'preact-router';
+import { subscribers, getCurrentUrl, Link as StaticLink } from 'preact-router';
 
 export class Match extends Component {
 	update = url => {
@@ -27,7 +27,7 @@ export class Match extends Component {
 export const Link = ({ activeClassName, path, ...props }) => (
 	<Match path={path || props.href}>
 		{ ({ matches }) => (
-			<a {...props} class={[props.class || props.className, matches && activeClassName].filter(Boolean).join(' ')} />
+			<StaticLink {...props} class={[props.class || props.className, matches && activeClassName].filter(Boolean).join(' ')} />
 		) }
 	</Match>
 );
