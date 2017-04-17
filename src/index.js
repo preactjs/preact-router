@@ -204,8 +204,9 @@ class Router extends Component {
 
 	getMatchingChildren(children, url, invoke) {
 		return children.slice().sort(pathRankSort).map( vnode => {
-			let path = vnode.attributes.path,
-				matches = exec(url, path, vnode.attributes);
+			let attrs = vnode.attributes || {},
+				path = attrs.path,
+				matches = exec(url, path, attrs);
 			if (matches) {
 				if (invoke!==false) {
 					let newProps = { url, matches };
