@@ -1,5 +1,5 @@
 import { cloneElement, h, Component } from 'preact';
-import { exec, pathRankSort } from './util';
+import { exec, pathRankSort, assign } from './util';
 
 let customHistory = null;
 
@@ -94,9 +94,10 @@ function routeFromLink(node) {
 
 
 function handleLinkClick(e) {
-	if (e.button !== 0) return;
-	routeFromLink(e.currentTarget || e.target || this);
-	return prevent(e);
+	if (e.button==0) {
+		routeFromLink(e.currentTarget || e.target || this);
+		return prevent(e);
+	}
 }
 
 
@@ -152,7 +153,7 @@ class Router extends Component {
 		}
 
 		this.state = {
-			url: this.props.url || getCurrentUrl()
+			url: props.url || getCurrentUrl()
 		};
 
 		initEventListeners();
@@ -215,12 +216,7 @@ class Router extends Component {
 			if (matches) {
 				if (invoke!==false) {
 					let newProps = { url, matches };
-					// copy matches onto props
-					for (let i in matches) {
-						if (matches.hasOwnProperty(i)) {
-							newProps[i] = matches[i];
-						}
-					}
+					assign(newProps, matches);
 					return cloneElement(vnode, newProps);
 				}
 				return vnode;
@@ -254,7 +250,7 @@ class Router extends Component {
 }
 
 const Link = (props) => (
-	h('a', Object.assign({}, props, { onClick: handleLinkClick }))
+	h('a', assign({ onClick: handleLinkClick }, props))
 );
 
 const Route = props => h(props.component, props);
