@@ -1,4 +1,5 @@
-import { Router, Link, Match, route } from 'src';
+import { Router, Link, route } from 'src';
+import { Match, Link as ActiveLink } from 'src/match';
 import { h, render } from 'preact';
 
 const Empty = () => null;
@@ -37,9 +38,9 @@ describe('dom', () => {
 	describe('<Link />', () => {
 		it('should render a normal link', () => {
 			expect(
-				mount(<Link href="/foo" bar="baz">hello</Link>)
+				mount(<Link href="/foo" bar="baz">hello</Link>).outerHTML
 			).to.eql(
-				mount(<a href="/foo" bar="baz">hello</a>)
+				mount(<a href="/foo" bar="baz">hello</a>).outerHTML
 			);
 		});
 
@@ -339,6 +340,104 @@ describe('dom', () => {
 				expect(scratch).to.have.deep.property('firstElementChild.className', 'b');
 				done();
 			}, 10);
+		});
+
+		it('should not carry over the previous value of a query parameter', () => {
+			class A {
+				render({ bar }){ return <p>bar is {bar}</p>; }
+			}
+			let routerRef;
+			mount(
+				<Router ref={r => routerRef = r}>
+					<A path="/foo" />
+				</Router>
+			);
+			route('/foo');
+			expect(routerRef.base.outerHTML).to.eql('<p>bar is </p>');
+			route('/foo?bar=5');
+			expect(routerRef.base.outerHTML).to.eql('<p>bar is 5</p>');
+			route('/foo');
+			expect(routerRef.base.outerHTML).to.eql('<p>bar is </p>');
+		});
+	});
+	
+	describe('preact-router/match', () => {
+		describe('<Match>', () => {
+			it('should invoke child function with match status when routing', done => {
+				let spy1 = sinon.spy(),
+					spy2 = sinon.spy();
+				mount(
+					<div>
+						<Router />
+						<Match path="/foo">{spy1}</Match>
+						<Match path="/bar">{spy2}</Match>
+					</div>
+				);
+				
+				expect(spy1, 'spy1 /foo').to.have.been.calledOnce.and.calledWithMatch({ matches: false, path:'/', url:'/' });
+				expect(spy2, 'spy2 /foo').to.have.been.calledOnce.and.calledWithMatch({ matches: false, path:'/', url:'/' });
+				
+				spy1.reset();
+				spy2.reset();
+				
+				route('/foo');
+				
+				setTimeout( () => {
+					expect(spy1, 'spy1 /foo').to.have.been.calledOnce.and.calledWithMatch({ matches: true, path:'/foo', url:'/foo' });
+					expect(spy2, 'spy2 /foo').to.have.been.calledOnce.and.calledWithMatch({ matches: false, path:'/foo', url:'/foo' });
+					spy1.reset();
+					spy2.reset();
+					
+					route('/foo?bar=5');
+
+					setTimeout( () => {
+						expect(spy1, 'spy1 /foo?bar=5').to.have.been.calledOnce.and.calledWithMatch({ matches: true, path:'/foo', url:'/foo?bar=5' });
+						expect(spy2, 'spy2 /foo?bar=5').to.have.been.calledOnce.and.calledWithMatch({ matches: false, path:'/foo', url:'/foo?bar=5' });
+						spy1.reset();
+						spy2.reset();
+
+						route('/bar');
+						
+						setTimeout( () => {
+							expect(spy1, 'spy1 /bar').to.have.been.calledOnce.and.calledWithMatch({ matches: false, path:'/bar', url:'/bar' });
+							expect(spy2, 'spy2 /bar').to.have.been.calledOnce.and.calledWithMatch({ matches: true, path:'/bar', url:'/bar' });
+							
+							done();
+						}, 20);
+					}, 20);
+				}, 20);
+			});
+		});
+
+		describe('<Link>', () => {
+			it('should render with active class when active', done => {
+				mount(
+					<div>
+						<Router />
+						<ActiveLink activeClassName="active" path="/foo">foo</ActiveLink>
+						<ActiveLink activeClassName="active" class="bar" path="/bar">bar</ActiveLink>
+					</div>
+				);
+				route('/foo');
+				
+				setTimeout( () => {
+					expect(scratch.innerHTML).to.eql('<div><a class="active">foo</a><a class="bar">bar</a></div>');
+
+					route('/foo?bar=5');
+
+					setTimeout( () => {
+						expect(scratch.innerHTML).to.eql('<div><a class="active">foo</a><a class="bar">bar</a></div>');
+
+						route('/bar');
+
+						setTimeout( () => {
+							expect(scratch.innerHTML).to.eql('<div><a class="">foo</a><a class="bar active">bar</a></div>');
+							
+							done();
+						});
+					});
+				});
+			});
 		});
 	});
 });

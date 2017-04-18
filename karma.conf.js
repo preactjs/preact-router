@@ -20,6 +20,7 @@ module.exports = function(config) {
 			},
 			resolve: {
 				alias: {
+					'preact-router': __dirname+'/src/index.js',
 					src: __dirname+'/src'
 				}
 			}

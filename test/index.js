@@ -1,5 +1,8 @@
 import { Router, Link, route } from 'src';
 import { h } from 'preact';
+import assertCloneOf from '../test_helpers/assert-clone-of';
+
+chai.use(assertCloneOf);
 
 describe('preact-router', () => {
 	it('should export Router, Link and route', () => {
@@ -19,15 +22,15 @@ describe('preact-router', () => {
 
 			expect(
 				router.render({ children }, { url:'/foo' })
-			).to.equal(children[1]);
+			).to.be.cloneOf(children[1]);
 
 			expect(
 				router.render({ children }, { url:'/' })
-			).to.equal(children[0]);
+			).to.be.cloneOf(children[0]);
 
 			expect(
 				router.render({ children }, { url:'/foo/bar' })
-			).to.equal(children[2]);
+			).to.be.cloneOf(children[2]);
 		});
 
 		it('should support nested parameterized routes', () => {
@@ -40,16 +43,15 @@ describe('preact-router', () => {
 
 			expect(
 				router.render({ children }, { url:'/foo' })
-			).to.equal(children[0]);
+			).to.be.cloneOf(children[0]);
 
 			expect(
 				router.render({ children }, { url:'/foo/bar' })
-			).to.equal(children[1]).and.have.deep.property('attributes.bar', 'bar');
+			).to.be.cloneOf(children[1], { matches: { bar:'bar' }, url:'/foo/bar' });
 
 			expect(
 				router.render({ children }, { url:'/foo/bar/baz' })
-			).equal(children[2]).and.have.deep.property('attributes')
-				.which.contains.all.keys({ bar:'bar', baz:'baz' });
+			).be.cloneOf(children[2], { matches: { bar:'bar', baz:'baz' }, url:'/foo/bar/baz' });
 		});
 
 		it('should support default routes', () => {
@@ -62,15 +64,15 @@ describe('preact-router', () => {
 
 			expect(
 				router.render({ children }, { url:'/foo' })
-			).to.equal(children[2]);
+			).to.be.cloneOf(children[2]);
 
 			expect(
 				router.render({ children }, { url:'/' })
-			).to.equal(children[1]);
+			).to.be.cloneOf(children[1]);
 
 			expect(
 				router.render({ children }, { url:'/asdf/asdf' })
-			).to.equal(children[0]);
+			).to.be.cloneOf(children[0], { matches: {}, url:'/asdf/asdf' });
 		});
 
 		it('should support initial route prop', () => {
@@ -83,7 +85,7 @@ describe('preact-router', () => {
 
 			expect(
 				router.render({ children }, router.state)
-			).to.equal(children[2]);
+			).to.be.cloneOf(children[2]);
 
 			expect(new Router({})).to.have.deep.property('state.url', location.pathname + (location.search || ''));
 		});

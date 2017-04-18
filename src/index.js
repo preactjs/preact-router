@@ -1,20 +1,16 @@
-import { h, Component, cloneElement } from 'preact';
-import { exec, pathRankSort, segmentize } from './util';
+import { cloneElement, h, Component } from 'preact';
+import { exec, pathRankSort, assign, segmentize, CONTEXT_KEY } from './util';
 
 let customHistory = null;
 
 const ROUTERS = [];
 
+const subscribers = [];
+
 const EMPTY = {};
 
-// hangs off all elements created by preact
-const ATTR_KEY = typeof Symbol!=='undefined' ? Symbol.for('preactattr') : '__preactattr_';
-
-//a key for the context to carry baseUrl to nested Router instances
-const CONTEXT_KEY = 'preact-router-base';
-
 function isPreactElement(node) {
-	return ATTR_KEY in node;
+	return node.__preactattr_!=null || typeof Symbol!=='undefined' && node[Symbol.for('preactattr')]!=null;
 }
 
 function setUrl(url, type='push') {
@@ -40,6 +36,7 @@ function getCurrentUrl() {
 	}
 	return `${url.pathname || ''}${url.search || ''}`;
 }
+
 
 
 function route(url, replace=false) {
@@ -74,6 +71,9 @@ function routeTo(url) {
 			didRoute = true;
 		}
 	}
+	for (let i=subscribers.length; i--; ) {
+		subscribers[i](url);
+	}
 	return didRoute;
 }
 
@@ -94,9 +94,10 @@ function routeFromLink(node) {
 
 
 function handleLinkClick(e) {
-	if (e.button !== 0) return;
-	routeFromLink(e.currentTarget || e.target || this);
-	return prevent(e);
+	if (e.button==0) {
+		routeFromLink(e.currentTarget || e.target || this);
+		return prevent(e);
+	}
 }
 
 
@@ -112,12 +113,12 @@ function prevent(e) {
 
 function delegateLinkHandler(e) {
 	// ignore events the browser takes care of already:
-	if (e.ctrlKey || e.metaKey || e.altKey || e.shiftKey) return;
+	if (e.ctrlKey || e.metaKey || e.altKey || e.shiftKey || e.button!==0) return;
 
 	let t = e.target;
 	do {
 		if (String(t.nodeName).toUpperCase()==='A' && t.getAttribute('href') && isPreactElement(t)) {
-			if (e.button !== 0) return;
+			if (t.hasAttribute('native')) return;
 			// if link is handled by the router, prevent browser defaults
 			if (routeFromLink(t)) {
 				return prevent(e);
@@ -144,11 +145,6 @@ function initEventListeners() {
 }
 
 
-const Link = (props) => {
-	return h('a', Object.assign({}, props, { onClick: handleLinkClick }));
-};
-
-
 class Router extends Component {
 	constructor(props, context) {
 		super(props);
@@ -169,7 +165,7 @@ class Router extends Component {
 		}
 
 		this.state = {
-			url: this.props.url || getCurrentUrl()
+			url: props.url || getCurrentUrl()
 		};
 
 		initEventListeners();
@@ -230,23 +226,20 @@ class Router extends Component {
 	}
 
 	getMatchingChildren(children, url, invoke) {
-		return children.slice().sort(pathRankSort).filter( ({ attributes }) => {
-			let path = this.baseUrl + attributes.path,
-				matches = exec(url, path, attributes);
+		return children.slice().sort(pathRankSort).map( vnode => {
+			let attrs = vnode.attributes || {},
+				path = this.baseUrl + attrs.path,
+				matches = exec(url, path, attrs);
 			if (matches) {
 				if (invoke!==false) {
-					attributes.url = url;
-					attributes.matches = matches;
-					// copy matches onto props
-					for (let i in matches) {
-						if (matches.hasOwnProperty(i)) {
-							attributes[i] = matches[i];
-						}
-					}
+					let newProps = { url, matches };
+					assign(newProps, matches);
+					return cloneElement(vnode, newProps);
 				}
-				return true;
+				return vnode;
 			}
-		});
+			return false;
+		}).filter(Boolean);
 	}
 
 	render({ children, onChange }, { url }) {
@@ -273,44 +266,18 @@ class Router extends Component {
 	}
 }
 
-const Route = ({ component, ...props }) => {
-	return h(component, props);
-};
+const Link = (props) => (
+	h('a', assign({ onClick: handleLinkClick }, props))
+);
 
-class Match extends Component {
+const Route = props => h(props.component, props);
 
-	constructor(props, context) {
-		super(props);
-		this.baseUrl = this.props.base || '';
-		if (props.path) {
-			let segments = segmentize(props.path);
-			segments.forEach(segment => {
-				if (segment.indexOf(':') == -1) {
-					this.baseUrl = this.baseUrl + '/' + segment;
-				}
-			});
-		}
-		if (context && context[CONTEXT_KEY]) {
-			this.baseUrl = context[CONTEXT_KEY] + this.baseUrl;
-		}
-	}
-
-	getChildContext() {
-		let result = {[CONTEXT_KEY]: this.baseUrl};
-		return result;
-	}
-
-	render({ children, url, matches }) {
-		return cloneElement(children[0], {url, matches});
-	}
-
-}
-
+Router.subscribers = subscribers;
+Router.getCurrentUrl = getCurrentUrl;
 Router.route = route;
 Router.Router = Router;
 Router.Route = Route;
 Router.Link = Link;
-Router.Match = Match;
 
-export { route, Router, Route, Link, Match };
+export { subscribers, getCurrentUrl, route, Router, Route, Link };
 export default Router;

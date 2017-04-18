@@ -1,5 +1,15 @@
 
+//a key for the context to carry baseUrl to nested Router instances
+export const CONTEXT_KEY = 'preact-router-base';
 const EMPTY = {};
+
+export function assign(obj, props) {
+	// eslint-disable-next-line guard-for-in
+	for (let i in props) {
+		obj[i] = props[i];
+	}
+	return obj;
+}
 
 export function exec(url, route, opts=EMPTY) {
 	let reg = /(?:\?([^#]*))?(#.*)?$/,

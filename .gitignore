@@ -1,4 +1,5 @@
 /dist
 /node_modules
 /npm-debug.log
+/match.js
 .DS_Store
