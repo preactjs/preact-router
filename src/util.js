@@ -1,6 +1,4 @@
 
-//a key for the context to carry baseUrl to nested Router instances
-export const CONTEXT_KEY = 'preact-router-base';
 const EMPTY = {};
 
 export function assign(obj, props) {

@@ -234,7 +234,7 @@ describe('dom', () => {
 			expect(Y.prototype.componentWillUnmount).not.to.have.been.called;
 		});
 
-		it('should support nested routers with Match', () => {
+		it('should support nested routers and Match(s)', () => {
 			class X {
 				componentWillMount() {}
 				componentWillUnmount() {}
@@ -253,24 +253,22 @@ describe('dom', () => {
 				<Router base='/ccc'>
 					<X path="/jjj" />
 					<Match path="/xxx/:bar*">
-						<Router>
 							<Y path="/kkk"/>
-						</Router>
 					</Match>
 				</Router>
 			);
-			expect(X.prototype.componentWillMount).not.to.have.been.called;
-			expect(Y.prototype.componentWillMount).not.to.have.been.called;
+			expect(X.prototype.componentWillMount, 'X1').not.to.have.been.called;
+			expect(Y.prototype.componentWillMount, 'Y1').not.to.have.been.called;
 			route('/ccc/jjj');
-			expect(X.prototype.componentWillMount).to.have.been.calledOnce;
-			expect(X.prototype.componentWillUnmount).not.to.have.been.called;
-			expect(Y.prototype.componentWillMount).not.to.have.been.called;
-			expect(Y.prototype.componentWillUnmount).not.to.have.been.called;
+			expect(X.prototype.componentWillMount, 'X2').to.have.been.calledOnce;
+			expect(X.prototype.componentWillUnmount, 'X3').not.to.have.been.called;
+			expect(Y.prototype.componentWillMount, 'Y2').not.to.have.been.called;
+			expect(Y.prototype.componentWillUnmount, 'Y3').not.to.have.been.called;
 			route('/ccc/xxx/kkk');
-			expect(X.prototype.componentWillMount).to.have.been.calledOnce;
-			expect(X.prototype.componentWillUnmount).to.have.been.calledOnce;
-			expect(Y.prototype.componentWillMount).to.have.been.calledOnce;
-			expect(Y.prototype.componentWillUnmount).not.to.have.been.called;
+			expect(X.prototype.componentWillMount, 'X4').to.have.been.calledOnce;
+			expect(X.prototype.componentWillUnmount, 'X5').to.have.been.calledOnce;
+			expect(Y.prototype.componentWillMount, 'Y4').to.have.been.calledOnce;
+			expect(Y.prototype.componentWillUnmount, 'Y5').not.to.have.been.called;
 		});
 
 		it('should support nested router reset via base attr', () => {

@@ -1,5 +1,5 @@
 import { cloneElement, h, Component } from 'preact';
-import { exec, pathRankSort, assign, segmentize, CONTEXT_KEY } from './util';
+import { exec, pathRankSort, assign, segmentize } from './util';
 
 let customHistory = null;
 
@@ -160,10 +160,9 @@ class Router extends Component {
 		if (props.history) {
 			customHistory = props.history;
 		}
-		if (context && context[CONTEXT_KEY] && !this.props.base) {
-			this.baseUrl = context[CONTEXT_KEY] + this.baseUrl;
+		if (context && context['preact-router-base'] && !this.props.base) {
+			this.baseUrl = context['preact-router-base'] + this.baseUrl;
 		}
-
 		this.state = {
 			url: props.url || getCurrentUrl()
 		};
@@ -172,7 +171,7 @@ class Router extends Component {
 	}
 
 	getChildContext() {
-		let result = {[CONTEXT_KEY]: this.baseUrl};
+		let result = {['preact-router-base']: this.baseUrl};
 		return result;
 	}
 
