@@ -22,7 +22,8 @@
   },
   "files": [
     "src",
-    "dist"
+    "dist",
+    "match.js"
   ],
   "x-typings": "./dist/index.d.ts",
   "keywords": [
