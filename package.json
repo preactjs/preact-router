@@ -60,7 +60,7 @@
     "diff": "^3.0.0",
     "eslint": "^3.0.0",
     "eslint-plugin-react": "^6.0.0",
-    "gzip-size-cli": "^1.0.0",
+    "gzip-size-cli": "^2.0.0",
     "karma": "^1.0.0",
     "karma-chai-sinon": "^0.1.5",
     "karma-mocha": "^1.0.1",
