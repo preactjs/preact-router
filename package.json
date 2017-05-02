@@ -81,7 +81,7 @@
     "rollup-plugin-memory": "^2.0.0",
     "rollup-plugin-post-replace": "^1.0.0",
     "rollup-plugin-uglify": "^1.0.1",
-    "sinon": "^1.17.4",
+    "sinon": "^2.2.0",
     "sinon-chai": "^2.8.0",
     "webpack": "^1.13.1"
   }
