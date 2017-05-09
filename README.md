@@ -1,5 +1,7 @@
 # preact-router
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/developit/preact-router.svg)](https://greenkeeper.io/)
+
 [![NPM](http://img.shields.io/npm/v/preact-router.svg)](https://www.npmjs.com/package/preact-router)
 [![travis-ci](https://travis-ci.org/developit/preact-router.svg)](https://travis-ci.org/developit/preact-router)
 
