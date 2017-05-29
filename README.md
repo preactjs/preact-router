@@ -63,11 +63,11 @@ import AsyncRoute from 'preact-async-route';
   <Home path="/" />
   <AsyncRoute
     path="/friends"
-    component={ () => import('./friends') }
+    component={ () => import('./friends').then(module => module.default) }
   />
   <AsyncRoute
     path="/friends/:id"
-    component={ () => import('./friend') }
+    component={ () => import('./friend').then(module => module.default) }
     loading={ () => <div>loading...</div> }
   />
 </Router>
