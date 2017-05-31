@@ -47,7 +47,7 @@
     "babel-cli": "^6.9.0",
     "babel-core": "^6.9.1",
     "babel-eslint": "^7.0.0",
-    "babel-loader": "^6.2.4",
+    "babel-loader": "^6.4.1",
     "babel-plugin-transform-class-properties": "^6.9.1",
     "babel-plugin-transform-es2015-classes": "^6.9.0",
     "babel-plugin-transform-object-assign": "^6.0.0",
