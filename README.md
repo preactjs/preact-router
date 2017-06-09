@@ -132,6 +132,34 @@ render(
 )
 ```
 
+### Redirects
+
+Can easily be impleted with a custom `Redirect` component;
+
+```js
+import { Component } from 'preact';
+import { route } from 'preact-router';
+
+export default class Redirect extends Component {
+  componentWillMount() {
+    route(this.props.to);
+  }
+
+  render() {
+    return null;
+  }
+}
+```
+
+Now to create a redirect within your application, you can add this `Redirect` component to your router;
+
+```js
+<Router>
+  <Bar path="/bar" />
+  <Redirect path="/foo" to="/bar" />
+</Router>
+```
+
 ---
 
 
