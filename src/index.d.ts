@@ -35,12 +35,13 @@ export class Router extends preact.Component<RouterProps, {}> {
     render(props: RouterProps, {}): preact.VNode;
 }
 
-
-export interface RouteProps extends RoutableProps {
-    component: preact.AnyComponent<any, any>;
+export interface RouteProps<C> extends RoutableProps {
+    component: preact.AnyComponent<C, any>;
 }
 
-export function Route(props: RouteProps): preact.VNode;
+export function Route<C>(
+    props: RouteProps<C> & { [P in keyof C]: C[P] }
+): preact.VNode;
 
 export function Link(props: JSX.HTMLAttributes): preact.VNode;
 
