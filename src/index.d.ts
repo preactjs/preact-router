@@ -1,4 +1,9 @@
+import * as preact from 'preact';
+
 export function route(url: string, replace?: boolean): boolean;
+export function route(options: { url: string; replace?: boolean }): boolean;
+
+export function getCurrentUrl(): string;
 
 export interface CustomHistory {
     getCurrentLocation?: () => string;
@@ -8,35 +13,36 @@ export interface CustomHistory {
     replace?: (url: string) => void;
 }
 
-export interface RouterProps extends JSX.HTMLAttributes, preact.ComponentProps {
-    history?: CustomHistory;
+export interface RoutableProps {
     path?: string;
+    default?: boolean;
+}
+
+export interface RouterProps extends RoutableProps {
+    history?: CustomHistory;
     static?: boolean;
     url?: string;
 }
 
 export class Router extends preact.Component<RouterProps, {}> {
     canRoute(url: string): boolean;
-    getMatchingChildren(children: preact.VNode[], url: string, invoke: boolean): preact.VNode[];
+    getMatchingChildren(
+        children: preact.VNode[],
+        url: string,
+        invoke: boolean
+    ): preact.VNode[];
     routeTo(url: string): boolean;
     render(props: RouterProps, {}): preact.VNode;
 }
 
-export interface RouteArgs<PropsType, StateType> {
-    component: preact.Component<PropsType, StateType>;
-    path: string;
-    matches?: boolean;
-    url?: string;
+export interface RouteProps<C> extends RoutableProps {
+    component: preact.AnyComponent<C, any>;
 }
 
-export function Route<PropsType, StateType>({component, url, matches}: RouteArgs<PropsType, StateType>): preact.VNode;
+export function Route<C>(
+    props: RouteProps<C> & { [P in keyof C]: C[P] }
+): preact.VNode;
 
-export function Link(props: any): preact.VNode;
-
-export namespace Router {
-    var route: ((url: string, replace?: boolean) => boolean);
-    var Route: (({component, url, matches}) => preact.VNode);
-    var Link: ((props: any) => preact.VNode);
-}
+export function Link(props: JSX.HTMLAttributes): preact.VNode;
 
 export default Router;
