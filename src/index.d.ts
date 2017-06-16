@@ -5,12 +5,16 @@ export function route(options: { url: string; replace?: boolean }): boolean;
 
 export function getCurrentUrl(): string;
 
+export interface Location {
+    pathname: string;
+    search: string;
+}
+
 export interface CustomHistory {
-    getCurrentLocation?: () => string;
-    location?: string;
-    listen(callback: (url: string) => void): () => void;
-    push?: (url: string) => void;
-    replace?: (url: string) => void;
+    listen(callback: (location: Location) => void): () => void;
+    location: Location;
+    push(path: string): void;
+    replace(path: string): void;
 }
 
 export interface RoutableProps {
