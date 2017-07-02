@@ -83,6 +83,6 @@
     "rollup-plugin-uglify": "^1.0.1",
     "sinon": "^1.17.4",
     "sinon-chai": "^2.8.0",
-    "webpack": "^1.13.1"
+    "webpack": "^2.5.1"
   }
 }
