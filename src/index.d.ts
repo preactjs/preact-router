@@ -43,8 +43,8 @@ export interface RouteProps<C> extends RoutableProps {
     component: preact.AnyComponent<C, any>;
 }
 
-export function Route<C>(
-    props: RouteProps<C> & { [P in keyof C]: C[P] }
+export function Route<Props>(
+    props: RouteProps<Props> & Partial<Props>
 ): preact.VNode;
 
 export function Link(props: JSX.HTMLAttributes): preact.VNode;
