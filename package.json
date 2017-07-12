@@ -23,7 +23,9 @@
   "files": [
     "src",
     "dist",
-    "match.js"
+    "match.js",
+    "match.d.ts",
+    "index.d.ts"
   ],
   "typings": "./index.d.ts",
   "keywords": [
