@@ -25,9 +25,9 @@ export interface RoutableProps {
 export interface RouterOnChangeArgs {
     router: Router;
     url: string;
-    previous: string;
-    active: string;
-    current: string;
+    previous?: string;
+    active: preact.VNode[];
+    current: preact.VNode;
 }
 
 export interface RouterProps extends RoutableProps {
