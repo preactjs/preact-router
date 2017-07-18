@@ -8,8 +8,7 @@
   "module": "dist/preact-router.es.js",
   "scripts": {
     "clean": "rimraf dist/",
-    "copy-typescript-definition": "copyfiles -f src/index.d.ts src/match.d.ts .",
-    "build": "npm-run-all --silent clean transpile transpile:match copy-typescript-definition size",
+    "build": "npm-run-all --silent clean transpile transpile:match size",
     "transpile": "rollup -c --environment FORMAT:umd && rollup -c --environment FORMAT:es",
     "transpile:match": "babel src/match.js -o match.js -f umd",
     "size": "size=$(gzip-size $npm_package_main) && echo \"gzip size: $size / $(pretty-bytes $size)\"",
@@ -23,11 +22,9 @@
   "files": [
     "src",
     "dist",
-    "match.js",
-    "match.d.ts",
-    "index.d.ts"
+    "match.js"
   ],
-  "typings": "./index.d.ts",
+  "typings": "./src/preact-router.d.ts",
   "keywords": [
     "preact",
     "router"
@@ -58,7 +55,6 @@
     "babel-preset-react": "^6.5.0",
     "babel-preset-stage-0": "^6.5.0",
     "chai": "^3.5.0",
-    "copyfiles": "^1.0.0",
     "diff": "^3.0.0",
     "eslint": "^3.0.0",
     "eslint-plugin-react": "^6.0.0",
