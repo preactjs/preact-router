@@ -22,8 +22,17 @@ export interface RoutableProps {
     default?: boolean;
 }
 
+interface RouterOnChangeProps {
+    router: Router;
+    url: string;
+    previous: string;
+    active: preact.VNode[];
+    current: preact.VNode | null;
+}
+
 export interface RouterProps extends RoutableProps {
     history?: CustomHistory;
+    onChange?: (args: RouterOnChangeProps) => void;
     static?: boolean;
     url?: string;
 }
@@ -36,12 +45,12 @@ export class Router extends preact.Component<RouterProps, {}> {
         invoke: boolean
     ): preact.VNode[];
     routeTo(url: string): boolean;
-    render(props: RouterProps, {}): preact.VNode;
+    render(props: RouterProps, { }): preact.VNode;
 }
 
 type AnyComponent<Props> =
-  | preact.FunctionalComponent<Props>
-  | preact.ComponentConstructor<Props, any>;
+    | preact.FunctionalComponent<Props>
+    | preact.ComponentConstructor<Props, any>;
 
 export interface RouteProps<Props> extends RoutableProps {
     component: AnyComponent<Props>;
