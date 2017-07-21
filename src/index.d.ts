@@ -26,7 +26,7 @@ interface RouterOnChangeProps {
     router: Router;
     url: string;
     previous: string;
-    actve: preact.VNode | null;
+    active: preact.VNode[];
     current: preact.VNode | null;
 }
 
