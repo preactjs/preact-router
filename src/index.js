@@ -1,5 +1,5 @@
 import { cloneElement, h, Component } from 'preact';
-import { exec, pathRankSort, assign } from './util';
+import { assign, getMatchingRoutes } from './util';
 
 let customHistory = null;
 
@@ -166,7 +166,7 @@ class Router extends Component {
 
 	/** Check if the given URL can be matched against any children */
 	canRoute(url) {
-		return this.getMatchingChildren(this.props.children, url, false).length > 0;
+		return getMatchingRoutes(this.props.children, url).length > 0;
 	}
 
 	/** Re-render children with a new URL to match against. */
@@ -209,22 +209,20 @@ class Router extends Component {
 	}
 
 	getMatchingChildren(children, url, invoke) {
-		return children.slice().sort(pathRankSort).map( vnode => {
-			let attrs = vnode.attributes || {},
-				path = attrs.path,
-				matches = exec(url, path, attrs);
-			if (matches) {
-				if (invoke!==false) {
-					let newProps = { url, matches };
-					assign(newProps, matches);
-					delete newProps.ref;
-					delete newProps.key;
-					return cloneElement(vnode, newProps);
-				}
-				return vnode;
-			}
-			return false;
-		}).filter(Boolean);
+		const routes = getMatchingRoutes(children, url);
+
+		if (invoke!==false){
+			return routes.map(r => {
+				let { route, matches } = r;
+				let newProps = { matches, url };
+				assign(newProps, matches);
+				delete newProps.ref;
+				delete newProps.key;
+				return cloneElement(route, newProps);
+			});
+		}
+
+		return routes.map(r => r.route);
 	}
 
 	render({ children, onChange }, { url }) {
@@ -259,10 +257,11 @@ const Route = props => h(props.component, props);
 
 Router.subscribers = subscribers;
 Router.getCurrentUrl = getCurrentUrl;
+Router.getMatchingRoutes = getMatchingRoutes;
 Router.route = route;
 Router.Router = Router;
 Router.Route = Route;
 Router.Link = Link;
 
-export { subscribers, getCurrentUrl, route, Router, Route, Link };
+export { subscribers, getCurrentUrl, getMatchingRoutes, route, Router, Route, Link };
 export default Router;

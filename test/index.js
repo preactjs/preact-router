@@ -12,6 +12,11 @@ describe('preact-router', () => {
 	});
 
 	describe('Router', () => {
+		it('should have static methods', () => {
+			expect(Router.getCurrentUrl).to.be.a('function');
+			expect(Router.getMatchingRoutes).to.be.a('function');
+		});
+
 		it('should filter children based on URL', () => {
 			let router = new Router({});
 			let children = [

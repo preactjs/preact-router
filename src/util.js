@@ -9,6 +9,17 @@ export function assign(obj, props) {
 	return obj;
 }
 
+export function getMatchingRoutes(routes, currentRoute) {
+	return routes
+		.slice()
+		.sort(pathRankSort)
+		.reduce((list, route) => {
+			let attrs = route.attributes || {};
+			let matches = exec(currentRoute, attrs.path, attrs);
+			return matches ? list.concat({ route, matches }) : list;
+		}, []);
+}
+
 export function exec(url, route, opts=EMPTY) {
 	let reg = /(?:\?([^#]*))?(#.*)?$/,
 		c = url.match(reg),

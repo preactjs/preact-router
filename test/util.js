@@ -1,4 +1,4 @@
-import { exec, pathRankSort, segmentize, rank, strip } from 'src/util';
+import { exec, getMatchingRoutes, pathRankSort, rank, segmentize, strip } from 'src/util';
 
 describe('util', () => {
 	describe('strip', () => {
@@ -100,6 +100,54 @@ describe('util', () => {
 			expect(exec('/a', '/:foo+')).to.eql({ foo:'a' });
 			expect(exec('/a/b', '/:foo+')).to.eql({ foo:'a/b' });
 			expect(exec('/a/b/c', '/:foo+')).to.eql({ foo:'a/b/c' });
+		});
+	});
+
+	describe('getMatchingRoutes', () => {
+		const routeFactory =
+			(path, isDefault = false) => ({
+				attributes: {
+					path,
+					default: isDefault
+				}
+			});
+
+		it('should return default route when given url does not match any route', () => {
+			const defaultRoute = routeFactory('/base', true);
+			const routes = [
+				routeFactory('/foo'),
+				defaultRoute,
+				routeFactory('/bar'),
+				routeFactory('/baz')
+			];
+			expect(getMatchingRoutes(routes, '/quux')).to.eql([{ route:defaultRoute, matches:{} }]);
+		});
+
+		it('should return empty array when given url does not match any route (and no default route is defined)', () => {
+			const routes = [
+				routeFactory('/foo'),
+				routeFactory('/bar'),
+				routeFactory('/baz')
+			];
+			expect(getMatchingRoutes(routes, '/quux')).to.eql([]);
+		});
+
+		it('should return list of matching routes', () => {
+			const match1 = routeFactory('/bar/:bar');
+			const match2 = routeFactory('/bar/lol');
+			const routes = [
+				routeFactory('/foo'),
+				match1,
+				match2,
+				routeFactory('/baz')
+			];
+			expect(getMatchingRoutes(routes, '/bar/lol')).to.eql([{
+				route: match2,
+				matches: {}
+			}, {
+				route: match1,
+				matches: { bar:'lol' }
+			}]);
 		});
 	});
 });
