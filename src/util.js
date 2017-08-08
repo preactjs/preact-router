@@ -25,15 +25,15 @@ export function exec(url, route, opts=EMPTY) {
 	let max = Math.max(url.length, route.length);
 	for (let i=0; i<max; i++) {
 		if (route[i] && route[i].charAt(0)===':') {
-			let param = route[i].replace(/(^\:|[+*?]+$)/g, '').replace(/\[.*\]/g, ''),
-				flags = (route[i].match(/[+*?]+$/) || EMPTY)[0] || '',
+			let param = route[i].replace(/(^\:|[+*?]+)/g, '').replace(/\[.*\]/g, ''),
+				flags = (route[i].match(/[+*?]+/) || EMPTY)[0] || '',
 				regexMatch = route[i].match(/\[(.*)\]/),
 				regex = ((regexMatch || EMPTY).length === 2) ? regexMatch[1] : null,
 				plus = ~flags.indexOf('+'),
 				star = ~flags.indexOf('*'),
 				val = url[i] || '';
 
-			if (regex && !val.match(regex)) {
+			if (regex && !val.match(regex) && flags.indexOf('?')<0) {
 				ret = false;
 				break;
 			}
