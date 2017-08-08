@@ -28,12 +28,12 @@ export function exec(url, route, opts=EMPTY) {
 			let param = route[i].replace(/(^\:|[+*?]+)/g, '').replace(/\[.*\]/g, ''),
 				flags = (route[i].match(/[+*?]+/) || EMPTY)[0] || '',
 				regexMatch = route[i].match(/\[(.*)\]/),
-				regex = ((regexMatch || EMPTY).length === 2) ? regexMatch[1] : null,
+				regex = ((regexMatch || EMPTY).length === 2) ? regexMatch[1] : '',
 				plus = ~flags.indexOf('+'),
 				star = ~flags.indexOf('*'),
 				val = url[i] || '';
 
-			if (regex && !val.match(regex) && flags.indexOf('?')<0) {
+			if (regex && !val.match(regex) && (flags.indexOf('?')<0 || val != '')) {
 				ret = false;
 				break;
 			}
