@@ -209,11 +209,12 @@ class Router extends Component {
 	}
 
 	getMatchingChildren(children, url, invoke) {
-		return children.slice().sort(pathRankSort).map( vnode => {
+		const matchingChildren = children.slice().sort(pathRankSort).map( vnode => {
 			let attrs = vnode.attributes || {},
 				path = attrs.path,
 				matches = exec(url, path, attrs);
 			if (matches) {
+				// console.log(matches)
 				if (invoke!==false) {
 					let newProps = { url, matches };
 					assign(newProps, matches);
@@ -223,6 +224,8 @@ class Router extends Component {
 			}
 			return false;
 		}).filter(Boolean);
+
+		return matchingChildren
 	}
 
 	render({ children, onChange }, { url }) {

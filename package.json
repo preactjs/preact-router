@@ -11,6 +11,7 @@
     "copy-typescript-definition": "copyfiles -f src/index.d.ts src/match.d.ts .",
     "build": "npm-run-all --silent clean transpile transpile:match copy-typescript-definition size",
     "transpile": "rollup -c --environment FORMAT:umd && rollup -c --environment FORMAT:es",
+    "watch": "rollup -c --environment FORMAT:es -w",
     "transpile:match": "babel src/match.js -o match.js -f umd",
     "size": "size=$(gzip-size $npm_package_main) && echo \"gzip size: $size / $(pretty-bytes $size)\"",
     "test": "npm-run-all lint build test:karma",
@@ -83,6 +84,7 @@
     "rollup-plugin-memory": "^2.0.0",
     "rollup-plugin-post-replace": "^1.0.0",
     "rollup-plugin-uglify": "^1.0.1",
+    "rollup-watch": "^4.3.1",
     "sinon": "^1.17.4",
     "sinon-chai": "^2.8.0",
     "webpack": "^1.13.1"
