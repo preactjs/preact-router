@@ -214,7 +214,6 @@ class Router extends Component {
 				path = attrs.path,
 				matches = exec(url, path, attrs);
 			if (matches) {
-				// console.log(matches)
 				if (invoke!==false) {
 					let newProps = { url, matches };
 					assign(newProps, matches);
