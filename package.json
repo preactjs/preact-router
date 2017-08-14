@@ -18,7 +18,6 @@
     "test:karma": "karma start --single-run",
     "test:watch": "karma start",
     "prepublish": "npm-run-all build test",
-    "postinstall": "npm-run-all build test",
     "release": "npm run build && git commit -am $npm_package_version && git tag $npm_package_version && git push && git push --tags && npm publish"
   },
   "files": [
