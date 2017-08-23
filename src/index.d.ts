@@ -60,6 +60,6 @@ export function Route<Props>(
     props: RouteProps<Props> & Partial<Props>
 ): preact.VNode;
 
-export function Link(props: JSX.HTMLAttributes): preact.VNode;
+export function Link(props: {activeClassName?: string} & JSX.HTMLAttributes): preact.VNode;
 
 export default Router;
