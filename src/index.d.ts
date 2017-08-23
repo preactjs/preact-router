@@ -34,7 +34,7 @@ export interface RouterProps extends RoutableProps {
     history?: CustomHistory;
     static?: boolean;
     url?: string;
-    onChange?(fn: (args: RouterOnChangeArgs) => void): void;
+    onChange?: (args: RouterOnChangeArgs) => void;
 }
 
 export class Router extends preact.Component<RouterProps, {}> {
