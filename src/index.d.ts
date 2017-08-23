@@ -22,10 +22,19 @@ export interface RoutableProps {
     default?: boolean;
 }
 
+export interface RouterOnChangeArgs {
+    router: Router;
+    url: string;
+    previous: string;
+    active: string;
+    current: string;
+}
+
 export interface RouterProps extends RoutableProps {
     history?: CustomHistory;
     static?: boolean;
     url?: string;
+    onChange?: (args: RouterOnChangeArgs) => void;
 }
 
 export class Router extends preact.Component<RouterProps, {}> {
