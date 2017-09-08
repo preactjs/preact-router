@@ -208,6 +208,8 @@ class Router extends Component {
 				if (invoke!==false) {
 					let newProps = { url, matches };
 					assign(newProps, matches);
+					delete newProps.ref;
+					delete newProps.key;
 					return cloneElement(vnode, newProps);
 				}
 				return vnode;

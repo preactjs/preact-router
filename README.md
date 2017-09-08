@@ -27,7 +27,8 @@ const Main = () => (
 	<Router>
 		<Home path="/" />
 		<About path="/about" />
-		<Search path="/search/:query" />
+		// Advanced is an optional query
+		<Search path="/search/:query/:advanced?" />
 	</Router>
 );
 
@@ -43,12 +44,14 @@ Any URL parameters get passed to the component as `props`.
 
 Defining what component(s) to load for a given URL is easy and declarative.
 You can even mix-and-match URL parameters and normal `props`.
+You can also make params optional by adding a `?` to it.
 
 ```js
 <Router>
   <A path="/" />
   <B path="/b" id="42" />
   <C path="/c/:id" />
+  <C path="/d/:optional?/:params?" />
   <D default />
 </Router>
 ```
@@ -63,11 +66,11 @@ import AsyncRoute from 'preact-async-route';
   <Home path="/" />
   <AsyncRoute
     path="/friends"
-    component={ () => import('./friends') }
+    getComponent={ () => import('./friends').then(module => module.default) }
   />
   <AsyncRoute
     path="/friends/:id"
-    component={ () => import('./friend') }
+    getComponent={ () => import('./friend').then(module => module.default) }
     loading={ () => <div>loading...</div> }
   />
 </Router>
@@ -130,6 +133,34 @@ render(
     </Router>
   </div>
 )
+```
+
+### Redirects
+
+Can easily be impleted with a custom `Redirect` component;
+
+```js
+import { Component } from 'preact';
+import { route } from 'preact-router';
+
+export default class Redirect extends Component {
+  componentWillMount() {
+    route(this.props.to);
+  }
+
+  render() {
+    return null;
+  }
+}
+```
+
+Now to create a redirect within your application, you can add this `Redirect` component to your router;
+
+```js
+<Router>
+  <Bar path="/bar" />
+  <Redirect path="/foo" to="/bar" />
+</Router>
 ```
 
 ---

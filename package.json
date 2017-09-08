@@ -1,14 +1,14 @@
 {
   "name": "preact-router",
   "amdName": "preactRouter",
-  "version": "2.5.0",
+  "version": "2.5.7",
   "description": "Connect your components up to that address bar.",
   "main": "dist/preact-router.js",
   "jsnext:main": "dist/preact-router.es.js",
   "module": "dist/preact-router.es.js",
   "scripts": {
     "clean": "rimraf dist/",
-    "copy-typescript-definition": "copyfiles -f src/index.d.ts dist",
+    "copy-typescript-definition": "copyfiles -f src/index.d.ts src/match.d.ts .",
     "build": "npm-run-all --silent clean transpile transpile:match copy-typescript-definition size",
     "transpile": "rollup -c --environment FORMAT:umd && rollup -c --environment FORMAT:es",
     "transpile:match": "babel src/match.js -o match.js -f umd",
@@ -22,9 +22,12 @@
   },
   "files": [
     "src",
-    "dist"
+    "dist",
+    "match.js",
+    "match.d.ts",
+    "index.d.ts"
   ],
-  "x-typings": "./dist/index.d.ts",
+  "typings": "./index.d.ts",
   "keywords": [
     "preact",
     "router"
