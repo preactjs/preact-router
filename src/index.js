@@ -214,7 +214,7 @@ class Router extends Component {
 				path = attrs.path,
 				matches = exec(url, path, attrs);
 			if (matches) {
-				if (invoke!==false) {
+				if (invoke!==false && typeof vnode.nodeName==='function') {
 					let newProps = { url, matches };
 					assign(newProps, matches);
 					delete newProps.ref;
