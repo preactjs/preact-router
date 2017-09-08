@@ -182,11 +182,11 @@ class Router extends Component {
 	}
 
 	componentWillMount() {
-		ROUTERS.push(this);
 		this.updating = true;
 	}
 
 	componentDidMount() {
+		ROUTERS.push(this);
 		if (customHistory) {
 			this.unlisten = customHistory.listen((location) => {
 				this.routeTo(`${location.pathname || ''}${location.search || ''}`);
