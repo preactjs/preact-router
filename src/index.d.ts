@@ -22,10 +22,19 @@ export interface RoutableProps {
     default?: boolean;
 }
 
+export interface RouterOnChangeArgs {
+    router: Router;
+    url: string;
+    previous?: string;
+    active: preact.VNode[];
+    current: preact.VNode;
+}
+
 export interface RouterProps extends RoutableProps {
     history?: CustomHistory;
     static?: boolean;
     url?: string;
+    onChange?: (args: RouterOnChangeArgs) => void;
 }
 
 export class Router extends preact.Component<RouterProps, {}> {
@@ -51,6 +60,6 @@ export function Route<Props>(
     props: RouteProps<Props> & Partial<Props>
 ): preact.VNode;
 
-export function Link(props: JSX.HTMLAttributes): preact.VNode;
+export function Link(props: {activeClassName?: string} & JSX.HTMLAttributes): preact.VNode;
 
 export default Router;

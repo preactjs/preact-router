@@ -66,11 +66,11 @@ import AsyncRoute from 'preact-async-route';
   <Home path="/" />
   <AsyncRoute
     path="/friends"
-    component={ () => import('./friends').then(module => module.default) }
+    getComponent={ () => import('./friends').then(module => module.default) }
   />
   <AsyncRoute
     path="/friends/:id"
-    component={ () => import('./friend').then(module => module.default) }
+    getComponent={ () => import('./friend').then(module => module.default) }
     loading={ () => <div>loading...</div> }
   />
 </Router>
@@ -145,7 +145,7 @@ import { route } from 'preact-router';
 
 export default class Redirect extends Component {
   componentWillMount() {
-    route(this.props.to);
+    route(this.props.to, true);
   }
 
   render() {
