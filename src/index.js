@@ -95,8 +95,10 @@ function routeFromLink(node) {
 
 function handleLinkClick(e) {
 	if (e.button==0) {
-		routeFromLink(e.currentTarget || e.target || this);
-		return prevent(e);
+		if (routeFromLink(e.currentTarget || e.target || this)) {
+			return prevent(e);
+		}
+		return true;
 	}
 }
 
