@@ -48,14 +48,14 @@ function resolve(url) {
 		a.setAttribute('href', url);
 		url = a.href;
 	}
-	let [,protocol,host,pathname,search] = uriRegex.exec(url);
+	let [,protocol,host,pathname,search,hash] = uriRegex.exec(url);
 	if (
 		(current.protocol && protocol !== current.protocol) ||
 		(current.host && host !== current.host)
 	) {
 		return;
 	}
-	return `${pathname}${search}`;
+	return `${pathname}${search}${hash}`;
 }
 
 
