@@ -170,6 +170,22 @@ describe('dom', () => {
 			route('/foo');
 			expect(routerRef.base.outerHTML).to.eql('<p>bar is </p>');
 		});
+
+		it('should support relative links', () => {
+			class A {
+				render() {
+					return <a href="two">go</a>;
+				}
+			}
+			history.replaceState(null, null, '/foo/one');
+			mount(
+				<Router>
+					<A default />
+				</Router>
+			);
+			scratch.querySelector('a').click();
+			expect(location.pathname).to.equal('/foo/two');
+		});
 	});
 	
 	describe('preact-router/match', () => {

@@ -23,20 +23,40 @@ function setUrl(url, type='push') {
 }
 
 
+function getCurrentLocation() {
+	return (customHistory && customHistory.location) ||
+		(customHistory && customHistory.getCurrentLocation && customHistory.getCurrentLocation()) ||
+		(typeof location!=='undefined' ? location : EMPTY);
+}
+
+
 function getCurrentUrl() {
-	let url;
-	if (customHistory && customHistory.location) {
-		url = customHistory.location;
-	}
-	else if (customHistory && customHistory.getCurrentLocation) {
-		url = customHistory.getCurrentLocation();
-	}
-	else {
-		url = typeof location!=='undefined' ? location : EMPTY;
-	}
+	let url = getCurrentLocation();
 	return `${url.pathname || ''}${url.search || ''}`;
 }
 
+
+const a = typeof document!=='undefined' && document.createElement('a');
+
+// Based on https://tools.ietf.org/html/rfc3986#appendix-B
+const uriRegex = new RegExp('^([^:/?#]+:)?(?://([^/?#]*))?([^?#]*)((?:\\?[^#]*)?)((?:#.*)?)');
+
+/* Resolve URL relative to current location */
+function resolve(url) {
+	let current = getCurrentLocation();
+	if (a) {
+		a.setAttribute('href', url);
+		url = a.href;
+	}
+	let [,protocol,host,pathname,search] = uriRegex.exec(url);
+	if (
+		(current.protocol && protocol !== current.protocol) ||
+		(current.host && host !== current.host)
+	) {
+		return;
+	}
+	return `${pathname}${search}`;
+}
 
 
 function route(url, replace=false) {
@@ -44,6 +64,9 @@ function route(url, replace=false) {
 		replace = url.replace;
 		url = url.url;
 	}
+
+	url = resolve(url);
+	if (!url) return;
 
 	// only push URL into history if we can handle it
 	if (canRoute(url)) {
@@ -79,17 +102,11 @@ function routeTo(url) {
 
 
 function routeFromLink(node) {
-	// only valid elements
-	if (!node || !node.getAttribute) return;
-
-	let href = node.getAttribute('href'),
-		target = node.getAttribute('target');
-
-	// ignore links with targets and non-path URLs
-	if (!href || !href.match(/^\//g) || (target && !target.match(/^_?self$/i))) return;
+	// ignore invalid & external links:
+	if (!node || (node.target && !node.target.match(/^_?self$/i))) return;
 
 	// attempt to route, if no match simply cede control to browser
-	return route(href);
+	return route(node.pathname + node.search + node.hash);
 }
 
 
@@ -117,12 +134,9 @@ function delegateLinkHandler(e) {
 
 	let t = e.target;
 	do {
-		if (String(t.nodeName).toUpperCase()==='A' && t.getAttribute('href') && isPreactElement(t)) {
-			if (t.hasAttribute('native')) return;
+		if (String(t.nodeName).toUpperCase()==='A' && t.pathname && isPreactElement(t) && !t.hasAttribute('native') && routeFromLink(t)) {
 			// if link is handled by the router, prevent browser defaults
-			if (routeFromLink(t)) {
-				return prevent(e);
-			}
+			return prevent(e);
 		}
 	} while ((t=t.parentNode));
 }
@@ -131,13 +145,13 @@ function delegateLinkHandler(e) {
 let eventListenersInitialized = false;
 
 function initEventListeners() {
-	if (eventListenersInitialized){
-		return;
-	}
+	if (eventListenersInitialized) return;
 
 	if (typeof addEventListener==='function') {
 		if (!customHistory) {
-			addEventListener('popstate', () => routeTo(getCurrentUrl()));
+			addEventListener('popstate', () => {
+				routeTo(getCurrentUrl());
+			});
 		}
 		addEventListener('click', delegateLinkHandler);
 	}
