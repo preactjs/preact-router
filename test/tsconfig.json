@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "noEmit": true,
+    "jsx": "react",
+    "jsxFactory": "h"
+  },
+  "files": [
+    "router.tsx",
+    "match.tsx",
+    "../src/index.d.ts",
+    "../src/match.d.ts"
+  ]
+}

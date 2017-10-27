@@ -62,4 +62,9 @@ export function Route<Props>(
 
 export function Link(props: {activeClassName?: string} & JSX.HTMLAttributes): preact.VNode;
 
+declare module 'preact' {
+    export interface ComponentProps<C extends preact.Component<any, any> | preact.FunctionalComponent<any>> extends RoutableProps {}
+    export interface PreactHTMLAttributes extends RoutableProps {}
+}
+
 export default Router;
