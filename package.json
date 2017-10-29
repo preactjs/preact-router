@@ -1,7 +1,7 @@
 {
-  "name": "preact-router",
+  "name": "preact-router-ssr",
   "amdName": "preactRouter",
-  "version": "2.5.7",
+  "version": "1.0.0",
   "description": "Connect your components up to that address bar.",
   "main": "dist/preact-router.js",
   "jsnext:main": "dist/preact-router.es.js",
