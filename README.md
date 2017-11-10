@@ -137,7 +137,7 @@ render(
 
 ### Redirects
 
-Can easily be impleted with a custom `Redirect` component;
+Can easily be implemented with a custom `Redirect` component;
 
 ```js
 import { Component } from 'preact';
