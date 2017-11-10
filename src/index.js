@@ -131,13 +131,13 @@ function delegateLinkHandler(e) {
 let eventListenersInitialized = false;
 
 function initEventListeners() {
-	if (eventListenersInitialized){
-		return;
-	}
+	if (eventListenersInitialized) return;
 
 	if (typeof addEventListener==='function') {
 		if (!customHistory) {
-			addEventListener('popstate', () => routeTo(getCurrentUrl()));
+			addEventListener('popstate', () => {
+				routeTo(getCurrentUrl());
+			});
 		}
 		addEventListener('click', delegateLinkHandler);
 	}
