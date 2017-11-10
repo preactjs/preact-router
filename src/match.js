@@ -1,7 +1,23 @@
-import { h, Component } from 'preact';
+import { h, Component, cloneElement } from 'preact';
 import { subscribers, getCurrentUrl, Link as StaticLink } from 'preact-router';
+import { exec, segmentize } from './util';
 
 export class Match extends Component {
+	constructor(props, context) {
+		super(props);
+		this.baseUrl = this.props.base || '';
+		if (props.path) {
+			let segments = segmentize(props.path);
+			segments.forEach(segment => {
+				if (segment.indexOf(':') == -1) {
+					this.baseUrl = this.baseUrl + '/' + segment;
+				}
+			});
+		}
+		if (context && context['preact-router-base']) {
+			this.baseUrl = context['preact-router-base'] + this.baseUrl;
+		}
+	}
 	update = url => {
 		this.nextUrl = url;
 		this.setState({});
@@ -12,15 +28,22 @@ export class Match extends Component {
 	componentWillUnmount() {
 		subscribers.splice(subscribers.indexOf(this.update)>>>0, 1);
 	}
-	render(props) {
+	getChildContext() {
+		let result = {['preact-router-base']: this.baseUrl};
+		return result;
+	}
+	render(props, state, context) {
 		let url = this.nextUrl || getCurrentUrl(),
 			path = url.replace(/\?.+$/,'');
 		this.nextUrl = null;
-		return props.children[0] && props.children[0]({
+		const newProps = {
 			url,
 			path,
-			matches: path===props.path
-		});
+			matches: path===props.path || exec(path, context['preact-router-base'] + props.path, {})
+		};
+		return props.children[0] && 
+		  (typeof props.children[0] === 'function' ? 
+			  props.children[0](newProps) : cloneElement(props.children[0], newProps));
 	}
 }
 
