@@ -55,16 +55,28 @@ export function pathRankSort(a, b) {
 		bAttr = b.attributes || EMPTY;
 	if (aAttr.default) return 1;
 	if (bAttr.default) return -1;
-	let diff = rank(aAttr.path) - rank(bAttr.path);
-	return diff || (aAttr.path.length - bAttr.path.length);
+	let aRank = rank(aAttr.path),
+		bRank = rank(bAttr.path);
+	return (aRank < bRank) ? 1 :
+		(aRank === bRank) ? 0 :
+		-1;
 }
 
 export function segmentize(url) {
 	return strip(url).split('/');
 }
 
-export function rank(url) {
-	return (strip(url).match(/\/+/g) || '').length;
+export function rankSegment(segment) {
+	let [, isParam, , flag] = /^(:?)(.*?)([*+?]?)$/.exec(segment);
+	return isParam ? ('0*+?'.indexOf(flag) || 4) : 5;
+}
+
+export function rank(path) {
+	return segmentize(path).map(rankSegment).join('');
+}
+
+export function rankChild({ attributes=EMPTY }) {
+	return attributes.default ? '0' : rank(attributes.path);
 }
 
 export function strip(url) {
