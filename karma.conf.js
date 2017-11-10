@@ -26,6 +26,10 @@ module.exports = function(config) {
 			}
 		},
 
+		mochaReporter: {
+			showDiff: true
+		},
+
 		webpackMiddleware: {
 			noInfo: true
 		}
