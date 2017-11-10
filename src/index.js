@@ -1,5 +1,5 @@
 import { cloneElement, h, Component } from 'preact';
-import { exec, pathRankSort, assign } from './util';
+import { exec, pathRankSort, assign, segmentize } from './util';
 
 let customHistory = null;
 
@@ -8,6 +8,8 @@ const ROUTERS = [];
 const subscribers = [];
 
 const EMPTY = {};
+//a key for the context to carry baseUrl to nested Router instances
+const CONTEXT_KEY = 'preact-router-baseUrl';
 
 function isPreactElement(node) {
 	return node.__preactattr_!=null || typeof Symbol!=='undefined' && node[Symbol.for('preactattr')]!=null;
@@ -146,17 +148,33 @@ function initEventListeners() {
 
 
 class Router extends Component {
-	constructor(props) {
+	constructor(props, context) {
 		super(props);
+		this.baseUrl = this.props.base || '';
+		if (props.path) {
+			let segments = segmentize(props.path);
+			segments.forEach(segment => {
+				if (segment.indexOf(':') == -1) {
+					this.baseUrl = this.baseUrl + '/' + segment;
+				}
+			});
+		}
 		if (props.history) {
 			customHistory = props.history;
 		}
-
+		if (context && context['preact-router-base'] && !this.props.base) {
+			this.baseUrl = context['preact-router-base'] + this.baseUrl;
+		}
 		this.state = {
 			url: props.url || getCurrentUrl()
 		};
 
 		initEventListeners();
+	}
+
+	getChildContext() {
+		let result = {['preact-router-base']: this.baseUrl};
+		return result;
 	}
 
 	shouldComponentUpdate(props) {
@@ -211,7 +229,7 @@ class Router extends Component {
 	getMatchingChildren(children, url, invoke) {
 		return children.slice().sort(pathRankSort).map( vnode => {
 			let attrs = vnode.attributes || {},
-				path = attrs.path,
+				path = this.baseUrl + attrs.path,
 				matches = exec(url, path, attrs);
 			if (matches) {
 				if (invoke!==false) {
@@ -257,12 +275,43 @@ const Link = (props) => (
 
 const Route = props => h(props.component, props);
 
+class Match extends Component {
+
+	constructor(props, context) {
+		super(props);
+		this.baseUrl = this.props.base || '';
+		if (props.path) {
+			let segments = segmentize(props.path);
+			segments.forEach(segment => {
+				if (segment.indexOf(':') == -1) {
+					this.baseUrl = this.baseUrl + '/' + segment;
+				}
+			});
+		}
+		if (context && context[CONTEXT_KEY]) {
+			this.baseUrl = context[CONTEXT_KEY] + this.baseUrl;
+		}
+	}
+
+	getChildContext() {
+		let result = {[CONTEXT_KEY]: this.baseUrl};
+		return result;
+	}
+
+	render({ children, url, matches }) {
+		return cloneElement(children[0], {url, matches});
+	}
+
+}
+
+
 Router.subscribers = subscribers;
 Router.getCurrentUrl = getCurrentUrl;
 Router.route = route;
 Router.Router = Router;
 Router.Route = Route;
 Router.Link = Link;
+Router.Match = Match;
 
-export { subscribers, getCurrentUrl, route, Router, Route, Link };
+export { subscribers, getCurrentUrl, route, Router, Route, Match, Link };
 export default Router;

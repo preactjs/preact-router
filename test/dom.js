@@ -121,6 +121,193 @@ describe('dom', () => {
 			expect(A.prototype.componentWillUnmount).to.have.been.calledOnce;
 		});
 
+		it('should support nested routers with default', () => {
+			class X {
+				componentWillMount() {}
+				componentWillUnmount() {}
+				render(){ return <div />; }
+			}
+			sinon.spy(X.prototype, 'componentWillMount');
+			sinon.spy(X.prototype, 'componentWillUnmount');
+			class Y {
+				componentWillMount() {}
+				componentWillUnmount() {}
+				render(){ return <div />; }
+			}
+			sinon.spy(Y.prototype, 'componentWillMount');
+			sinon.spy(Y.prototype, 'componentWillUnmount');
+			mount(
+				<Router base="/app">
+					<X path="/x" />
+					<Router default>
+					  <Y path="/y"/>
+					</Router>
+				</Router>
+			);
+			expect(X.prototype.componentWillMount).not.to.have.been.called;
+			expect(Y.prototype.componentWillMount).not.to.have.been.called;
+			route('/app/x');
+			expect(X.prototype.componentWillMount).to.have.been.calledOnce;
+			expect(X.prototype.componentWillUnmount).not.to.have.been.called;
+			expect(Y.prototype.componentWillMount).not.to.have.been.called;
+			expect(Y.prototype.componentWillUnmount).not.to.have.been.called;
+			route('/app/y');
+			expect(X.prototype.componentWillMount).to.have.been.calledOnce;
+			expect(X.prototype.componentWillUnmount).to.have.been.calledOnce;
+			expect(Y.prototype.componentWillMount).to.have.been.calledOnce;
+			expect(Y.prototype.componentWillUnmount).not.to.have.been.called;
+		});
+
+		it('should support nested routers with path', () => {
+			class X {
+				componentWillMount() {}
+				componentWillUnmount() {}
+				render(){ return <div />; }
+			}
+			sinon.spy(X.prototype, 'componentWillMount');
+			sinon.spy(X.prototype, 'componentWillUnmount');
+			class Y {
+				componentWillMount() {}
+				componentWillUnmount() {}
+				render(){ return <div />; }
+			}
+			sinon.spy(Y.prototype, 'componentWillMount');
+			sinon.spy(Y.prototype, 'componentWillUnmount');
+			mount(
+				<Router base='/baz'>
+					<X path="/j" />
+					<Router path="/box/:bar*">
+						<Y path="/k"/>
+					</Router>
+				</Router>
+			);
+			expect(X.prototype.componentWillMount).not.to.have.been.called;
+			expect(Y.prototype.componentWillMount).not.to.have.been.called;
+			route('/baz/j');
+			expect(X.prototype.componentWillMount).to.have.been.calledOnce;
+			expect(X.prototype.componentWillUnmount).not.to.have.been.called;
+			expect(Y.prototype.componentWillMount).not.to.have.been.called;
+			expect(Y.prototype.componentWillUnmount).not.to.have.been.called;
+			route('/baz/box/k');
+			expect(X.prototype.componentWillMount).to.have.been.calledOnce;
+			expect(X.prototype.componentWillUnmount).to.have.been.calledOnce;
+			expect(Y.prototype.componentWillMount).to.have.been.calledOnce;
+			expect(Y.prototype.componentWillUnmount).not.to.have.been.called;
+		});
+
+		it('should support deeply nested routers', () => {
+			class X {
+				componentWillMount() {}
+				componentWillUnmount() {}
+				render(){ return <div />; }
+			}
+			sinon.spy(X.prototype, 'componentWillMount');
+			sinon.spy(X.prototype, 'componentWillUnmount');
+			class Y {
+				componentWillMount() {}
+				componentWillUnmount() {}
+				render(){ return <div />; }
+			}
+			sinon.spy(Y.prototype, 'componentWillMount');
+			sinon.spy(Y.prototype, 'componentWillUnmount');
+			mount(
+				<Router base='/baz'>
+					<X path="/j" />
+					<z path="/box/:bar*">
+						<Router path="/box">
+							<Y path="/k"/>
+						</Router>
+					</z>
+				</Router>
+			);
+			expect(X.prototype.componentWillMount).not.to.have.been.called;
+			expect(Y.prototype.componentWillMount).not.to.have.been.called;
+			route('/baz/j');
+			expect(X.prototype.componentWillMount).to.have.been.calledOnce;
+			expect(X.prototype.componentWillUnmount).not.to.have.been.called;
+			expect(Y.prototype.componentWillMount).not.to.have.been.called;
+			expect(Y.prototype.componentWillUnmount).not.to.have.been.called;
+			route('/baz/box/k');
+			expect(X.prototype.componentWillMount).to.have.been.calledOnce;
+			expect(X.prototype.componentWillUnmount).to.have.been.calledOnce;
+			expect(Y.prototype.componentWillMount).to.have.been.calledOnce;
+			expect(Y.prototype.componentWillUnmount).not.to.have.been.called;
+		});
+
+		it('should support nested routers and Match(s)', () => {
+			class X {
+				componentWillMount() {}
+				componentWillUnmount() {}
+				render(){ return <div />; }
+			}
+			sinon.spy(X.prototype, 'componentWillMount');
+			sinon.spy(X.prototype, 'componentWillUnmount');
+			class Y {
+				componentWillMount() {}
+				componentWillUnmount() {}
+				render(){ return <div />; }
+			}
+			sinon.spy(Y.prototype, 'componentWillMount');
+			sinon.spy(Y.prototype, 'componentWillUnmount');
+			mount(
+				<Router base='/ccc'>
+					<X path="/jjj" />
+					<Match path="/xxx/:bar*">
+							<Y path="/kkk"/>
+					</Match>
+				</Router>
+			);
+			expect(X.prototype.componentWillMount, 'X1').not.to.have.been.called;
+			expect(Y.prototype.componentWillMount, 'Y1').not.to.have.been.called;
+			route('/ccc/jjj');
+			expect(X.prototype.componentWillMount, 'X2').to.have.been.calledOnce;
+			expect(X.prototype.componentWillUnmount, 'X3').not.to.have.been.called;
+			expect(Y.prototype.componentWillMount, 'Y2').not.to.have.been.called;
+			expect(Y.prototype.componentWillUnmount, 'Y3').not.to.have.been.called;
+			route('/ccc/xxx/kkk');
+			expect(X.prototype.componentWillMount, 'X4').to.have.been.calledOnce;
+			expect(X.prototype.componentWillUnmount, 'X5').to.have.been.calledOnce;
+			expect(Y.prototype.componentWillMount, 'Y4').to.have.been.calledOnce;
+			expect(Y.prototype.componentWillUnmount, 'Y5').not.to.have.been.called;
+		});
+
+		it('should support nested router reset via base attr', () => {
+			class X {
+				componentWillMount() {}
+				componentWillUnmount() {}
+				render(){ return <div />; }
+			}
+			sinon.spy(X.prototype, 'componentWillMount');
+			sinon.spy(X.prototype, 'componentWillUnmount');
+			class Y {
+				componentWillMount() {}
+				componentWillUnmount() {}
+				render(){ return <div />; }
+			}
+			sinon.spy(Y.prototype, 'componentWillMount');
+			sinon.spy(Y.prototype, 'componentWillUnmount');
+			mount(
+				<Router base='/baz'>
+					<X path="/j" />
+					<Router path="/:bar*" base="/baz/foo">
+						<Y path="/k"/>
+					</Router>
+				</Router>
+			);
+			expect(X.prototype.componentWillMount).not.to.have.been.called;
+			expect(Y.prototype.componentWillMount).not.to.have.been.called;
+			route('/baz/j');
+			expect(X.prototype.componentWillMount).to.have.been.calledOnce;
+			expect(X.prototype.componentWillUnmount).not.to.have.been.called;
+			expect(Y.prototype.componentWillMount).not.to.have.been.called;
+			expect(Y.prototype.componentWillUnmount).not.to.have.been.called;
+			route('/baz/foo/k');
+			expect(X.prototype.componentWillMount).to.have.been.calledOnce;
+			expect(X.prototype.componentWillUnmount).to.have.been.calledOnce;
+			expect(Y.prototype.componentWillMount).to.have.been.calledOnce;
+			expect(Y.prototype.componentWillUnmount).not.to.have.been.called;
+		});
+
 		it('should support re-routing', done => {
 			class A {
 				componentWillMount() {
@@ -171,7 +358,7 @@ describe('dom', () => {
 			expect(routerRef.base.outerHTML).to.eql('<p>bar is </p>');
 		});
 	});
-	
+
 	describe('preact-router/match', () => {
 		describe('<Match>', () => {
 			it('should invoke child function with match status when routing', done => {
@@ -184,21 +371,21 @@ describe('dom', () => {
 						<Match path="/bar">{spy2}</Match>
 					</div>
 				);
-				
+
 				expect(spy1, 'spy1 /foo').to.have.been.calledOnce.and.calledWithMatch({ matches: false, path:'/', url:'/' });
 				expect(spy2, 'spy2 /foo').to.have.been.calledOnce.and.calledWithMatch({ matches: false, path:'/', url:'/' });
-				
+
 				spy1.reset();
 				spy2.reset();
-				
+
 				route('/foo');
-				
+
 				setTimeout( () => {
 					expect(spy1, 'spy1 /foo').to.have.been.calledOnce.and.calledWithMatch({ matches: true, path:'/foo', url:'/foo' });
 					expect(spy2, 'spy2 /foo').to.have.been.calledOnce.and.calledWithMatch({ matches: false, path:'/foo', url:'/foo' });
 					spy1.reset();
 					spy2.reset();
-					
+
 					route('/foo?bar=5');
 
 					setTimeout( () => {
@@ -208,11 +395,11 @@ describe('dom', () => {
 						spy2.reset();
 
 						route('/bar');
-						
+
 						setTimeout( () => {
 							expect(spy1, 'spy1 /bar').to.have.been.calledOnce.and.calledWithMatch({ matches: false, path:'/bar', url:'/bar' });
 							expect(spy2, 'spy2 /bar').to.have.been.calledOnce.and.calledWithMatch({ matches: true, path:'/bar', url:'/bar' });
-							
+
 							done();
 						}, 20);
 					}, 20);
@@ -230,7 +417,7 @@ describe('dom', () => {
 					</div>
 				);
 				route('/foo');
-				
+
 				setTimeout( () => {
 					expect(scratch.innerHTML).to.eql('<div><a class="active">foo</a><a class="bar">bar</a></div>');
 
@@ -243,7 +430,7 @@ describe('dom', () => {
 
 						setTimeout( () => {
 							expect(scratch.innerHTML).to.eql('<div><a class="">foo</a><a class="bar active">bar</a></div>');
-							
+
 							done();
 						});
 					});
