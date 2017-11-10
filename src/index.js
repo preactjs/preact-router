@@ -38,24 +38,20 @@ function getCurrentUrl() {
 
 const a = typeof document!=='undefined' && document.createElement('a');
 
-// Based on https://tools.ietf.org/html/rfc3986#appendix-B
-const uriRegex = new RegExp('^([^:/?#]+:)?(?://([^/?#]*))?([^?#]*)((?:\\?[^#]*)?)((?:#.*)?)');
-
 /* Resolve URL relative to current location */
 function resolve(url) {
 	let current = getCurrentLocation();
 	if (a) {
 		a.setAttribute('href', url);
-		url = a.href;
+		if (
+			(current.protocol && a.protocol !== current.protocol) ||
+			(current.host && a.host !== current.host)
+		) {
+			return;
+		}
+		return a.pathname + a.search + a.hash;
 	}
-	let [,protocol,host,pathname,search,hash] = uriRegex.exec(url);
-	if (
-		(current.protocol && protocol !== current.protocol) ||
-		(current.host && host !== current.host)
-	) {
-		return;
-	}
-	return `${pathname}${search}${hash}`;
+	return url;
 }
 
 
