@@ -9,7 +9,7 @@ export function assign(obj, props) {
 	return obj;
 }
 
-export function exec(url, route, opts=EMPTY) {
+export function exec(url, route, opts) {
 	let reg = /(?:\?([^#]*))?(#.*)?$/,
 		c = url.match(reg),
 		matches = {},
@@ -51,34 +51,32 @@ export function exec(url, route, opts=EMPTY) {
 }
 
 export function pathRankSort(a, b) {
-	let aAttr = a.attributes || EMPTY,
-		bAttr = b.attributes || EMPTY;
-	if (aAttr.default) return 1;
-	if (bAttr.default) return -1;
-	let aRank = rank(aAttr.path),
-		bRank = rank(bAttr.path);
-	return (aRank < bRank) ? 1 :
-		(aRank === bRank) ? 0 :
-		-1;
+	return (
+		(a.rank < b.rank) ? 1 :
+		(a.rank > b.rank) ? -1 :
+		(a.index - b.index)
+	);
+}
+
+// filter out VNodes without attributes (which are unrankeable), and add `index`/`rank` properties to be used in sorting.
+export function prepareVNodeForRanking(vnode, index) {
+	vnode.index = index;
+	vnode.rank = rankChild(vnode);
+	return vnode.attributes;
 }
 
 export function segmentize(url) {
-	return strip(url).split('/');
+	return url.replace(/(^\/+|\/+$)/g, '').split('/');
 }
 
 export function rankSegment(segment) {
-	let [, isParam, , flag] = /^(:?)(.*?)([*+?]?)$/.exec(segment);
-	return isParam ? ('0*+?'.indexOf(flag) || 4) : 5;
+	return segment.charAt(0)==':' ? (1 + '*+?'.indexOf(segment.charAt(segment.length-1))) || 4 : 5;
 }
 
 export function rank(path) {
 	return segmentize(path).map(rankSegment).join('');
 }
 
-export function rankChild({ attributes=EMPTY }) {
-	return attributes.default ? '0' : rank(attributes.path);
-}
-
-export function strip(url) {
-	return url.replace(/(^\/+|\/+$)/g, '');
+function rankChild(vnode) {
+	return vnode.attributes.default ? 0 : rank(vnode.attributes.path);
 }

@@ -1,5 +1,5 @@
 import { cloneElement, h, Component } from 'preact';
-import { exec, rankChild, assign } from './util';
+import { exec, prepareVNodeForRanking, assign, pathRankSort } from './util';
 
 let customHistory = null;
 
@@ -210,20 +210,12 @@ class Router extends Component {
 
 	getMatchingChildren(children, url, invoke) {
 		return children
-			.filter(({ attributes }) => !!attributes)
-			.map((child, index) => ({ child, index, rank: rankChild(child) }))
-			.sort((a, b) => (
-				(a.rank < b.rank) ? 1 :
-				(a.rank > b.rank) ? -1 :
-				(a.index - b.index)
-			))
-			.map(({ child }) => child)
+			.filter(prepareVNodeForRanking)
+			.sort(pathRankSort)
 			.map( vnode => {
-				let attrs = vnode.attributes || {},
-					path = attrs.path,
-					matches = exec(url, path, attrs);
+				let matches = exec(url, vnode.attributes.path, vnode.attributes);
 				if (matches) {
-					if (invoke!==false) {
+					if (invoke !== false) {
 						let newProps = { url, matches };
 						assign(newProps, matches);
 						delete newProps.ref;
@@ -232,7 +224,6 @@ class Router extends Component {
 					}
 					return vnode;
 				}
-				return false;
 			}).filter(Boolean);
 	}
 
