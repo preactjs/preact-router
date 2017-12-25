@@ -13,6 +13,7 @@ Connect your [Preact] components up to that address bar.
 
 #### [See a Real-world Example :arrow_right:](http://jsfiddle.net/developit/qc73v9va/)
 
+
 ---
 
 
@@ -37,6 +38,7 @@ render(<Main />, document.body);
 
 If there is an error rendering the destination route, a 404 will be displayed.
 
+
 ### Handling URLS
 
 :information_desk_person: Pages are just regular components that get mounted when you navigate to a certain URL.
@@ -55,6 +57,7 @@ You can also make params optional by adding a `?` to it.
   <D default />
 </Router>
 ```
+
 
 ### Lazy Loading
 
@@ -75,6 +78,7 @@ import AsyncRoute from 'preact-async-route';
   />
 </Router>
 ```
+
 
 ### Active Matching & Links
 
@@ -135,6 +139,7 @@ render(
 )
 ```
 
+
 ### Redirects
 
 Can easily be implemented with a custom `Redirect` component;
@@ -163,7 +168,26 @@ Now to create a redirect within your application, you can add this `Redirect` co
 </Router>
 ```
 
----
+
+### Custom History
+
+It's possible to use alternative history bindings, like `/#!/hash-history`:
+
+```js
+import { h } from 'preact';
+import Router from 'preact-router';
+import createHashHistory from 'history/createHashHistory';
+
+const Main = () => (
+    <Router history={createHashHistory()}>
+        <Home path="/" />
+        <About path="/about" />
+        <Search path="/search/:query" />
+    </Router>
+);
+
+render(<Main />, document.body);
+```
 
 
 ### License
