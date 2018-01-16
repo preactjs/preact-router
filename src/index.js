@@ -171,6 +171,9 @@ class Router extends Component {
 
 	/** Re-render children with a new URL to match against. */
 	routeTo(url) {
+		// marlun78: Ignore anchors
+		if (String(url).charAt(0)==='#') return false;
+
 		this._didRoute = false;
 		this.setState({ url });
 

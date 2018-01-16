@@ -117,6 +117,28 @@ describe('preact-router', () => {
 
 			router.componentWillUnmount();
 		});
+
+		it('should ignore anchor links (starting with #)', () => {
+			let router = new Router({
+				url: '/foo',
+				children: [
+					<foo path="/" />,
+					<foo path="/foo" />
+				]
+			}, {});
+			sinon.spy(router, 'routeTo');
+			sinon.spy(router, 'setState');
+
+			router.componentWillMount();
+
+			expect(route('#bar')).to.equal(false);
+			expect(router.routeTo)
+				.to.have.been.calledOnce
+				.and.calledWithExactly('#bar');
+			expect(router.setState).to.have.callCount(0);
+
+			router.componentWillUnmount();
+		});
 	});
 
 	describe('route()', () => {

@@ -1,8 +1,8 @@
 {
-  "name": "preact-router",
+  "name": "@betit/preact-router",
   "amdName": "preactRouter",
   "version": "2.6.0",
-  "description": "Connect your components up to that address bar.",
+  "description": "A fork of github.com/developit/preact-router",
   "main": "dist/preact-router.js",
   "jsnext:main": "dist/preact-router.es.js",
   "module": "dist/preact-router.es.js",
@@ -37,12 +37,12 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/developit/preact-router.git"
+    "url": "https://github.com/betit/preact-router.git"
   },
   "bugs": {
-    "url": "https://github.com/developit/preact-router/issues"
+    "url": "https://github.com/betit/preact-router/issues"
   },
-  "homepage": "https://github.com/developit/preact-router",
+  "homepage": "https://github.com/betit/preact-router",
   "peerDependencies": {
     "preact": "*"
   },
