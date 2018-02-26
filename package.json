@@ -9,7 +9,7 @@
   "scripts": {
     "clean": "rimraf dist/",
     "copy-typescript-definition": "copyfiles -f src/index.d.ts src/match.d.ts .",
-    "build": "npm-run-all --silent clean transpile transpile:match copy-typescript-definition size",
+    "build": "npm-run-all clean transpile transpile:match copy-typescript-definition size",
     "transpile": "rollup -c --environment FORMAT:umd && rollup -c --environment FORMAT:es",
     "transpile:match": "babel src/match.js -o match.js -f umd",
     "size": "size=$(gzip-size $npm_package_main) && echo \"gzip size: $size / $(pretty-bytes $size)\"",
@@ -17,7 +17,7 @@
     "lint": "eslint {src,test,test_helpers}",
     "test:karma": "karma start --single-run",
     "test:watch": "karma start",
-    "prepublish": "npm-run-all build test",
+    "prepublish": "npm-run-all build",
     "release": "npm run build && git commit -am $npm_package_version && git tag $npm_package_version && git push && git push --tags && npm publish"
   },
   "files": [
