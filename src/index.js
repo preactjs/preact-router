@@ -146,6 +146,11 @@ function initEventListeners() {
 	eventListenersInitialized = true;
 }
 
+// hack! Not sure how to make this fix work: https://github.com/developit/preact-router/pull/232
+// so in the mean time Chris is using this to fix his production memory leak
+function clearGlobalState() {
+	ROUTERS.splice(0, ROUTERS.length);
+}
 
 class Router extends Component {
 	constructor(props) {
@@ -266,5 +271,5 @@ Router.Router = Router;
 Router.Route = Route;
 Router.Link = Link;
 
-export { subscribers, getCurrentUrl, route, Router, Route, Link };
+export { subscribers, getCurrentUrl, route, Router, Route, Link, clearGlobalState };
 export default Router;
