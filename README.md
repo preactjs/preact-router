@@ -199,6 +199,17 @@ const Main = () => (
 render(<Main />, document.body);
 ```
 
+### Programmatically Triggering Route
+
+Its possible to programmatically trigger a route to a page (like `window.location = '/page-2'`)
+
+```js
+import { route } from 'preact-router';
+
+route('/page-2')  // appends a history entry
+
+route('/page-3', true)  // replaces the current history entry
+```
 
 ### License
 
