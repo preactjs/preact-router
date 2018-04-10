@@ -150,7 +150,7 @@ This can be accomplished by adding a `native` boolean attribute to any link:
 <a href="/foo" native>Foo</a>
 ```
 
-### Detecting Route Chnages
+### Detecting Route Changes
 
 The `Router` notifies you when a change event occurs for a route with the `onChange` callback:
 
