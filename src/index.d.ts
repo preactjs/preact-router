@@ -66,7 +66,6 @@ export function Link(props: {activeClassName?: string} & JSX.HTMLAttributes): pr
 
 declare module 'preact' {
     export interface Attributes extends RoutableProps {}
-    export interface ClassAttributes<T> extends RoutableProps {}
 }
 
 export default Router;
