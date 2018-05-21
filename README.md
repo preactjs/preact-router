@@ -150,6 +150,40 @@ This can be accomplished by adding a `native` boolean attribute to any link:
 <a href="/foo" native>Foo</a>
 ```
 
+### Detecting Route Changes
+
+The `Router` notifies you when a change event occurs for a route with the `onChange` callback:
+
+```
+import { render, Component } from 'preact';
+import { Router, route } from 'preact-router';
+
+class App extends Component {
+
+  // some method that returns a promise
+  isAuthenticated() { }
+
+  async handleRoute = e => {
+    switch(e.path) {
+      case '/profile':
+        const isAuthed == await this.isAuthenticated();
+	if(!isAuthed) route('/', true);
+      	break;
+    }
+  }
+
+  render() {
+    return (
+      <Router onChange={this.handleRoute.bind(this)}>
+        <Home path="/" />
+        <Profile path="/profile" />
+      </Router>
+    );  
+  }
+
+}
+```
+
 ### Redirects
 
 Can easily be implemented with a custom `Redirect` component;
