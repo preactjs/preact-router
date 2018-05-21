@@ -2,5 +2,6 @@
 /node_modules
 /npm-debug.log
 /match.js
+/package-lock.json
 /*.d.ts
 .DS_Store
