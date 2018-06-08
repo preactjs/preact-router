@@ -164,7 +164,7 @@ class App extends Component {
   isAuthenticated() { }
 
   async handleRoute = e => {
-    switch(e.path) {
+    switch(e.url) {
       case '/profile':
         const isAuthed == await this.isAuthenticated();
 	if(!isAuthed) route('/', true);
