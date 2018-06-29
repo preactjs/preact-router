@@ -46,17 +46,22 @@ describe('dom', () => {
 
 		it('should route when clicked', () => {
 			let onChange = sinon.spy();
+			let onLoad = sinon.spy();
 			mount(
 				<div>
 					<Link href="/foo">foo</Link>
-					<Router onChange={onChange}>
+					<Router onChange={onChange} onLoad={onLoad}>
 						<div default />
 					</Router>
 				</div>
 			);
 			onChange.reset();
+			onLoad.reset();
 			$('a').click();
 			expect(onChange)
+				.to.have.been.calledOnce
+				.and.to.have.been.calledWithMatch({ url:'/foo' });
+			expect(onLoad)
 				.to.have.been.calledOnce
 				.and.to.have.been.calledWithMatch({ url:'/foo' });
 		});
@@ -65,18 +70,23 @@ describe('dom', () => {
 	describe('<a>', () => {
 		it('should route for existing routes', () => {
 			let onChange = sinon.spy();
+			let onLoad = sinon.spy();
 			mount(
 				<div>
 					<a href="/foo">foo</a>
-					<Router onChange={onChange}>
+					<Router onChange={onChange} onLoad={onLoad}>
 						<div default />
 					</Router>
 				</div>
 			);
 			onChange.reset();
+			onLoad.reset();
 			$('a').click();
 			// fireEvent($('a'), 'click');
 			expect(onChange)
+				.to.have.been.calledOnce
+				.and.to.have.been.calledWithMatch({ url:'/foo' });
+			expect(onLoad)
 				.to.have.been.calledOnce
 				.and.to.have.been.calledWithMatch({ url:'/foo' });
 		});
