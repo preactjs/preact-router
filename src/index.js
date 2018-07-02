@@ -193,6 +193,7 @@ class Router extends Component {
 			});
 		}
 		this.updating = false;
+		this.onLoad();
 	}
 
 	componentWillUnmount() {
@@ -206,6 +207,14 @@ class Router extends Component {
 
 	componentDidUpdate() {
 		this.updating = false;
+		this.onLoad();
+	}
+
+	onLoad() {
+		let onLoad = this.props.onLoad;
+		if (typeof onLoad==='function') {
+			onLoad({ url: this.state.url });
+		}
 	}
 
 	getMatchingChildren(children, url, invoke) {
