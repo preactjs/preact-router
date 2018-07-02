@@ -1,5 +1,5 @@
 {
-  "name": "preact-router",
+  "name": "pogo-router",
   "amdName": "preactRouter",
   "version": "2.6.1",
   "description": "Connect your components up to that address bar.",
