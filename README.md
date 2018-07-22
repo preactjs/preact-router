@@ -163,22 +163,22 @@ class App extends Component {
   // some method that returns a promise
   isAuthenticated() { }
 
-  async handleRoute = e => {
-    switch(e.url) {
+  handleRoute = async e => {
+    switch (e.url) {
       case '/profile':
         const isAuthed = await this.isAuthenticated();
-	      if(!isAuthed) route('/', true);
-      	break;
+        if (!isAuthed) route('/', true);
+        break;
     }
-  }
+  };
 
   render() {
     return (
-      <Router onChange={this.handleRoute.bind(this)}>
+      <Router onChange={this.handleRoute}>
         <Home path="/" />
         <Profile path="/profile" />
       </Router>
-    );  
+    );
   }
 
 }
