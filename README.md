@@ -154,7 +154,7 @@ This can be accomplished by adding a `native` boolean attribute to any link:
 
 The `Router` notifies you when a change event occurs for a route with the `onChange` callback:
 
-```
+```js
 import { render, Component } from 'preact';
 import { Router, route } from 'preact-router';
 
@@ -163,22 +163,22 @@ class App extends Component {
   // some method that returns a promise
   isAuthenticated() { }
 
-  async handleRoute = e => {
-    switch(e.url) {
+  handleRoute = async e => {
+    switch (e.url) {
       case '/profile':
-        const isAuthed == await this.isAuthenticated();
-	if(!isAuthed) route('/', true);
-      	break;
+        const isAuthed = await this.isAuthenticated();
+        if (!isAuthed) route('/', true);
+        break;
     }
-  }
+  };
 
   render() {
     return (
-      <Router onChange={this.handleRoute.bind(this)}>
+      <Router onChange={this.handleRoute}>
         <Home path="/" />
         <Profile path="/profile" />
       </Router>
-    );  
+    );
   }
 
 }
