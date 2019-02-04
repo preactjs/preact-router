@@ -9,6 +9,16 @@ const subscribers = [];
 
 const EMPTY = {};
 
+/**
+ * Set customHistory variable
+ * because customHistory is read-only when exports
+ * 
+ * @param {*} newCustomHistory history object
+ */
+function setCustomHistory(newCustomHistory) {
+  customHistory = newCustomHistory;
+}
+
 function isPreactElement(node) {
 	return node.__preactattr_!=null || typeof Symbol!=='undefined' && node[Symbol.for('preactattr')]!=null;
 }
@@ -148,15 +158,18 @@ function initEventListeners() {
 class Router extends Component {
 	constructor(props) {
 		super(props);
-		if (props.history) {
-			customHistory = props.history;
+		/** this condition allows to modify the constructor */
+    if (Object.getPrototypeOf(this.constructor).name === 'Component') {
+			if (props.history) {
+				setCustomHistory(props.history);
+			}
+
+			this.state = {
+				url: props.url || getCurrentUrl()
+			};
+
+			initEventListeners();
 		}
-
-		this.state = {
-			url: props.url || getCurrentUrl()
-		};
-
-		initEventListeners();
 	}
 
 	shouldComponentUpdate(props) {
@@ -265,4 +278,6 @@ Router.Route = Route;
 Router.Link = Link;
 
 export { subscribers, getCurrentUrl, route, Router, Route, Link };
+/** allows to modify the Router class */
+export { canRoute, delegateLinkHandler, routeTo, customHistory, setCustomHistory };
 export default Router;
