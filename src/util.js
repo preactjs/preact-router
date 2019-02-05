@@ -1,4 +1,3 @@
-
 const EMPTY = {};
 
 export function assign(obj, props) {
@@ -26,11 +25,18 @@ export function exec(url, route, opts) {
 	let max = Math.max(url.length, route.length);
 	for (let i=0; i<max; i++) {
 		if (route[i] && route[i].charAt(0)===':') {
-			let param = route[i].replace(/(^\:|[+*?]+$)/g, ''),
-				flags = (route[i].match(/[+*?]+$/) || EMPTY)[0] || '',
+			let param = route[i].replace(/(^\:|[+*?]+)/g, '').replace(/\[.*\]/g, ''),
+				flags = (route[i].match(/[+*?]+/) || EMPTY)[0] || '',
+				regexMatch = route[i].match(/\[(.*)\]/),
+				regex = ((regexMatch || EMPTY).length === 2) ? regexMatch[1] : '',
 				plus = ~flags.indexOf('+'),
 				star = ~flags.indexOf('*'),
 				val = url[i] || '';
+
+			if (regex && !val.match(regex) && (flags.indexOf('?')<0 || val != '')) {
+				ret = false;
+				break;
+			}
 			if (!val && !star && (flags.indexOf('?')<0 || plus)) {
 				ret = false;
 				break;
