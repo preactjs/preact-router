@@ -79,17 +79,11 @@ function routeTo(url) {
 
 
 function routeFromLink(node) {
-	// only valid elements
-	if (!node || !node.getAttribute) return;
-
-	let href = node.getAttribute('href'),
-		target = node.getAttribute('target');
-
-	// ignore links with targets and non-path URLs
-	if (!href || !href.match(/^\//g) || (target && !target.match(/^_?self$/i))) return;
+	// ignore invalid & external links:
+	if (!node || node.protocol!==location.protocol || node.host!==location.host || (node.target && !node.target.match(/^_?self$/i))) return;
 
 	// attempt to route, if no match simply cede control to browser
-	return route(href);
+	return route(node.pathname + node.search + node.hash);
 }
 
 
@@ -117,12 +111,9 @@ function delegateLinkHandler(e) {
 
 	let t = e.target;
 	do {
-		if (String(t.nodeName).toUpperCase()==='A' && t.getAttribute('href') && isPreactElement(t)) {
-			if (t.hasAttribute('native')) return;
+		if (String(t.nodeName).toUpperCase()==='A' && t.pathname && isPreactElement(t) && !t.hasAttribute('native') && routeFromLink(t)) {
 			// if link is handled by the router, prevent browser defaults
-			if (routeFromLink(t)) {
-				return prevent(e);
-			}
+			return prevent(e);
 		}
 	} while ((t=t.parentNode));
 }
