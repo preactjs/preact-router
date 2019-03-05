@@ -9,10 +9,6 @@ const subscribers = [];
 
 const EMPTY = {};
 
-function isPreactElement(node) {
-	return node.__preactattr_!=null || typeof Symbol!=='undefined' && node[Symbol.for('preactattr')]!=null;
-}
-
 function setUrl(url, type='push') {
 	if (customHistory && customHistory[type]) {
 		customHistory[type](url);
@@ -117,7 +113,7 @@ function delegateLinkHandler(e) {
 
 	let t = e.target;
 	do {
-		if (String(t.type).toUpperCase()==='A' && t.getAttribute('href') && isPreactElement(t)) {
+		if (String(t.nodeName).toUpperCase()==='A' && t.getAttribute('href')) {
 			if (t.hasAttribute('native')) return;
 			// if link is handled by the router, prevent browser defaults
 			if (routeFromLink(t)) {

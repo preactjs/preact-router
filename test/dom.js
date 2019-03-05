@@ -66,7 +66,7 @@ describe('dom', () => {
 			let onChange = sinon.spy();
 			mount(
 				<div>
-					<Link href="/foo">foo</Link>
+					<a href="/foo">foo</a>
 					<Router onChange={onChange}>
 						<div default />
 					</Router>
