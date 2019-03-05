@@ -1,4 +1,4 @@
-import { cloneElement, h, Component } from 'preact';
+import { cloneElement, h, Component, toChildArray } from 'preact';
 import { exec, prepareVNodeForRanking, assign, pathRankSort } from './util';
 
 let customHistory = null;
@@ -117,7 +117,7 @@ function delegateLinkHandler(e) {
 
 	let t = e.target;
 	do {
-		if (String(t.nodeName).toUpperCase()==='A' && t.getAttribute('href') && isPreactElement(t)) {
+		if (String(t.type).toUpperCase()==='A' && t.getAttribute('href') && isPreactElement(t)) {
 			if (t.hasAttribute('native')) return;
 			// if link is handled by the router, prevent browser defaults
 			if (routeFromLink(t)) {
@@ -166,7 +166,8 @@ class Router extends Component {
 
 	/** Check if the given URL can be matched against any children */
 	canRoute(url) {
-		return this.getMatchingChildren(this.props.children, url, false).length > 0;
+		const children = toChildArray(this.props.children);
+		return this.getMatchingChildren(children, url, false).length > 0;
 	}
 
 	/** Re-render children with a new URL to match against. */
@@ -213,7 +214,7 @@ class Router extends Component {
 			.filter(prepareVNodeForRanking)
 			.sort(pathRankSort)
 			.map( vnode => {
-				let matches = exec(url, vnode.attributes.path, vnode.attributes);
+				let matches = exec(url, vnode.props.path, vnode.props);
 				if (matches) {
 					if (invoke !== false) {
 						let newProps = { url, matches };
@@ -228,7 +229,7 @@ class Router extends Component {
 	}
 
 	render({ children, onChange }, { url }) {
-		let active = this.getMatchingChildren(children, url, true);
+		let active = this.getMatchingChildren(toChildArray(children), url, true);
 
 		let current = active[0] || null;
 		this._didRoute = !!current;
