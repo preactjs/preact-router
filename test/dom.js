@@ -40,7 +40,7 @@ describe('dom', () => {
 			mount(
 				<Link href="/foo" bar="baz">hello</Link>
 			);
-			expect(scratch.innerHTML).to.eql('<a href=\"/foo\" bar=\"baz\">hello</a>');
+			expect(scratch.innerHTML).to.eql('<a href="/foo" bar="baz">hello</a>');
 		});
 
 		it('should route when clicked', () => {
