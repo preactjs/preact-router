@@ -1,4 +1,4 @@
-import { cloneElement, h, Component, toChildArray } from 'preact';
+import { cloneElement, createElement, Component, toChildArray } from 'preact';
 import { exec, prepareVNodeForRanking, assign, pathRankSort } from './util';
 
 let customHistory = null;
@@ -249,10 +249,10 @@ class Router extends Component {
 }
 
 const Link = (props) => (
-	h('a', assign({ onClick: handleLinkClick }, props))
+	createElement('a', assign({ onClick: handleLinkClick }, props))
 );
 
-const Route = props => h(props.component, props);
+const Route = props => createElement(props.component, props);
 
 Router.subscribers = subscribers;
 Router.getCurrentUrl = getCurrentUrl;
