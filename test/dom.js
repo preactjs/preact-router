@@ -17,7 +17,7 @@ describe('dom', () => {
 		scratch = document.createElement('div');
 		document.body.appendChild(scratch);
 		$ = s => scratch.querySelector(s);
-		mount = jsx => render(jsx, scratch, scratch.firstChild);
+		mount = jsx => {render(jsx, scratch); return scratch.lastChild;};
 	});
 
 	beforeEach( () => {
@@ -37,10 +37,11 @@ describe('dom', () => {
 
 	describe('<Link />', () => {
 		it('should render a normal link', () => {
-			mount(
-				<Link href="/foo" bar="baz">hello</Link>
+			expect(
+				mount(<Link href="/foo" bar="baz">hello</Link>).outerHTML
+			).to.eql(
+				mount(<a href="/foo" bar="baz">hello</a>).outerHTML
 			);
-			expect(scratch.innerHTML).to.eql('<a href="/foo" bar="baz">hello</a>');
 		});
 
 		it('should route when clicked', () => {
