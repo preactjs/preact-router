@@ -1,4 +1,4 @@
-import { h, Component, toChildArray } from 'preact';
+import { h, Component } from 'preact';
 import { subscribers, getCurrentUrl, Link as StaticLink } from 'preact-router';
 
 export class Match extends Component {
@@ -16,8 +16,7 @@ export class Match extends Component {
 		let url = this.nextUrl || getCurrentUrl(),
 			path = url.replace(/\?.+$/,'');
 		this.nextUrl = null;
-		const children = toChildArray(props.children);
-		return children[0] && children[0]({
+		return props.children({
 			url,
 			path,
 			matches: path===props.path
