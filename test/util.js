@@ -43,7 +43,7 @@ describe('util', () => {
 
 	describe('pathRankSort', () => {
 		it('should sort by highest rank first', () => {
-			let paths = arr => arr.map( path => ({ attributes:{path}} ) );
+			let paths = arr => arr.map( path => ({ props:{path}} ) );
 			let clean = vnode => { delete vnode.rank; delete vnode.index; return vnode; };
 
 			expect(
@@ -54,10 +54,10 @@ describe('util', () => {
 		});
 
 		it('should return default routes last', () => {
-			let paths = arr => arr.map( path => ({attributes:{path}}) );
+			let paths = arr => arr.map( path => ({props:{path}}) );
 			let clean = vnode => { delete vnode.rank; delete vnode.index; return vnode; };
 
-			let defaultPath = {attributes:{default:true}};
+			let defaultPath = {props:{default:true}};
 			let p = paths(['/a/b/', '/a/b', '/', 'b']);
 			p.splice(2,0,defaultPath);
 
