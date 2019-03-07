@@ -12,6 +12,9 @@ export class Match extends Component {
 	componentWillUnmount() {
 		subscribers.splice(subscribers.indexOf(this.update)>>>0, 1);
 	}
+	isMatch(path) {
+		return path===this.props.path;
+	}
 	render(props) {
 		let url = this.nextUrl || getCurrentUrl(),
 			path = url.replace(/\?.+$/,'');
@@ -19,7 +22,7 @@ export class Match extends Component {
 		return props.children[0] && props.children[0]({
 			url,
 			path,
-			matches: path===props.path
+			matches: this.isMatch(path)
 		});
 	}
 }
