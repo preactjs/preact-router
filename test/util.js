@@ -112,7 +112,7 @@ describe('util', () => {
 			expect(exec('/a', '/:foo+', { trailing: true })).to.eql({ foo:'a/' });
 			expect(exec('/a/b', '/:foo+', { trailing: true })).to.eql({ foo:'a/b/' });
 			expect(exec('/a/b/c', '/:foo+', { trailing: true })).to.eql({ foo:'a/b/c/' });
-
+			// The below tests are for backwards compatibility
 			expect(exec('/', '/:foo+', { trailing: false })).to.eql(false);
 			expect(exec('/a', '/:foo+', { trailing: false })).to.eql({ foo:'a' });
 			expect(exec('/a/b', '/:foo+', { trailing: false })).to.eql({ foo:'a/b' });
