@@ -20,6 +20,7 @@ function RouterWithComponents() {
             <div path="/a"></div>
             <ClassComponent path="/b" />
             <SomeFunctionalComponent path="/c" />
+            <SomeFunctionalComponent path="/d" trailing/>
         </Router>
     )
 }
@@ -31,6 +32,7 @@ function RouterWithRoutes() {
             <Route default component={SomeFunctionalComponent} />
             <Route path="/a" component={ClassComponent} />
             <Route path="/b" component={SomeFunctionalComponent} />
+            <Route path="/c/" component={ClassComponent} trailing/>
         </Router>
     );
 }

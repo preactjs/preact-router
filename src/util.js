@@ -38,6 +38,7 @@ export function exec(url, route, opts) {
 			matches[param] = decodeURIComponent(val);
 			if (plus || star) {
 				matches[param] = url.slice(i).map(decodeURIComponent).join('/');
+				if (opts.trailing) { matches[param] += '/' }
 				break;
 			}
 		}

@@ -106,5 +106,12 @@ describe('util', () => {
 			expect(exec('/a/b', '/:foo+', {})).to.eql({ foo:'a/b' });
 			expect(exec('/a/b/c', '/:foo+', {})).to.eql({ foo:'a/b/c' });
 		});
+
+		it('should include trailing slash when trailing is selected', () => {
+			expect(exec('/', '/:foo+', { trailing: true })).to.eql(false);
+			expect(exec('/a', '/:foo+', { trailing: true })).to.eql({ foo:'a/' });
+			expect(exec('/a/b', '/:foo+', { trailing: true })).to.eql({ foo:'a/b/' });
+			expect(exec('/a/b/c', '/:foo+', { trailing: true })).to.eql({ foo:'a/b/c/' });
+		});
 	});
 });
