@@ -6,7 +6,7 @@ export class Match extends preact.Component<RoutableProps, {}> {
     render(): preact.VNode;
 }
 
-export interface LinkProps extends JSX.HTMLAttributes {
+export interface LinkProps extends preact.JSX.HTMLAttributes {
     activeClassName: string;
 }
 
