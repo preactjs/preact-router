@@ -120,8 +120,7 @@ render(
 `<Link>` is just a normal link, but it automatically adds and removes an "active" classname to itself based on whether it matches the current URL.
 
 ```js
-import { Router } from 'preact-router';
-import { Link } from 'preact-router/match';
+import { Router, Link } from 'preact-router';
 
 render(
   <div>
