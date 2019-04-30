@@ -16,7 +16,7 @@ export class Match extends Component {
 		let url = this.nextUrl || getCurrentUrl(),
 			path = url.replace(/\?.+$/,'');
 		this.nextUrl = null;
-		return props.children[0] && props.children[0]({
+		return props.children({
 			url,
 			path,
 			matches: path===props.path

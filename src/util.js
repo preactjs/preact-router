@@ -62,7 +62,7 @@ export function pathRankSort(a, b) {
 export function prepareVNodeForRanking(vnode, index) {
 	vnode.index = index;
 	vnode.rank = rankChild(vnode);
-	return vnode.attributes;
+	return vnode.props;
 }
 
 export function segmentize(url) {
@@ -78,5 +78,5 @@ export function rank(path) {
 }
 
 function rankChild(vnode) {
-	return vnode.attributes.default ? 0 : rank(vnode.attributes.path);
+	return vnode.props.default ? 0 : rank(vnode.props.path);
 }

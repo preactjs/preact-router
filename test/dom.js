@@ -17,7 +17,7 @@ describe('dom', () => {
 		scratch = document.createElement('div');
 		document.body.appendChild(scratch);
 		$ = s => scratch.querySelector(s);
-		mount = jsx => render(jsx, scratch, scratch.firstChild);
+		mount = jsx => {render(jsx, scratch); return scratch.lastChild;};
 	});
 
 	beforeEach( () => {

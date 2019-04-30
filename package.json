@@ -1,7 +1,7 @@
 {
   "name": "preact-router",
   "amdName": "preactRouter",
-  "version": "2.6.1",
+  "version": "3.0.0",
   "description": "Connect your components up to that address bar.",
   "main": "dist/preact-router.js",
   "jsnext:main": "dist/preact-router.es.js",
@@ -45,7 +45,7 @@
   },
   "homepage": "https://github.com/developit/preact-router",
   "peerDependencies": {
-    "preact": "*"
+    "preact": ">=10 || ^10.0.0-beta.0"
   },
   "devDependencies": {
     "babel-cli": "^6.9.0",
@@ -76,7 +76,7 @@
     "mocha": "^5.2.0",
     "npm-run-all": "^3.0.0",
     "phantomjs-prebuilt": "^2.1.7",
-    "preact": "^8.0.1",
+    "preact": "^10.0.0-beta.0",
     "pretty-bytes-cli": "^1.0.0",
     "puppeteer": "^1.9.0",
     "rimraf": "^2.5.1",
@@ -88,7 +88,7 @@
     "rollup-plugin-uglify": "^1.0.1",
     "sinon": "^7.1.0",
     "sinon-chai": "^2.8.0",
-    "typescript": "^2.5.3",
+    "typescript": "^3.4.4",
     "webpack": "^1.13.1"
   }
 }
