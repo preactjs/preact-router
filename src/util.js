@@ -26,7 +26,7 @@ export function exec(url, route, opts) {
 	let max = Math.max(url.length, route.length);
 	for (let i=0; i<max; i++) {
 		if (route[i] && route[i].charAt(0)===':') {
-			let param = route[i].replace(/(^\:|[+*?]+$)/g, ''),
+			let param = route[i].replace(/(^:|[+*?]+$)/g, ''),
 				flags = (route[i].match(/[+*?]+$/) || EMPTY)[0] || '',
 				plus = ~flags.indexOf('+'),
 				star = ~flags.indexOf('*'),
@@ -53,8 +53,8 @@ export function exec(url, route, opts) {
 export function pathRankSort(a, b) {
 	return (
 		(a.rank < b.rank) ? 1 :
-		(a.rank > b.rank) ? -1 :
-		(a.index - b.index)
+			(a.rank > b.rank) ? -1 :
+				(a.index - b.index)
 	);
 }
 

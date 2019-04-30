@@ -141,13 +141,13 @@ describe('preact-router', () => {
 		});
 
 		it('should return true for existing route', () => {
-			router.routeTo.reset();
+			router.routeTo.resetHistory();
 			expect(route('/')).to.equal(true);
 			expect(router.routeTo)
 				.to.have.been.calledOnce
 				.and.calledWithExactly('/');
 
-			router.routeTo.reset();
+			router.routeTo.resetHistory();
 			expect(route('/foo')).to.equal(true);
 			expect(router.routeTo)
 				.to.have.been.calledOnce
@@ -155,7 +155,7 @@ describe('preact-router', () => {
 		});
 
 		it('should return false for missing route', () => {
-			router.routeTo.reset();
+			router.routeTo.resetHistory();
 			expect(route('/asdf')).to.equal(false);
 			expect(router.routeTo)
 				.to.have.been.calledOnce
@@ -169,7 +169,7 @@ describe('preact-router', () => {
 				...oldChildren
 			];
 
-			router.routeTo.reset();
+			router.routeTo.resetHistory();
 			expect(route('/asdf')).to.equal(true);
 			expect(router.routeTo)
 				.to.have.been.calledOnce
