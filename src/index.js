@@ -151,7 +151,7 @@ class Router extends Component {
 		this.state = {
 			url: props.url || getCurrentUrl()
 		};
-
+		
 		initEventListeners();
 	}
 
@@ -179,7 +179,12 @@ class Router extends Component {
 	}
 
 	componentWillMount() {
-		ROUTERS.push(this);
+		// preact-render-to-string initializes components with the dirty flag set.
+		// We can use this to detect a static rendering environment and disable subscriptions.
+		this._ssr = this.__d || this._dirty;
+		if (!this._ssr) {
+			ROUTERS.push(this);
+		}
 		this.updating = true;
 	}
 
@@ -194,7 +199,7 @@ class Router extends Component {
 
 	componentWillUnmount() {
 		if (typeof this.unlisten==='function') this.unlisten();
-		ROUTERS.splice(ROUTERS.indexOf(this), 1);
+		ROUTERS.splice(ROUTERS.indexOf(this) >>> 0, 1);
 	}
 
 	componentWillUpdate() {
@@ -231,7 +236,7 @@ class Router extends Component {
 		this._didRoute = !!current;
 
 		let previous = this.previousUrl;
-		if (url!==previous) {
+		if (!this._ssr && url!==previous) {
 			this.previousUrl = url;
 			if (typeof onChange==='function') {
 				onChange({
