@@ -160,6 +160,10 @@ class Router extends Component {
 		return props.url!==this.props.url || props.onChange!==this.props.onChange;
 	}
 
+	componentWillReceiveProps(props) {
+		if (props.url && props.url!==this.state.url) this.routeTo(props.url) && setUrl(props.url);
+	}
+
 	/** Check if the given URL can be matched against any children */
 	canRoute(url) {
 		const children = toChildArray(this.props.children);
