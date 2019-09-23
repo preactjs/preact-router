@@ -7,7 +7,8 @@ export class Match extends preact.Component<RoutableProps, {}> {
 }
 
 export interface LinkProps extends JSX.HTMLAttributes {
-    activeClassName: string;
+    activeClassName?: string;
+    preventBubbling?: boolean;
 }
 
 export function Link(props: LinkProps): preact.VNode;

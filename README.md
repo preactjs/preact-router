@@ -119,6 +119,8 @@ render(
 
 `<Link>` is just a normal link, but it automatically adds and removes an "active" classname to itself based on whether it matches the current URL.
 
+By default Link allow bubbling event on click, but you can control it by prop `preventBubbling`.
+
 ```js
 import { Router } from 'preact-router';
 import { Link } from 'preact-router/match';
@@ -128,7 +130,7 @@ render(
     <nav>
       <Link activeClassName="active" href="/">Home</Link>
       <Link activeClassName="active" href="/foo">Foo</Link>
-      <Link activeClassName="active" href="/bar">Bar</Link>
+      <Link activeClassName="active" preventBubbling href="/bar">Click event will not bubble</Link>
     </nav>
     <Router>
       <div default>

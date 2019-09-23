@@ -1,4 +1,5 @@
 import * as preact from 'preact';
+import { LinkProps } from './match.d'
 
 export function route(url: string, replace?: boolean): boolean;
 export function route(options: { url: string; replace?: boolean }): boolean;
@@ -62,7 +63,7 @@ export function Route<Props>(
     props: RouteProps<Props> & Partial<Props>
 ): preact.VNode;
 
-export function Link(props: {activeClassName?: string} & JSX.HTMLAttributes): preact.VNode;
+export function Link(props: LinkProps): preact.VNode;
 
 declare module 'preact' {
     export interface Attributes extends RoutableProps {}
