@@ -122,8 +122,7 @@ render(
 By default Link allow bubbling event on click, but you can control it by prop `preventBubbling`.
 
 ```js
-import { Router } from 'preact-router';
-import { Link } from 'preact-router/match';
+import { Router, Link } from 'preact-router';
 
 render(
   <div>
@@ -222,7 +221,7 @@ It's possible to use alternative history bindings, like `/#!/hash-history`:
 ```js
 import { h } from 'preact';
 import Router from 'preact-router';
-import createHashHistory from 'history/createHashHistory';
+import { createHashHistory } from 'history';
 
 const Main = () => (
     <Router history={createHashHistory()}>
