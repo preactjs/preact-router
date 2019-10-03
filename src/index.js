@@ -1,5 +1,5 @@
 import { cloneElement, h, Component } from 'preact';
-import { exec, prepareVNodeForRanking, assign, pathRankSort } from './util';
+import { exec, prepareVNodeForRanking, assign, pathRankSort , segmentize } from './util';
 
 let customHistory = null;
 
@@ -8,6 +8,8 @@ const ROUTERS = [];
 const subscribers = [];
 
 const EMPTY = {};
+
+const CONTEXT_KEY = 'preact-router-baseUrl';
 
 function isPreactElement(node) {
 	return node.__preactattr_!=null || typeof Symbol!=='undefined' && node[Symbol.for('preactattr')]!=null;
@@ -40,11 +42,13 @@ function getCurrentUrl() {
 
 
 function route(url, replace=false) {
+	
 	if (typeof url!=='string' && url.url) {
 		replace = url.replace;
 		url = url.url;
 	}
 
+	url = '/zimbrax' + url;
 	// only push URL into history if we can handle it
 	if (canRoute(url)) {
 		setUrl(url, replace ? 'replace' : 'push');
@@ -146,10 +150,24 @@ function initEventListeners() {
 
 
 class Router extends Component {
-	constructor(props) {
+	constructor(props, context) {
 		super(props);
+		this.baseUrl = this.props.base || '';
+		if (props.path) {
+			let segments = segmentize(props.path);
+			segments.forEach(segment => {
+				if (segment.indexOf(':') == -1) {
+					this.baseUrl = this.baseUrl + '/' + segment;
+				}
+			});
+		}
+
 		if (props.history) {
 			customHistory = props.history;
+		}
+
+		if (context && context['preact-router-base'] && !this.props.base) {
+			this.baseUrl = context['preact-router-base'] + this.baseUrl;
 		}
 
 		this.state = {
@@ -157,6 +175,10 @@ class Router extends Component {
 		};
 
 		initEventListeners();
+	}
+
+	getChildContext() {
+		return  {['preact-router-base']: this.baseUrl};
 	}
 
 	shouldComponentUpdate(props) {
@@ -213,7 +235,7 @@ class Router extends Component {
 			.filter(prepareVNodeForRanking)
 			.sort(pathRankSort)
 			.map( vnode => {
-				let matches = exec(url, vnode.attributes.path, vnode.attributes);
+				let matches = exec(url, this.baseUrl + vnode.attributes.path, vnode.attributes);
 				if (matches) {
 					if (invoke !== false) {
 						let newProps = { url, matches };
@@ -257,12 +279,42 @@ const Link = (props) => (
 
 const Route = props => h(props.component, props);
 
+class Match extends Component {
+
+	constructor(props, context) {
+		super(props);
+		this.baseUrl = this.props.base || '';
+		if (props.path) {
+			let segments = segmentize(props.path);
+			segments.forEach(segment => {
+				if (segment.indexOf(':') == -1) {
+					this.baseUrl = this.baseUrl + '/' + segment;
+				}
+			});
+		}
+		if (context && context[CONTEXT_KEY]) {
+			this.baseUrl = context[CONTEXT_KEY] + this.baseUrl;
+		}
+	}
+
+	getChildContext() {
+		let result = {[CONTEXT_KEY]: this.baseUrl};
+		return result;
+	}
+
+	render({ children, url, matches }) {
+		return cloneElement(children[0], {url, matches});
+	}
+
+}
+
 Router.subscribers = subscribers;
 Router.getCurrentUrl = getCurrentUrl;
 Router.route = route;
 Router.Router = Router;
 Router.Route = Route;
 Router.Link = Link;
+Router.Match = Match;
 
-export { subscribers, getCurrentUrl, route, Router, Route, Link };
+export { subscribers, getCurrentUrl, route, Router, Route, Link, Match , exec, segmentize};
 export default Router;
