@@ -42,13 +42,14 @@ function getCurrentUrl() {
 
 
 function route(url, replace=false) {
-	
+	const  basePath = document.getElementsByTagName('base')[0].href.replace(window.origin, '').slice(0,-1);
+
 	if (typeof url!=='string' && url.url) {
 		replace = url.replace;
 		url = url.url;
 	}
 
-	url = '/zimbrax' + url;
+	url = basePath + url;
 	// only push URL into history if we can handle it
 	if (canRoute(url)) {
 		setUrl(url, replace ? 'replace' : 'push');
@@ -152,7 +153,8 @@ function initEventListeners() {
 class Router extends Component {
 	constructor(props, context) {
 		super(props);
-		this.baseUrl = this.props.base || '';
+		const  basePath = document.getElementsByTagName('base')[0].href.replace(window.origin, '').slice(0,-1);
+		this.baseUrl = basePath|| '';
 		if (props.path) {
 			let segments = segmentize(props.path);
 			segments.forEach(segment => {

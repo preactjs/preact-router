@@ -5,8 +5,8 @@ export class Match extends Component {
 	
 	constructor(props, context) {
 		super(props);
-		
-		this.baseUrl = this.props.base || '';
+		const  basePath = document.getElementsByTagName('base')[0].href.replace(window.origin, '').slice(0,-1);
+		this.baseUrl = basePath || '';
 		if (props.path) {
 			let segments = segmentize(props.path);
 			segments.forEach(segment => {
