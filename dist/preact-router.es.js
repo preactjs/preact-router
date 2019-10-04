@@ -84,7 +84,7 @@ function rankChild(vnode) {
 
 function getBase() {
 	var base = document.getElementsByTagName('base');
-	return base && base[0] && base[0].href.replace(window.origin, '').slice(0,-1);
+	return base && base[0] && base[0].href && base[0].href.replace(window.origin, '').slice(0,-1);
 }
 
 var customHistory = null;
