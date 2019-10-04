@@ -1,11 +1,12 @@
 import { h, Component , cloneElement} from 'preact';
-import { subscribers, getCurrentUrl, Link as StaticLink , exec, segmentize } from 'preact-router';
+import { subscribers, getCurrentUrl, Link as StaticLink , exec, segmentize, getBase } from 'preact-router';
+
+const basePath = getBase() || '';
 
 export class Match extends Component {
 	
 	constructor(props, context) {
 		super(props);
-		const  basePath = document.getElementsByTagName('base')[0].href.replace(window.origin, '').slice(0,-1);
 		this.baseUrl = basePath || '';
 		if (props.path) {
 			let segments = segmentize(props.path);

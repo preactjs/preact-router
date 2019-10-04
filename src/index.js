@@ -1,5 +1,5 @@
 import { cloneElement, h, Component } from 'preact';
-import { exec, prepareVNodeForRanking, assign, pathRankSort , segmentize } from './util';
+import { exec, prepareVNodeForRanking, assign, pathRankSort, segmentize, getBase } from './util';
 
 let customHistory = null;
 
@@ -9,7 +9,7 @@ const subscribers = [];
 
 const EMPTY = {};
 
-const CONTEXT_KEY = 'preact-router-baseUrl';
+const basePath = getBase() || '';
 
 function isPreactElement(node) {
 	return node.__preactattr_!=null || typeof Symbol!=='undefined' && node[Symbol.for('preactattr')]!=null;
@@ -42,8 +42,7 @@ function getCurrentUrl() {
 
 
 function route(url, replace=false) {
-	const  basePath = document.getElementsByTagName('base')[0].href.replace(window.origin, '').slice(0,-1);
-
+	
 	if (typeof url!=='string' && url.url) {
 		replace = url.replace;
 		url = url.url;
@@ -153,7 +152,6 @@ function initEventListeners() {
 class Router extends Component {
 	constructor(props, context) {
 		super(props);
-		const  basePath = document.getElementsByTagName('base')[0].href.replace(window.origin, '').slice(0,-1);
 		this.baseUrl = basePath|| '';
 		if (props.path) {
 			let segments = segmentize(props.path);
@@ -281,42 +279,12 @@ const Link = (props) => (
 
 const Route = props => h(props.component, props);
 
-class Match extends Component {
-
-	constructor(props, context) {
-		super(props);
-		this.baseUrl = this.props.base || '';
-		if (props.path) {
-			let segments = segmentize(props.path);
-			segments.forEach(segment => {
-				if (segment.indexOf(':') == -1) {
-					this.baseUrl = this.baseUrl + '/' + segment;
-				}
-			});
-		}
-		if (context && context[CONTEXT_KEY]) {
-			this.baseUrl = context[CONTEXT_KEY] + this.baseUrl;
-		}
-	}
-
-	getChildContext() {
-		let result = {[CONTEXT_KEY]: this.baseUrl};
-		return result;
-	}
-
-	render({ children, url, matches }) {
-		return cloneElement(children[0], {url, matches});
-	}
-
-}
-
 Router.subscribers = subscribers;
 Router.getCurrentUrl = getCurrentUrl;
 Router.route = route;
 Router.Router = Router;
 Router.Route = Route;
 Router.Link = Link;
-Router.Match = Match;
 
-export { subscribers, getCurrentUrl, route, Router, Route, Link, Match , exec, segmentize};
+export { subscribers, getCurrentUrl, route, Router, Route, Link, exec, segmentize, getBase };
 export default Router;
