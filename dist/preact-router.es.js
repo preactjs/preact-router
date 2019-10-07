@@ -95,7 +95,7 @@ var subscribers = [];
 
 var EMPTY = {};
 
-var basePath = getBase() || '';
+var basePath = '';
 
 function isPreactElement(node) {
 	return node.__preactattr_!=null || typeof Symbol!=='undefined' && node[Symbol.for('preactattr')]!=null;
@@ -244,7 +244,8 @@ var Router = (function (Component$$1) {
 		var this$1 = this;
 
 		Component$$1.call(this, props);
-		this.baseUrl = basePath|| '';
+		basePath = props.basePath;
+		this.baseUrl = basePath || '';
 		if (props.path) {
 			var segments = segmentize(props.path);
 			segments.forEach(function (segment) {

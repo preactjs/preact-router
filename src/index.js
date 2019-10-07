@@ -9,7 +9,7 @@ const subscribers = [];
 
 const EMPTY = {};
 
-const basePath = getBase() || '';
+let basePath = '';
 
 function isPreactElement(node) {
 	return node.__preactattr_!=null || typeof Symbol!=='undefined' && node[Symbol.for('preactattr')]!=null;
@@ -152,7 +152,8 @@ function initEventListeners() {
 class Router extends Component {
 	constructor(props, context) {
 		super(props);
-		this.baseUrl = basePath|| '';
+		basePath = props.basePath;
+		this.baseUrl = basePath || '';
 		if (props.path) {
 			let segments = segmentize(props.path);
 			segments.forEach(segment => {
