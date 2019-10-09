@@ -49,7 +49,9 @@ function route(url, replace=false) {
 	// only push URL into history if we can handle it
 	const router = getMatchingRouter(url);
 	if (router) {
-		url = router.baseUrl + url;
+		if (!url.startsWith(router.baseUrl)) {
+			url = router.baseUrl + url;
+		}
 		setUrl(url, replace ? 'replace' : 'push');
 	}
 

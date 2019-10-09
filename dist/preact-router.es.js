@@ -134,7 +134,9 @@ function route(url, replace) {
 	// only push URL into history if we can handle it
 	var router = getMatchingRouter(url);
 	if (router) {
-		url = router.baseUrl + url;
+		if (!url.startsWith(router.baseUrl)) {
+			url = router.baseUrl + url;
+		}
 		setUrl(url, replace ? 'replace' : 'push');
 	}
 

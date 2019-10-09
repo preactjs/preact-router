@@ -68,7 +68,7 @@ var Match = exports.Match = function (_Component) {
 		var newProps = {
 			url: url,
 			path: path,
-			matches: path === props.path || (0, _preactRouter.exec)(path, context['preact-router-base'] + props.path, {})
+			matches: path === props.path || (0, _preactRouter.exec)(path, this.baseUrl + props.path, {})
 		};
 		return props.children[0] && (typeof props.children[0] === 'function' ? props.children[0](newProps) : (0, _preact.cloneElement)(props.children[0], newProps));
 	};

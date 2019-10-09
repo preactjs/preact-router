@@ -41,7 +41,7 @@ export class Match extends Component {
 		const newProps = {
 			url,
 			path,
-			matches: path===props.path || exec(path, context['preact-router-base'] + props.path, {})
+			matches: path===props.path || exec(path, this.baseUrl + props.path, {})
 		};
 		return props.children[0] &&
 		  (typeof props.children[0] === 'function' ?
