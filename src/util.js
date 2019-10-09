@@ -80,8 +80,3 @@ export function rank(path) {
 function rankChild(vnode) {
 	return vnode.attributes.default ? 0 : rank(vnode.attributes.path);
 }
-
-export function getBase() {
-	const base = document.getElementsByTagName('base');
-	return base && base[0] && base[0].href && base[0].href.replace(window.origin, '').slice(0,-1);
-}

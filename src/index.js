@@ -1,5 +1,5 @@
 import { cloneElement, h, Component } from 'preact';
-import { exec, prepareVNodeForRanking, assign, pathRankSort, segmentize, getBase } from './util';
+import { exec, prepareVNodeForRanking, assign, pathRankSort, segmentize } from './util';
 
 let customHistory = null;
 
@@ -285,5 +285,5 @@ Router.Router = Router;
 Router.Route = Route;
 Router.Link = Link;
 
-export { subscribers, getCurrentUrl, route, Router, Route, Link, exec, segmentize, getBase };
+export { subscribers, getCurrentUrl, route, Router, Route, Link, exec, segmentize };
 export default Router;

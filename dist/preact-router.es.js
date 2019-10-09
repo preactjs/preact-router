@@ -82,11 +82,6 @@ function rankChild(vnode) {
 	return vnode.attributes.default ? 0 : rank(vnode.attributes.path);
 }
 
-function getBase() {
-	var base = document.getElementsByTagName('base');
-	return base && base[0] && base[0].href && base[0].href.replace(window.origin, '').slice(0,-1);
-}
-
 var customHistory = null;
 
 var ROUTERS = [];
@@ -392,5 +387,5 @@ Router.Router = Router;
 Router.Route = Route;
 Router.Link = Link;
 
-export { subscribers, getCurrentUrl, route, Router, Route, Link, exec, segmentize, getBase };export default Router;
+export { subscribers, getCurrentUrl, route, Router, Route, Link, exec, segmentize };export default Router;
 //# sourceMappingURL=preact-router.es.js.map

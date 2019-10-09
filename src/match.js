@@ -1,5 +1,5 @@
 import { h, Component , cloneElement} from 'preact';
-import { subscribers, getCurrentUrl, Link as StaticLink , exec, segmentize, getBase } from 'preact-router';
+import { subscribers, getCurrentUrl, Link as StaticLink , exec, segmentize } from 'preact-router';
 
 export class Match extends Component {
 	
