@@ -95,8 +95,6 @@ var subscribers = [];
 
 var EMPTY = {};
 
-var basePath = '';
-
 function isPreactElement(node) {
 	return node.__preactattr_!=null || typeof Symbol!=='undefined' && node[Symbol.for('preactattr')]!=null;
 }
@@ -138,9 +136,10 @@ function route(url, replace) {
 		url = url.url;
 	}
 
-	url = basePath + url;
 	// only push URL into history if we can handle it
-	if (canRoute(url)) {
+	var router = getMatchingRouter(url);
+	if (router) {
+		url = router.baseUrl + url;
 		setUrl(url, replace ? 'replace' : 'push');
 	}
 
@@ -149,9 +148,9 @@ function route(url, replace) {
 
 
 /** Check if the given URL can be handled by any router instances. */
-function canRoute(url) {
+function getMatchingRouter(url) {
 	for (var i=ROUTERS.length; i--; ) {
-		if (ROUTERS[i].canRoute(url)) { return true; }
+		if (ROUTERS[i].canRoute(url)) { return ROUTERS[i]; }
 	}
 	return false;
 }
@@ -244,8 +243,7 @@ var Router = (function (Component$$1) {
 		var this$1 = this;
 
 		Component$$1.call(this, props);
-		basePath = props.basePath;
-		this.baseUrl = basePath || '';
+		this.baseUrl = props.basePath || '';
 		if (props.path) {
 			var segments = segmentize(props.path);
 			segments.forEach(function (segment) {
