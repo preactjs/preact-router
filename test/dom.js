@@ -11,14 +11,11 @@ function fireEvent(on, type) {
 }
 
 describe('dom', () => {
-	let scratch, $, mount, base;
+	let scratch, $, mount;
 
 	before( () => {
 		scratch = document.createElement('div');
 		document.body.appendChild(scratch);
-		base = document.createElement('base');
-		base.setAttribute('href', '/');
-		document.body.appendChild(base);
 		$ = s => scratch.querySelector(s);
 		mount = jsx => render(jsx, scratch, scratch.firstChild);
 	});
