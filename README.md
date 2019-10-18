@@ -220,7 +220,7 @@ It's possible to use alternative history bindings, like `/#!/hash-history`:
 ```js
 import { h } from 'preact';
 import Router from 'preact-router';
-import createHashHistory from 'history/createHashHistory';
+import { createHashHistory } from 'history';
 
 const Main = () => (
     <Router history={createHashHistory()}>

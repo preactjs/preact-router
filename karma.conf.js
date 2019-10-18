@@ -2,7 +2,7 @@ module.exports = function(config) {
 	config.set({
 		frameworks: ['mocha', 'chai-sinon'],
 		reporters: ['mocha'],
-		browsers: ['PhantomJS'],
+		browsers: ['ChromeHeadless'],
 
 		files: ['test/**/*.js'],
 
