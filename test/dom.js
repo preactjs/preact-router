@@ -176,44 +176,64 @@ describe('dom', () => {
 		describe('<Match>', () => {
 			it('should invoke child function with match status when routing', done => {
 				let spy1 = sinon.spy(),
-					spy2 = sinon.spy();
+					spy2 = sinon.spy(),
+					spy3 = sinon.spy();
 				mount(
 					<div>
 						<Router />
 						<Match path="/foo">{spy1}</Match>
 						<Match path="/bar">{spy2}</Match>
+						<Match path="/bar/:param">{spy3}</Match>
 					</div>
 				);
 
 				expect(spy1, 'spy1 /foo').to.have.been.calledOnce.and.calledWithMatch({ matches: false, path:'/', url:'/' });
 				expect(spy2, 'spy2 /foo').to.have.been.calledOnce.and.calledWithMatch({ matches: false, path:'/', url:'/' });
+				expect(spy3, 'spy3 /foo').to.have.been.calledOnce.and.calledWithMatch({ matches: false, path:'/', url:'/' });
 
 				spy1.resetHistory();
 				spy2.resetHistory();
+				spy3.resetHistory();
 
 				route('/foo');
 
 				setTimeout( () => {
 					expect(spy1, 'spy1 /foo').to.have.been.calledOnce.and.calledWithMatch({ matches: true, path:'/foo', url:'/foo' });
 					expect(spy2, 'spy2 /foo').to.have.been.calledOnce.and.calledWithMatch({ matches: false, path:'/foo', url:'/foo' });
+					expect(spy3, 'spy3 /foo').to.have.been.calledOnce.and.calledWithMatch({ matches: false, path:'/foo', url:'/foo' });
 					spy1.resetHistory();
 					spy2.resetHistory();
+					spy3.resetHistory();
 
 					route('/foo?bar=5');
 
 					setTimeout( () => {
 						expect(spy1, 'spy1 /foo?bar=5').to.have.been.calledOnce.and.calledWithMatch({ matches: true, path:'/foo', url:'/foo?bar=5' });
 						expect(spy2, 'spy2 /foo?bar=5').to.have.been.calledOnce.and.calledWithMatch({ matches: false, path:'/foo', url:'/foo?bar=5' });
+						expect(spy3, 'spy3 /foo?bar=5').to.have.been.calledOnce.and.calledWithMatch({ matches: false, path:'/foo', url:'/foo?bar=5' });
 						spy1.resetHistory();
 						spy2.resetHistory();
+						spy3.resetHistory();
 
 						route('/bar');
 
 						setTimeout( () => {
 							expect(spy1, 'spy1 /bar').to.have.been.calledOnce.and.calledWithMatch({ matches: false, path:'/bar', url:'/bar' });
 							expect(spy2, 'spy2 /bar').to.have.been.calledOnce.and.calledWithMatch({ matches: true, path:'/bar', url:'/bar' });
+							expect(spy3, 'spy3 /bar').to.have.been.calledOnce.and.calledWithMatch({ matches: false, path:'/bar', url:'/bar' });
+							spy1.resetHistory();
+							spy2.resetHistory();
+							spy3.resetHistory();
 
-							done();
+							route('/bar/123');
+
+							setTimeout( () => {
+								expect(spy1, 'spy1 /bar/123').to.have.been.calledOnce.and.calledWithMatch({ matches: false, path:'/bar/123', url:'/bar/123' });
+								expect(spy2, 'spy2 /bar/123').to.have.been.calledOnce.and.calledWithMatch({ matches: false, path:'/bar/123', url:'/bar/123' });
+								expect(spy3, 'spy3 /bar/123').to.have.been.calledOnce.and.calledWithMatch({ matches: true, path:'/bar/123', url:'/bar/123' });
+
+								done();
+							}, 20);
 						}, 20);
 					}, 20);
 				}, 20);
