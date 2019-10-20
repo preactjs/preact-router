@@ -1,5 +1,5 @@
 import { h, Component } from 'preact';
-import { subscribers, getCurrentUrl, Link as StaticLink } from 'preact-router';
+import { subscribers, getCurrentUrl, Link as StaticLink, exec } from 'preact-router';
 
 export class Match extends Component {
 	update = url => {
@@ -19,7 +19,7 @@ export class Match extends Component {
 		return props.children({
 			url,
 			path,
-			matches: path===props.path
+			matches: exec(path, props.path, {}) !== false
 		});
 	}
 }
