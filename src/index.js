@@ -179,7 +179,7 @@ class Router extends Component {
 	}
 
 	componentWillMount() {
-		// preact-render-to-string initializes components with the dirty flag set.
+		// preact-render-to-string does not initialize the "next state" field for components.
 		// We can use this to detect a static rendering environment and disable subscriptions.
 		this._ssr = '_nextState' in this || '__s' in this;
 		if (!this._ssr) {
