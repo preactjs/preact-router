@@ -168,14 +168,14 @@ class Router extends Component {
 
 	/** Re-render children with a new URL to match against. */
 	routeTo(url) {
-		this._didRoute = false;
 		this.setState({ url });
 
-		// if we're in the middle of an update, don't synchronously re-route.
-		if (this.updating) return this.canRoute(url);
+		const didRoute = this.canRoute(url);
 
-		this.forceUpdate();
-		return this._didRoute;
+		// trigger a manual re-route if we're not in the middle of an update:
+		if (!this.updating) this.forceUpdate();
+
+		return didRoute;
 	}
 
 	componentWillMount() {
@@ -233,7 +233,6 @@ class Router extends Component {
 		let active = this.getMatchingChildren(toChildArray(children), url, true);
 
 		let current = active[0] || null;
-		this._didRoute = !!current;
 
 		let previous = this.previousUrl;
 		if (!this._ssr && url!==previous) {
