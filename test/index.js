@@ -4,6 +4,12 @@ import assertCloneOf from '../test_helpers/assert-clone-of';
 
 chai.use(assertCloneOf);
 
+function createBrowserRouter(props) {
+	const router = new Router(props);
+	router.__s = router.state || {};  // _nextState
+	router.componentWillMount();
+}
+
 describe('preact-router', () => {
 	it('should export Router, Link and route', () => {
 		expect(Router).to.be.a('function');
@@ -13,7 +19,7 @@ describe('preact-router', () => {
 
 	describe('Router', () => {
 		it('should filter children based on URL', () => {
-			let router = new Router({});
+			let router = createBrowserRouter({});
 			let children = [
 				<foo path="/" />,
 				<foo path="/foo" />,
@@ -34,7 +40,7 @@ describe('preact-router', () => {
 		});
 
 		it('should support nested parameterized routes', () => {
-			let router = new Router({});
+			let router = createBrowserRouter({});
 			let children = [
 				<foo path="/foo" />,
 				<foo path="/foo/:bar" />,
@@ -55,7 +61,7 @@ describe('preact-router', () => {
 		});
 
 		it('should support default routes', () => {
-			let router = new Router({});
+			let router = createBrowserRouter({});
 			let children = [
 				<foo default />,
 				<foo path="/" />,
@@ -76,7 +82,7 @@ describe('preact-router', () => {
 		});
 
 		it('should support initial route prop', () => {
-			let router = new Router({ url:'/foo' });
+			let router = createBrowserRouter({ url:'/foo' });
 			let children = [
 				<foo default />,
 				<foo path="/" />,
@@ -87,14 +93,14 @@ describe('preact-router', () => {
 				router.render({ children }, router.state)
 			).to.be.cloneOf(children[2]);
 
-			expect(new Router({})).to.have.deep.property('state.url', location.pathname + (location.search || ''));
+			expect(createBrowserRouter({})).to.have.deep.property('state.url', location.pathname + (location.search || ''));
 		});
 
 		it('should support custom history', () => {
 			let push = sinon.spy();
 			let replace = sinon.spy();
 			let getCurrentLocation = sinon.spy(() => ({pathname: '/initial'}));
-			let router = new Router({
+			let router = createBrowserRouter({
 				history: { push, replace, getCurrentLocation },
 				children: [
 					<index path="/" />,
@@ -123,7 +129,7 @@ describe('preact-router', () => {
 		let router;
 
 		before( () => {
-			router = new Router({
+			router = createBrowserRouter({
 				url: '/foo',
 				children: [
 					<foo path="/" />,
