@@ -1,6 +1,7 @@
 import { Router, Link, route } from 'src';
 import { Match, Link as ActiveLink } from 'src/match';
 import { h, render } from 'preact';
+import { act } from 'preact/test-utils';
 
 const Empty = () => null;
 
@@ -55,7 +56,9 @@ describe('dom', () => {
 				</div>
 			);
 			onChange.resetHistory();
-			$('a').click();
+			act(() => {
+				$('a').click();
+			});
 			expect(onChange)
 				.to.have.been.calledOnce
 				.and.to.have.been.calledWithMatch({ url:'/foo' });
@@ -74,7 +77,9 @@ describe('dom', () => {
 				</div>
 			);
 			onChange.resetHistory();
-			$('a').click();
+			act(() => {
+				$('a').click();
+			});
 			// fireEvent($('a'), 'click');
 			expect(onChange)
 				.to.have.been.calledOnce
@@ -92,7 +97,9 @@ describe('dom', () => {
 				</div>
 			);
 			onChange.resetHistory();
-			$('a').click();
+			act(() => {
+				$('a').click();
+			});
 			expect(onChange).not.to.have.been.called;
 			expect(location.href).to.contain('#foo');
 		});
@@ -113,10 +120,14 @@ describe('dom', () => {
 				</Router>
 			);
 			expect(A.prototype.componentWillMount).not.to.have.been.called;
-			route('/foo');
+			act(() => {
+				route('/foo');
+			});
 			expect(A.prototype.componentWillMount).to.have.been.calledOnce;
 			expect(A.prototype.componentWillUnmount).not.to.have.been.called;
-			route('/bar');
+			act(() => {
+				route('/bar');
+			});
 			expect(A.prototype.componentWillMount).to.have.been.calledOnce;
 			expect(A.prototype.componentWillUnmount).to.have.been.calledOnce;
 		});
@@ -141,7 +152,9 @@ describe('dom', () => {
 				</Router>
 			);
 			expect(A.prototype.componentWillMount).not.to.have.been.called;
-			route('/a');
+			act(() => {
+				route('/a');
+			});
 			expect(A.prototype.componentWillMount).to.have.been.calledOnce;
 			A.prototype.componentWillMount.resetHistory();
 			expect(location.pathname).to.equal('/b');
@@ -163,11 +176,17 @@ describe('dom', () => {
 					<A path="/foo" />
 				</Router>
 			);
-			route('/foo');
+			act(() => {
+				route('/foo');
+			});
 			expect(routerRef.base.outerHTML).to.eql('<p>bar is </p>');
-			route('/foo?bar=5');
+			act(() => {
+				route('/foo?bar=5');
+			});
 			expect(routerRef.base.outerHTML).to.eql('<p>bar is 5</p>');
-			route('/foo');
+			act(() => {
+				route('/foo');
+			});
 			expect(routerRef.base.outerHTML).to.eql('<p>bar is </p>');
 		});
 	});
