@@ -181,7 +181,7 @@ class Router extends Component {
 	componentWillMount() {
 		// preact-render-to-string initializes components with the dirty flag set.
 		// We can use this to detect a static rendering environment and disable subscriptions.
-		this._ssr = this.__d || this._dirty;
+		this._ssr = '_nextState' in this || '__s' in this;
 		if (!this._ssr) {
 			ROUTERS.push(this);
 		}
