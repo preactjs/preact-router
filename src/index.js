@@ -156,12 +156,8 @@ class Router extends Component {
 	}
 
 	shouldComponentUpdate(props) {
-		if (props.static!==true) return true;
-		return props.url!==this.props.url || props.onChange!==this.props.onChange;
-	}
-
-	componentWillReceiveProps(props) {
-		if (props.url && props.url!==this.state.url) this.routeTo(props.url) && setUrl(props.url);
+		if (props.url && props.url!==this.state.url) this.routeTo(props.url);
+		return !props.static || props.url!=this.props.url || props.onChange!=this.props.onChange;
 	}
 
 	/** Check if the given URL can be matched against any children */
