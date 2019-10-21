@@ -7,7 +7,9 @@ chai.use(assertCloneOf);
 function createBrowserRouter(props) {
 	const router = new Router(props);
 	router.__s = router.state || {};  // _nextState
+	router.__d = true;  // _dirty
 	router.componentWillMount();
+	return router;
 }
 
 describe('preact-router', () => {
