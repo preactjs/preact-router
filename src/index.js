@@ -89,10 +89,12 @@ function routeFromLink(node) {
 }
 
 
-function handleLinkClick(e) {
+function handleLinkClick(e, props) {
 	if (e.button==0) {
 		routeFromLink(e.currentTarget || e.target || this);
-		return prevent(e);
+
+		if (props.preventBubbling) return prevent(e);
+		return e;
 	}
 }
 
@@ -248,7 +250,7 @@ class Router extends Component {
 }
 
 const Link = (props) => (
-	createElement('a', assign({ onClick: handleLinkClick }, props))
+	createElement('a', assign({ onClick: e => handleLinkClick(e, props) }, props))
 );
 
 const Route = props => createElement(props.component, props);

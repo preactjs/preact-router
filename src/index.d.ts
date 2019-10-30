@@ -1,4 +1,5 @@
 import * as preact from 'preact';
+import { LinkProps } from './match.d'
 
 export function route(url: string, replace?: boolean): boolean;
 export function route(options: { url: string; replace?: boolean }): boolean;
