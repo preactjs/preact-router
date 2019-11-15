@@ -90,10 +90,9 @@ function routeFromLink(node) {
 
 
 function handleLinkClick(e) {
-	if (e.button==0) {
-		routeFromLink(e.currentTarget || e.target || this);
-		return prevent(e);
-	}
+	if (e.ctrlKey || e.metaKey || e.altKey || e.shiftKey || e.button!==0) return;
+	routeFromLink(e.currentTarget || e.target || this);
+	return prevent(e);
 }
 
 
