@@ -19,7 +19,7 @@
     "test:karma": "karma start --single-run",
     "test:watch": "karma start",
     "test:ts": "tsc -p ./test",
-    "prepublish": "npm-run-all build test",
+    "prepublishOnly": "npm-run-all build test",
     "release": "npm run build && git commit -am $npm_package_version && git tag $npm_package_version && git push && git push --tags && npm publish"
   },
   "files": [
@@ -74,6 +74,7 @@
     "karma-webpack": "^2.0.1",
     "mkdirp": "^0.5.1",
     "mocha": "^5.2.0",
+    "npm-merge-driver-install": "^1.1.1",
     "npm-run-all": "^3.0.0",
     "preact": "^10.0.0-rc.0",
     "pretty-bytes-cli": "^1.0.0",
