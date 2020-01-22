@@ -7,6 +7,7 @@
   "jsnext:main": "dist/preact-router.es.js",
   "module": "dist/preact-router.es.js",
   "scripts": {
+    "postinstall": "npm-merge-driver install",
     "clean": "rimraf dist/",
     "copy-typescript-definition": "copyfiles -f src/index.d.ts src/match.d.ts .",
     "build": "npm-run-all --silent clean transpile transpile:match copy-typescript-definition size",
@@ -74,6 +75,7 @@
     "karma-webpack": "^2.0.1",
     "mkdirp": "^0.5.1",
     "mocha": "^5.2.0",
+    "npm-merge-driver": "2.3.5",
     "npm-run-all": "^3.0.0",
     "preact": "^10.0.0-rc.0",
     "pretty-bytes-cli": "^1.0.0",
