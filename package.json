@@ -7,7 +7,6 @@
   "jsnext:main": "dist/preact-router.es.js",
   "module": "dist/preact-router.es.js",
   "scripts": {
-    "postinstall": "npm-merge-driver install",
     "clean": "rimraf dist/",
     "copy-typescript-definition": "copyfiles -f src/index.d.ts src/match.d.ts .",
     "build": "npm-run-all --silent clean transpile transpile:match copy-typescript-definition size",
@@ -20,7 +19,7 @@
     "test:karma": "karma start --single-run",
     "test:watch": "karma start",
     "test:ts": "tsc -p ./test",
-    "prepublish": "npm-run-all build test",
+    "prepublishOnly": "npm-run-all build test",
     "release": "npm run build && git commit -am $npm_package_version && git tag $npm_package_version && git push && git push --tags && npm publish"
   },
   "files": [
@@ -91,5 +90,8 @@
     "sinon-chai": "^2.8.0",
     "typescript": "^3.4.4",
     "webpack": "^1.13.1"
+  },
+  "dependencies": {
+    "npm-merge-driver-install": "^1.1.1"
   }
 }
