@@ -75,6 +75,7 @@
     "mkdirp": "^0.5.1",
     "mocha": "^5.2.0",
     "npm-merge-driver": "2.3.5",
+    "npm-merge-driver-install": "^1.1.1",
     "npm-run-all": "^3.0.0",
     "preact": "^10.0.0-rc.0",
     "pretty-bytes-cli": "^1.0.0",
@@ -90,8 +91,5 @@
     "sinon-chai": "^2.8.0",
     "typescript": "^3.4.4",
     "webpack": "^1.13.1"
-  },
-  "dependencies": {
-    "npm-merge-driver-install": "^1.1.1"
   }
 }
