@@ -258,6 +258,7 @@ Router.route = route;
 Router.Router = Router;
 Router.Route = Route;
 Router.Link = Link;
+Router.exec = exec;
 
 export { subscribers, getCurrentUrl, route, Router, Route, Link, exec };
 export default Router;
