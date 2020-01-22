@@ -74,7 +74,6 @@
     "karma-webpack": "^2.0.1",
     "mkdirp": "^0.5.1",
     "mocha": "^5.2.0",
-    "npm-merge-driver": "2.3.5",
     "npm-merge-driver-install": "^1.1.1",
     "npm-run-all": "^3.0.0",
     "preact": "^10.0.0-rc.0",
