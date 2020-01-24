@@ -44,9 +44,12 @@ If there is an error rendering the destination route, a 404 will be displayed.
 :information_desk_person: Pages are just regular components that get mounted when you navigate to a certain URL.
 Any URL parameters get passed to the component as `props`.
 
-Defining what component(s) to load for a given URL is easy and declarative.
-You can even mix-and-match URL parameters and normal `props`.
-You can also make params optional by adding a `?` to it.
+Defining what component(s) to load for a given URL is easy and declarative.  
+You can even mix-and-match URL parameters and normal `props`.  
+You can also make params optional by adding a `?` to it.  
+When you add `*` or `+` to param, it matches to match the path to the left of param.  
+`*` matches when `partical_path` is 0 or more characters.  
+`+` matches when `partical_path` is 1 or more characters.
 
 ```js
 <Router>
@@ -54,7 +57,9 @@ You can also make params optional by adding a `?` to it.
   <B path="/b" id="42" />
   <C path="/c/:id" />
   <C path="/d/:optional?/:params?" />
-  <D default />
+  <D path="/e/:partical_path*" />
+  <E path="/f/:partical_path+" />
+  <F default />
 </Router>
 ```
 
@@ -243,6 +248,50 @@ import { route } from 'preact-router';
 route('/page-2')  // appends a history entry
 
 route('/page-3', true)  // replaces the current history entry
+```
+
+### Nested Route Example
+
+```js
+import { h, render } from 'preact'
+import Router from 'preact-router'
+import { Link } from 'preact-router/match'
+
+function Foo() {
+    return (
+      <div>
+        <h1>Foo</h1>
+        <Router>
+          <Bar path="/foo/bar" />
+          <Baz path="/foo/baz" />
+        </Router>
+      </div>
+    )
+}
+
+function Bar() {
+  return <h2>Bar</h2>
+}
+
+function Baz() {
+  return <h2>Baz</h2>
+}
+
+
+function App() {
+  return (
+    <div>
+      <Router>
+        <Foo path="/foo/:partical_path*" />
+      </Router>
+      <Link activeClassName="active" href="/foo">Foo</Link><br />
+      <Link activeClassName="active" href="/foo/bar">Bar</Link><br />
+      <Link activeClassName="active" href="/foo/baz">Baz</Link>
+    </div>
+  )
+}
+
+render(<App />, document.body)
 ```
 
 ### License
