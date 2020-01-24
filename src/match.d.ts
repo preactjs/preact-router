@@ -7,7 +7,7 @@ export class Match extends preact.Component<RoutableProps, {}> {
 }
 
 export interface LinkProps extends preact.JSX.HTMLAttributes {
-    activeClassName: string;
+    activeClassName?: string;
     children?: preact.ComponentChildren;
 }
 
