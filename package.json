@@ -45,7 +45,7 @@
   },
   "homepage": "https://github.com/developit/preact-router",
   "peerDependencies": {
-    "preact": ">=10 || ^10.0.0-rc.0"
+    "preact": ">=10"
   },
   "devDependencies": {
     "babel-cli": "^6.9.0",
