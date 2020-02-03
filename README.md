@@ -46,7 +46,7 @@ Any URL parameters get passed to the component as `props`.
 
 Defining what component(s) to load for a given URL is easy and declarative.
 You can even mix-and-match URL parameters and normal `props`.
-You can also make params optional by adding a `?` to it.
+You can also make params optional by adding a `?` to it. Additional modifiers are described in the [path-to-regexp](https://github.com/pillarjs/path-to-regexp#modifiers) package.
 
 ```js
 <Router>
