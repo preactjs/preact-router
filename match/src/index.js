@@ -33,4 +33,3 @@ export const Link = ({ activeClassName, path, ...props }) => (
 );
 
 export default Match;
-Match.Link = Link;

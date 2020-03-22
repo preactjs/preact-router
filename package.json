@@ -4,15 +4,12 @@
   "version": "3.2.1",
   "description": "Connect your components up to that address bar.",
   "main": "dist/preact-router.js",
+  "umd:main": "dist/preact-router.umd.js",
+  "unpkg": "dist/preact-router.umd.js",
   "jsnext:main": "dist/preact-router.es.js",
   "module": "dist/preact-router.es.js",
   "scripts": {
-    "clean": "rimraf dist/",
-    "copy-typescript-definition": "copyfiles -f src/index.d.ts src/match.d.ts .",
-    "build": "npm-run-all --silent clean transpile transpile:match copy-typescript-definition size",
-    "transpile": "rollup -c --environment FORMAT:umd && rollup -c --environment FORMAT:es",
-    "transpile:match": "babel src/match.js -o match.js -f umd",
-    "size": "size=$(gzip-size $npm_package_main) && echo \"gzip size: $size / $(pretty-bytes $size)\"",
+    "build": "microbundle -f es,modern && microbundle src/cjs.js -f cjs,umd && (cd match && npm run build) && copyfiles src/index.d.ts .",
     "test": "npm-run-all lint build test:karma test:ts",
     "lint": "eslint ./{src,test,test_helpers}/**/*.js",
     "fix": "npm run lint -- --fix",
@@ -25,8 +22,7 @@
   "files": [
     "src",
     "dist",
-    "match.js",
-    "match.d.ts",
+    "match",
     "index.d.ts"
   ],
   "typings": "./index.d.ts",
@@ -36,14 +32,9 @@
   ],
   "author": "Jason Miller <jason@developit.ca>",
   "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/developit/preact-router.git"
-  },
-  "bugs": {
-    "url": "https://github.com/developit/preact-router/issues"
-  },
-  "homepage": "https://github.com/developit/preact-router",
+  "repository": "preactjs/preact-router",
+  "bugs": "https://github.com/preactjs/preact-router/issues",
+  "homepage": "https://github.com/preactjs/preact-router",
   "peerDependencies": {
     "preact": ">=10"
   },
@@ -64,7 +55,6 @@
     "diff": "^3.0.0",
     "eslint": "^5.8.0",
     "eslint-plugin-react": "^6.0.0",
-    "gzip-size-cli": "^1.0.0",
     "karma": "^3.1.1",
     "karma-chai-sinon": "^0.1.5",
     "karma-chrome-launcher": "^2.2.0",
@@ -72,6 +62,7 @@
     "karma-mocha-reporter": "^2.2.5",
     "karma-sourcemap-loader": "^0.3.7",
     "karma-webpack": "^2.0.1",
+    "microbundle": "^0.12.0-next.8",
     "mkdirp": "^0.5.1",
     "mocha": "^5.2.0",
     "npm-merge-driver-install": "^1.1.1",
@@ -80,12 +71,6 @@
     "pretty-bytes-cli": "^1.0.0",
     "puppeteer": "^1.9.0",
     "rimraf": "^2.5.1",
-    "rollup": "^0.41.6",
-    "rollup-plugin-buble": "^0.15.0",
-    "rollup-plugin-es3": "^1.0.3",
-    "rollup-plugin-memory": "^2.0.0",
-    "rollup-plugin-post-replace": "^1.0.0",
-    "rollup-plugin-uglify": "^1.0.1",
     "sinon": "^7.1.0",
     "sinon-chai": "^2.8.0",
     "typescript": "^3.4.4",

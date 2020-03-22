@@ -1,6 +1,7 @@
 /dist
 /node_modules
 /npm-debug.log
-/match.js
 /*.d.ts
 .DS_Store
+/match/*.js
+/match/*.d.ts
