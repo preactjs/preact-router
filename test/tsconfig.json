@@ -7,7 +7,7 @@
   "files": [
     "router.tsx",
     "match.tsx",
-    "../src/index.d.ts",
-    "../src/match.d.ts"
+    "../index.d.ts",
+    "../match/index.d.ts"
   ]
 }

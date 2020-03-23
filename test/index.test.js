@@ -1,14 +1,16 @@
-import { Router, Link, route } from 'src';
+import { Router, Link, route } from '../src';
 import { h, render } from 'preact';
-import assertCloneOf from '../test_helpers/assert-clone-of';
-
-chai.use(assertCloneOf);
+import { toBeCloneOf } from './utils/assert-clone-of';
 
 describe('preact-router', () => {
+	beforeAll(() => {
+		jasmine.addMatchers({ toBeCloneOf });
+	});
+
 	it('should export Router, Link and route', () => {
-		expect(Router).to.be.a('function');
-		expect(Link).to.be.a('function');
-		expect(route).to.be.a('function');
+		expect(Router).toBeInstanceOf(Function);
+		expect(Link).toBeInstanceOf(Function);
+		expect(route).toBeInstanceOf(Function);
 	});
 
 	describe('Router', () => {
@@ -43,15 +45,15 @@ describe('preact-router', () => {
 
 			expect(
 				router.render({ children }, { url:'/foo' })
-			).to.be.cloneOf(children[1]);
+			).toBeCloneOf(children[1]);
 
 			expect(
 				router.render({ children }, { url:'/' })
-			).to.be.cloneOf(children[0]);
+			).toBeCloneOf(children[0]);
 
 			expect(
 				router.render({ children }, { url:'/foo/bar' })
-			).to.be.cloneOf(children[2]);
+			).toBeCloneOf(children[2]);
 		});
 
 		it('should support nested parameterized routes', () => {
@@ -73,15 +75,15 @@ describe('preact-router', () => {
 
 			expect(
 				router.render({ children }, { url:'/foo' })
-			).to.be.cloneOf(children[0]);
+			).toBeCloneOf(children[0]);
 
 			expect(
 				router.render({ children }, { url:'/foo/bar' })
-			).to.be.cloneOf(children[1], { matches: { bar:'bar' }, url:'/foo/bar' });
+			).toBeCloneOf(children[1], { matches: { bar:'bar' }, url:'/foo/bar' });
 
 			expect(
 				router.render({ children }, { url:'/foo/bar/baz' })
-			).be.cloneOf(children[2], { matches: { bar:'bar', baz:'baz' }, url:'/foo/bar/baz' });
+			).toBeCloneOf(children[2], { matches: { bar:'bar', baz:'baz' }, url:'/foo/bar/baz' });
 		});
 
 		it('should support default routes', () => {
@@ -102,15 +104,15 @@ describe('preact-router', () => {
 
 			expect(
 				router.render({ children }, { url:'/foo' })
-			).to.be.cloneOf(children[2]);
+			).toBeCloneOf(children[2]);
 
 			expect(
 				router.render({ children }, { url:'/' })
-			).to.be.cloneOf(children[1]);
+			).toBeCloneOf(children[1]);
 
 			expect(
 				router.render({ children }, { url:'/asdf/asdf' })
-			).to.be.cloneOf(children[0], { matches: {}, url:'/asdf/asdf' });
+			).toBeCloneOf(children[0], { matches: {}, url:'/asdf/asdf' });
 		});
 
 		it('should support initial route prop', () => {
@@ -131,7 +133,7 @@ describe('preact-router', () => {
 
 			expect(
 				router.render({ children }, router.state)
-			).to.be.cloneOf(children[2]);
+			).toBeCloneOf(children[2]);
 
 			render(null, scratch);
 
@@ -144,14 +146,14 @@ describe('preact-router', () => {
 				scratch
 			);
 
-			expect(router).to.have.deep.property('state.url', location.pathname + (location.search || ''));
+			expect(router.state.url).toBe(location.pathname + (location.search || ''));
 		});
 
 		it('should support custom history', () => {
-			let push = sinon.spy();
-			let replace = sinon.spy();
-			let listen = sinon.spy();
-			let getCurrentLocation = sinon.spy(() => ({pathname: '/initial'}));
+			let push = jasmine.createSpy('push');
+			let replace = jasmine.createSpy('replace');
+			let listen = jasmine.createSpy('listen');
+			let getCurrentLocation = jasmine.createSpy('getCurrentLocation', () => ({pathname: '/initial'})).and.callThrough();
 
 			let children = [
 				<index path="/" />,
@@ -171,14 +173,16 @@ describe('preact-router', () => {
 			router.componentWillMount();
 
 			router.render(router.props, router.state);
-			expect(getCurrentLocation, 'getCurrentLocation').to.have.been.calledOnce;
-			expect(router).to.have.deep.property('state.url', '/initial');
+			expect(getCurrentLocation).toHaveBeenCalledTimes(1);
+			expect(router.state.url).toBe('/initial');
 
 			route('/foo');
-			expect(push, 'push').to.have.been.calledOnce.and.calledWith('/foo');
+			expect(push).toHaveBeenCalledTimes(1);
+			expect(push).toHaveBeenCalledWith('/foo');
 
 			route('/bar', true);
-			expect(replace, 'replace').to.have.been.calledOnce.and.calledWith('/bar');
+			expect(replace).toHaveBeenCalledTimes(1);
+			expect(replace).toHaveBeenCalledWith('/bar');
 
 			router.componentWillUnmount();
 		});
@@ -202,34 +206,31 @@ describe('preact-router', () => {
 				scratch
 			);
 
-			sinon.spy(router, 'routeTo');
+			spyOn(router, 'routeTo').and.callThrough();
 		});
 
 		afterEach(() => {
-			router.componentWillUnmount();
+			render(null, scratch);
 			document.body.removeChild(scratch);
 		});
 
 		it('should return true for existing route', () => {
-			router.routeTo.resetHistory();
-			expect(route('/')).to.equal(true);
-			expect(router.routeTo)
-				.to.have.been.calledOnce
-				.and.calledWithExactly('/');
+			router.routeTo.calls.reset();
+			expect(route('/')).toBe(true);
+			expect(router.routeTo).toHaveBeenCalledTimes(1);
+			expect(router.routeTo).toHaveBeenCalledWith('/');
 
-			router.routeTo.resetHistory();
-			expect(route('/foo')).to.equal(true);
-			expect(router.routeTo)
-				.to.have.been.calledOnce
-				.and.calledWithExactly('/foo');
+			router.routeTo.calls.reset();
+			expect(route('/foo')).toBe(true);
+			expect(router.routeTo).toHaveBeenCalledTimes(1);
+			expect(router.routeTo).toHaveBeenCalledWith('/foo');
 		});
 
 		it('should return false for missing route', () => {
-			router.routeTo.resetHistory();
-			expect(route('/asdf')).to.equal(false);
-			expect(router.routeTo)
-				.to.have.been.calledOnce
-				.and.calledWithExactly('/asdf');
+			router.routeTo.calls.reset();
+			expect(route('/asdf')).toBe(false);
+			expect(router.routeTo).toHaveBeenCalledTimes(1);
+			expect(router.routeTo).toHaveBeenCalledWith('/asdf');
 		});
 
 		it('should return true for fallback route', () => {
@@ -239,11 +240,10 @@ describe('preact-router', () => {
 				...oldChildren
 			];
 
-			router.routeTo.resetHistory();
-			expect(route('/asdf')).to.equal(true);
-			expect(router.routeTo)
-				.to.have.been.calledOnce
-				.and.calledWithExactly('/asdf');
+			router.routeTo.calls.reset();
+			expect(route('/asdf')).toBe(true);
+			expect(router.routeTo).toHaveBeenCalledTimes(1);
+			expect(router.routeTo).toHaveBeenCalledWith('/asdf');
 		});
 	});
 });

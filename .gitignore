@@ -1,7 +1,6 @@
 /dist
+/coverage
 /node_modules
 /npm-debug.log
-/*.d.ts
 .DS_Store
 /match/*.js
-/match/*.d.ts

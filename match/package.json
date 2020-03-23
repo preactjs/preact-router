@@ -2,8 +2,9 @@
 	"name": "index",
 	"module": "./index.es.js",
 	"main": "./index.js",
+	"types": "./index.d.ts",
 	"scripts": {
-		"build": "microbundle src/index.js -f es -o . --no-sourcemap && microbundle src/cjs.js -f cjs -o . --no-sourcemap && cp src/index.d.ts ."
+		"build": "microbundle src/index.js -f es -o . --no-sourcemap && microbundle src/cjs.js -f cjs -o . --no-sourcemap"
 	},
 	"peerDependencies": {
 		"preact": "*",

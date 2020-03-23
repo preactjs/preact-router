@@ -2,11 +2,11 @@ import { h, Component } from 'preact';
 import { subscribers, getCurrentUrl, Link as StaticLink, exec } from 'preact-router';
 
 export class Match extends Component {
-	update = url => {
-		this.nextUrl = url;
-		this.setState({});
-	};
 	componentDidMount() {
+		this.update = url => {
+			this.nextUrl = url;
+			this.setState({});
+		};
 		subscribers.push(this.update);
 	}
 	componentWillUnmount() {

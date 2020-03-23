@@ -8,13 +8,24 @@
   "unpkg": "dist/preact-router.umd.js",
   "jsnext:main": "dist/preact-router.es.js",
   "module": "dist/preact-router.es.js",
+  "exports": {
+    ".": {
+      "import": "./dist/preact-router.es.js",
+      "require": "./dist/preact-router.js"
+    },
+    "./match": {
+      "import": "./match/index.es.js",
+      "require": "./match/index.js"
+    },
+    "./package.json": "./package.json",
+    "./": "./"
+  },
   "scripts": {
-    "build": "microbundle -f es,modern && microbundle src/cjs.js -f cjs,umd && (cd match && npm run build) && copyfiles src/index.d.ts .",
-    "test": "npm-run-all lint build test:karma test:ts",
-    "lint": "eslint ./{src,test,test_helpers}/**/*.js",
+    "build": "microbundle -f es,modern && microbundle src/cjs.js -f cjs,umd && (cd match && npm run build)",
+    "test": "npm-run-all lint build test:unit test:ts",
+    "lint": "eslint src test",
     "fix": "npm run lint -- --fix",
-    "test:karma": "karma start --single-run",
-    "test:watch": "karma start",
+    "test:unit": "karmatic",
     "test:ts": "tsc -p ./test",
     "prepublishOnly": "npm-run-all build test",
     "release": "npm run build && git commit -am $npm_package_version && git tag $npm_package_version && git push && git push --tags && npm publish"
@@ -33,47 +44,36 @@
   "author": "Jason Miller <jason@developit.ca>",
   "license": "MIT",
   "repository": "preactjs/preact-router",
-  "bugs": "https://github.com/preactjs/preact-router/issues",
   "homepage": "https://github.com/preactjs/preact-router",
+  "eslintConfig": {
+    "extends": "preact",
+    "rules": {
+      "jest/no-jasmine-globals": 0
+    },
+    "globals": {
+      "spyOn": "readonly"
+    }
+  },
   "peerDependencies": {
     "preact": ">=10"
   },
   "devDependencies": {
-    "babel-cli": "^6.9.0",
-    "babel-core": "^6.9.1",
-    "babel-eslint": "^7.0.0",
-    "babel-loader": "^6.2.4",
-    "babel-plugin-transform-class-properties": "^6.9.1",
-    "babel-plugin-transform-es2015-classes": "^6.9.0",
-    "babel-plugin-transform-object-assign": "^6.0.0",
-    "babel-plugin-transform-react-jsx": "^6.8.0",
-    "babel-preset-es2015": "^6.9.0",
-    "babel-preset-react": "^6.5.0",
-    "babel-preset-stage-0": "^6.5.0",
+    "@babel/plugin-transform-react-jsx": "^7.9.1",
     "chai": "^3.5.0",
     "copyfiles": "^1.0.0",
-    "diff": "^3.0.0",
-    "eslint": "^5.8.0",
-    "eslint-plugin-react": "^6.0.0",
-    "karma": "^3.1.1",
-    "karma-chai-sinon": "^0.1.5",
-    "karma-chrome-launcher": "^2.2.0",
-    "karma-mocha": "^1.3.0",
-    "karma-mocha-reporter": "^2.2.5",
-    "karma-sourcemap-loader": "^0.3.7",
-    "karma-webpack": "^2.0.1",
+    "eslint": "^6.8.0",
+    "eslint-config-preact": "1.1.0",
+    "karmatic": "^1.4.0",
     "microbundle": "^0.12.0-next.8",
-    "mkdirp": "^0.5.1",
+    "mkdirp": "^0.5.3",
     "mocha": "^5.2.0",
     "npm-merge-driver-install": "^1.1.1",
     "npm-run-all": "^3.0.0",
-    "preact": "^10.0.0-rc.0",
-    "pretty-bytes-cli": "^1.0.0",
-    "puppeteer": "^1.9.0",
+    "preact": "^10.3.4",
     "rimraf": "^2.5.1",
     "sinon": "^7.1.0",
     "sinon-chai": "^2.8.0",
     "typescript": "^3.4.4",
-    "webpack": "^1.13.1"
+    "webpack": "^4.42.0"
   }
 }
