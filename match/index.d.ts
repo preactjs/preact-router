@@ -1,6 +1,6 @@
 import * as preact from 'preact';
 
-import { Link as StaticLink, RoutableProps } from './';
+import { Link as StaticLink, RoutableProps } from '..';
 
 export class Match extends preact.Component<RoutableProps, {}> {
     render(): preact.VNode;
