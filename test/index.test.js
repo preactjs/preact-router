@@ -188,6 +188,40 @@ describe('preact-router', () => {
 
 			router.componentWillUnmount();
 		});
+
+		it('should send proper params to Router.onChange', () => {
+			let onChange = jasmine.createSpy('onChange');
+
+			let children = [
+				<index path="/" />,
+				<foo path="/foo/:id" />,
+				<bar path="/bar/:baz/boo/:bibi" />
+			];
+
+			render(
+				(
+					<Router onChange={onChange} ref={ref => (router = ref)}>
+						{children}
+					</Router>
+				),
+				scratch
+			);
+
+			router.render(router.props, { url: '/' });
+			expect(onChange).toHaveBeenCalledWith(
+				jasmine.objectContaining({ path: '/' })
+			)
+
+			router.render(router.props, { url: '/foo/67' });
+			expect(onChange).toHaveBeenCalledWith(
+				jasmine.objectContaining({ path: '/foo/:id' })
+			)
+
+			router.render(router.props, { url: '/bar/bazparam/boo/bibiparam' });
+			expect(onChange).toHaveBeenCalledWith(
+				jasmine.objectContaining({ path: '/bar/:baz/boo/:bibi' })
+			)
+		})
 	});
 
 	describe('route()', () => {
