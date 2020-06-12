@@ -28,6 +28,8 @@ export interface RouterOnChangeArgs {
     previous?: string;
     active: preact.VNode[];
     current: preact.VNode;
+    path: string | null;
+    matches: Record<string, string> | null;
 }
 
 export interface RouterProps extends RoutableProps {
@@ -63,6 +65,8 @@ export function Route<Props>(
 ): preact.VNode;
 
 export function Link(props: {activeClassName?: string} & preact.JSX.HTMLAttributes): preact.VNode;
+
+export function useRouter(): [((url: string, replace?: boolean) => boolean) | ((options: { url: string; replace?: boolean }) => boolean), RouterOnChangeArgs];
 
 declare module 'preact' {
     export interface Attributes extends RoutableProps {}
