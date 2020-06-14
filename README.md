@@ -61,24 +61,26 @@ You can also make params optional by adding a `?` to it.
 
 ### Lazy Loading
 
-Lazy loading (code splitting) with `preact-router` can be implemented easily using the [AsyncRoute](https://www.npmjs.com/package/preact-async-route) module:
-
+~~Lazy loading (code splitting) with `preact-router` can be implemented easily using the [AsyncRoute](https://www.npmjs.com/package/preact-async-route) module~~.
+`preact-async-route` was deprecated and it is now recommended to use lazy components (they are now supported in `preact-x`). They can be used as shown [here](https://reactjs.org/docs/code-splitting.html#reactlazy) and the example below can be found in this codesandbox [url](https://codesandbox.io/s/preact-lazy-loading-x7ker)
 ```js
-import AsyncRoute from 'preact-async-route';
-<Router>
-  <Home path="/" />
-  <AsyncRoute
-    path="/friends"
-    getComponent={ () => import('./friends').then(module => module.default) }
-  />
-  <AsyncRoute
-    path="/friends/:id"
-    getComponent={ () => import('./friend').then(module => module.default) }
-    loading={ () => <div>loading...</div> }
-  />
-</Router>
-```
+import { lazy, Suspense } from "preact/compat";
+import { Router } from "preact-router";
 
+const Home = lazy(() => import("./home"));
+
+function App() {
+  return (
+    <div>
+      <Suspense fallback={<div>Loading...</div>}>
+        <Router>
+          <Home path="/" />
+        </Router>
+      </Suspense>
+    </div>
+  );
+}
+```
 
 ### Active Matching & Links
 
