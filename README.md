@@ -61,8 +61,7 @@ You can also make params optional by adding a `?` to it.
 
 ### Lazy Loading
 
-~~Lazy loading (code splitting) with `preact-router` can be implemented easily using the [AsyncRoute](https://www.npmjs.com/package/preact-async-route) module~~.
-`preact-async-route` was deprecated and it is now recommended to use lazy components (they are now supported in `preact-x`). They can be used as shown [here](https://reactjs.org/docs/code-splitting.html#reactlazy) and the example below can be found in this codesandbox [url](https://codesandbox.io/s/preact-lazy-loading-x7ker)
+Lazy loading (code splitting) with `preact-router` can be implemented using the `lazy`-component.
 ```js
 import { lazy, Suspense } from "preact/compat";
 import { Router } from "preact-router";
