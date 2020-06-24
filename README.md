@@ -2,6 +2,8 @@
 
 [![NPM](https://img.shields.io/npm/v/preact-router.svg)](https://www.npmjs.com/package/preact-router)
 [![travis-ci](https://travis-ci.org/developit/preact-router.svg)](https://travis-ci.org/developit/preact-router)
+[![minzip size](https://badgen.net/bundlephobia/minzip/preact-router)](https://badgen.net/bundlephobia/minzip/preact-router)
+
 
 Connect your [Preact] components up to that address bar.
 
