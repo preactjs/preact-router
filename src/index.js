@@ -13,7 +13,7 @@ const subscribers = [];
 const EMPTY = {};
 
 function useRouter() {
-	return [route, useContext(RouterContext)];
+	return [useContext(RouterContext), route];
 }
 
 function setUrl(url, type='push') {

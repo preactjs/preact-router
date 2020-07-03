@@ -66,7 +66,10 @@ export function Route<Props>(
 
 export function Link(props: {activeClassName?: string} & preact.JSX.HTMLAttributes): preact.VNode;
 
-export function useRouter(): [((url: string, replace?: boolean) => boolean) | ((options: { url: string; replace?: boolean }) => boolean), RouterOnChangeArgs];
+export function useRouter(): [
+    RouterOnChangeArgs,
+    ((url: string, replace?: boolean) => boolean) | ((options: { url: string; replace?: boolean }) => boolean),
+];
 
 declare module 'preact' {
     export interface Attributes extends RoutableProps {}

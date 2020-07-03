@@ -288,7 +288,7 @@ describe('preact-router', () => {
 		let router;
 
 		it('should return route() as first param', () => {
-			const [routeFromHook] = useRouter()
+			const [, routeFromHook] = useRouter()
 			expect(routeFromHook).toBeInstanceOf(Function)
 			expect(routeFromHook).toBe(route)
 		})
@@ -299,7 +299,6 @@ describe('preact-router', () => {
 
 			const FunctionalComponent = ({ path, shouldMatch }) => {
 				const [
-					,
 					{
 						router: routerFromHook,
 						url,
