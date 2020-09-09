@@ -68,7 +68,7 @@ export function Link(props: {activeClassName?: string} & preact.JSX.HTMLAttribut
 
 export function useRouter(): [
     RouterOnChangeArgs,
-    ((url: string, replace?: boolean) => boolean) | ((options: { url: string; replace?: boolean }) => boolean),
+    (urlOrOptions: string | { url: string; replace?: boolean }, replace?: boolean) => boolean,
 ];
 
 declare module 'preact' {
