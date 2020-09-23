@@ -85,10 +85,10 @@ describe('util', () => {
 		});
 
 		it('should match optional param segments', () => {
-			expect(exec('/', '/:foo?', {})).toEqual({ foo:'' });
+			expect(exec('/', '/:foo?', {})).toEqual({ foo:undefined });
 			expect(exec('/bar', '/:foo?', {})).toEqual({ foo:'bar' });
-			expect(exec('/', '/:foo?/:bar?', {})).toEqual({ foo:'', bar:'' });
-			expect(exec('/bar', '/:foo?/:bar?', {})).toEqual({ foo:'bar', bar:'' });
+			expect(exec('/', '/:foo?/:bar?', {})).toEqual({ foo:undefined, bar:undefined });
+			expect(exec('/bar', '/:foo?/:bar?', {})).toEqual({ foo:'bar', bar:undefined });
 			expect(exec('/bar', '/:foo?/bar', {})).toEqual(false);
 			expect(exec('/foo/bar', '/:foo?/bar', {})).toEqual({ foo:'foo' });
 		});
