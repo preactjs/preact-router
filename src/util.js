@@ -35,7 +35,7 @@ export function exec(url, route, opts) {
 				ret = false;
 				break;
 			}
-			matches[param] = val && decodeURIComponent(val);
+			matches[param] = decodeURIComponent(val) || undefined;
 			if (plus || star) {
 				matches[param] = url.slice(i).map(decodeURIComponent).join('/');
 				break;
