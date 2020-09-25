@@ -82,7 +82,7 @@ function routeFromLink(node) {
 		target = node.getAttribute('target');
 
 	// ignore links with targets and non-path URLs
-	if (!href || !href.match(/^\//g) || (target && !target.match(/^_?self$/i))) return;
+	if (!href || !href.match(/^\/(?!\/)/g) || (target && !target.match(/^_?self$/i))) return;
 
 	// attempt to route, if no match simply cede control to browser
 	return route(href);
