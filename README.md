@@ -235,7 +235,7 @@ render(<Main />, document.body);
 
 ### Programmatically Triggering Route
 
-Its possible to programmatically trigger a route to a page (like `window.location = '/page-2'`)
+It's possible to programmatically trigger a route to a page (like `window.location = '/page-2'`)
 
 ```js
 import { route } from 'preact-router';
