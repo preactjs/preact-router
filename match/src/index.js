@@ -24,15 +24,16 @@ export class Match extends Component {
 	}
 }
 
-export const Link = ({ class: c, className, activeClass, activeClassName, path, ...props }) => (
-	<Match path={path || props.href}>
-		{ ({ matches }) => (
-			<StaticLink
-				{...props}
-				class={`${c || className || ''}${matches ? ' ' + (activeClass || activeClassName) : ''}`}
-			/>
-		) }
-	</Match>
-);
+export function Link({ class: c, className, activeClass, activeClassName, path, ...props }) {
+	const inactive = [c, className].filter(Boolean).join(' ');
+	const active = [c, className, activeClass, activeClassName].filter(Boolean).join(' ');
+	return (
+		<Match path={path || props.href}>
+			{ ({ matches }) => (
+				<StaticLink {...props} class={matches ? active : inactive} />
+			) }
+		</Match>
+	);
+}
 
 export default Match;
