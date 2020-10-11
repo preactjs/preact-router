@@ -233,6 +233,8 @@ const Main = () => (
 render(<Main />, document.body);
 ```
 
+Note: As of `history` v5.0.0, the TypeScript types are incompatible with `preact-router`. Downgrade to v4.x.x to maintain compatability. 
+
 ### Programmatically Triggering Route
 
 It's possible to programmatically trigger a route to a page (like `window.location = '/page-2'`)
