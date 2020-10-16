@@ -44,12 +44,9 @@ If there is an error rendering the destination route, a 404 will be displayed.
 :information_desk_person: Pages are just regular components that get mounted when you navigate to a certain URL.
 Any URL parameters get passed to the component as `props`.
 
-Defining what component(s) to load for a given URL is easy and declarative.  
-You can even mix-and-match URL parameters and normal `props`.  
-You can also make params optional by adding a `?` to it.  
-When you add `*` or `+` to param, it matches to match the path to the left of param.  
-`*` matches when `partical_path` is 0 or more characters.  
-`+` matches when `partical_path` is 1 or more characters.
+Defining what component(s) to load for a given URL is easy and declarative.
+Querystring and `:parameter` values are passed to the matched component as props.
+ Parameters can be made optional by adding a `?`, or turned into a wildcard match by adding `*` (zero or more characters) or `+` (one or more characters):
 
 ```js
 <Router>
