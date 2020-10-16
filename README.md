@@ -54,8 +54,8 @@ Querystring and `:parameter` values are passed to the matched component as props
   <B path="/b" id="42" />
   <C path="/c/:id" />
   <C path="/d/:optional?/:params?" />
-  <D path="/e/:partical_path*" />
-  <E path="/f/:partical_path+" />
+  <D path="/e/:remaining_path*" />
+  <E path="/f/:remaining_path+" />
   <F default />
 </Router>
 ```
