@@ -247,7 +247,9 @@ route('/page-2')  // appends a history entry
 route('/page-3', true)  // replaces the current history entry
 ```
 
-### Nested Route Example
+### Nested Routers
+
+The `<Router>` is a self-contained component that renders based on the page URL. When nested a Router inside of another Router, the inner Router does not share or observe the outer's URL or matches. Instead, inner routes must include the full path to be matched against the page's URL:
 
 ```js
 import { h, render } from 'preact'
