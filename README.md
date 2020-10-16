@@ -252,46 +252,41 @@ route('/page-3', true)  // replaces the current history entry
 The `<Router>` is a self-contained component that renders based on the page URL. When nested a Router inside of another Router, the inner Router does not share or observe the outer's URL or matches. Instead, inner routes must include the full path to be matched against the page's URL:
 
 ```js
-import { h, render } from 'preact'
-import Router from 'preact-router'
-import { Link } from 'preact-router/match'
+import { h, render } from 'preact';
+import Router from 'preact-router';
 
-function Foo() {
+function Profile(props) {
+    // `props.rest` is the rest of the URL after "/profile/"
     return (
       <div>
-        <h1>Foo</h1>
+        <h1>Profile</h1>
         <Router>
-          <Bar path="/foo/bar" />
-          <Baz path="/foo/baz" />
+          <MyProfile path="/profile/me" />
+          <UserProfile path="/profile/:user" />
         </Router>
       </div>
-    )
+    );
 }
-
-function Bar() {
-  return <h2>Bar</h2>
-}
-
-function Baz() {
-  return <h2>Baz</h2>
-}
-
+const MyProfile = () => (<h2>My Profile</h2>);
+const UserProfile = (props) => (<h2>{props.user}</h2>);
 
 function App() {
   return (
     <div>
       <Router>
-        <Foo path="/foo/:partical_path*" />
+        <Home path="/" />
+        <Profile path="/profile/:rest*" />
       </Router>
-      <Link activeClassName="active" href="/foo">Foo</Link><br />
-      <Link activeClassName="active" href="/foo/bar">Bar</Link><br />
-      <Link activeClassName="active" href="/foo/baz">Baz</Link>
+      <nav>
+        <a href="/">Home</a>
+        <a href="/profile/me">My Profile</a>
+        <a href="/profile/alice">Alice's Profile</a>
+      </nav>
     </div>
-  )
+  );
 }
 
-render(<App />, document.body)
-```
+render(<App />, document.body);
 
 ### License
 
