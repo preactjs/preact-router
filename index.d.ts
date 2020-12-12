@@ -65,7 +65,9 @@ export function Route<Props>(
 export function Link(props: {activeClassName?: string} & preact.JSX.HTMLAttributes): preact.VNode;
 
 declare module 'preact' {
-    export interface Attributes extends RoutableProps {}
+    namespace JSX {
+        interface IntrinsicAttributes extends RoutableProps {}
+    }
 }
 
 export default Router;
