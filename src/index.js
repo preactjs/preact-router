@@ -238,7 +238,7 @@ class Router extends Component {
 					router: this,
 					url,
 					previous,
-					previousRoute: previousRoute,
+					previousRoute,
 					active,
 					current,
 					currentRoute: current
