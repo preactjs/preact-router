@@ -11,12 +11,17 @@ const SomeFunctionalComponent: FunctionalComponent<{}> = ({}) => {
     return <div></div>;
 };
 
+function FunctionalComponentWithoutAnnotation() {
+    return <div />;
+}
+
 function RouterWithComponents() {
     return (
         <Router>
             <div default></div>
             <ClassComponent default />
             <SomeFunctionalComponent default />
+            <FunctionalComponentWithoutAnnotation default />
             <div path="/a"></div>
             <ClassComponent path="/b" />
             <SomeFunctionalComponent path="/c" />
