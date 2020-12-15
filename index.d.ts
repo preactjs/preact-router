@@ -22,21 +22,22 @@ export interface RoutableProps {
     default?: boolean;
 }
 
-export interface RouterOnChangeArgs {
+export type RouteParamDefault = Record<string, string> | null;
+export interface RouterOnChangeArgs<RouteParams extends RouteParamDefault = RouteParamDefault> {
     router: Router;
     url: string;
     previous?: string;
     active: preact.VNode[];
     current: preact.VNode;
     path: string | null;
-    matches: Record<string, string> | null;
+    matches: RouteParams;
 }
 
-export interface RouterProps extends RoutableProps {
+export interface RouterProps<RouteParams extends RouteParamDefault = RouteParamDefault> extends RoutableProps {
     history?: CustomHistory;
     static?: boolean;
     url?: string;
-    onChange?: (args: RouterOnChangeArgs) => void;
+    onChange?: (args: RouterOnChangeArgs<RouteParams>) => void;
 }
 
 export class Router extends preact.Component<RouterProps, {}> {
@@ -66,8 +67,8 @@ export function Route<Props>(
 
 export function Link(props: {activeClassName?: string} & preact.JSX.HTMLAttributes): preact.VNode;
 
-export function useRouter(): [
-    RouterOnChangeArgs,
+export function useRouter<RouteParams extends RouteParamDefault = RouteParamDefault>(): [
+    RouterOnChangeArgs<RouteParams>,
     (urlOrOptions: string | { url: string; replace?: boolean }, replace?: boolean) => boolean,
 ];
 
