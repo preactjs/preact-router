@@ -49,6 +49,13 @@ function UseRouterFn() {
         route
     ] = useRouter()
 
+    const [
+        {
+            matches: typedMatches,
+        }
+    ] = useRouter<{id: string}>()
+    const id = typedMatches.id
+
     route('/foo')
     route({ url: '/bar', replace: true })
 }
