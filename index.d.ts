@@ -22,8 +22,7 @@ export interface RoutableProps {
     default?: boolean;
 }
 
-export type RouteParamDefault = Record<string, string> | null;
-export interface RouterOnChangeArgs<RouteParams extends RouteParamDefault = RouteParamDefault> {
+export interface RouterOnChangeArgs<RouteParams extends Record<string, string> | null = Record<string, string> | null> {
     router: Router;
     url: string;
     previous?: string;
@@ -33,7 +32,7 @@ export interface RouterOnChangeArgs<RouteParams extends RouteParamDefault = Rout
     matches: RouteParams;
 }
 
-export interface RouterProps<RouteParams extends RouteParamDefault = RouteParamDefault> extends RoutableProps {
+export interface RouterProps<RouteParams extends Record<string, string> | null = Record<string, string> | null> extends RoutableProps {
     history?: CustomHistory;
     static?: boolean;
     url?: string;
@@ -67,7 +66,7 @@ export function Route<Props>(
 
 export function Link(props: {activeClassName?: string} & preact.JSX.HTMLAttributes): preact.VNode;
 
-export function useRouter<RouteParams extends RouteParamDefault = RouteParamDefault>(): [
+export function useRouter<RouteParams extends Record<string, string> | null = Record<string, string> | null>(): [
     RouterOnChangeArgs<RouteParams>,
     (urlOrOptions: string | { url: string; replace?: boolean }, replace?: boolean) => boolean,
 ];
