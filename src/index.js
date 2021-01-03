@@ -8,8 +8,6 @@ let customHistory = null;
 
 const ROUTERS = [];
 
-const subscribers = [];
-
 const EMPTY = {};
 
 function useRouter() {
@@ -73,9 +71,6 @@ function routeTo(url) {
 		if (ROUTERS[i].routeTo(url)===true) {
 			didRoute = true;
 		}
-	}
-	for (let i=subscribers.length; i--; ) {
-		subscribers[i](url);
 	}
 	return didRoute;
 }
@@ -271,5 +266,5 @@ const Link = (props) => (
 
 const Route = props => createElement(props.component, props);
 
-export { subscribers, getCurrentUrl, route, Router, Route, Link, exec, useRouter };
+export { getCurrentUrl, route, Router, Route, Link, exec, useRouter };
 export default Router;

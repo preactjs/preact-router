@@ -50,8 +50,6 @@ export class Router extends preact.Component<RouterProps, {}> {
     render(props: RouterProps, {}): preact.VNode;
 }
 
-export const subscribers: Array<(url: string) => void>
-
 type AnyComponent<Props> =
   | preact.FunctionalComponent<Props>
   | preact.ComponentConstructor<Props, any>;

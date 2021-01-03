@@ -1,6 +1,5 @@
-import { subscribers, getCurrentUrl, route, Router, Route, Link, exec, useRouter } from './index';
+import { getCurrentUrl, route, Router, Route, Link, exec, useRouter } from './index';
 
-Router.subscribers = subscribers;
 Router.getCurrentUrl = getCurrentUrl;
 Router.route = route;
 Router.Router = Router;
