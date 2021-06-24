@@ -48,6 +48,8 @@ export class Router extends preact.Component<RouterProps, {}> {
     render(props: RouterProps, {}): preact.VNode;
 }
 
+export const subscribers: Array<(url: string) => void>
+
 type AnyComponent<Props> =
   | preact.FunctionalComponent<Props>
   | preact.ComponentConstructor<Props, any>;
@@ -60,6 +62,10 @@ export function Route<Props>(
     props: RouteProps<Props> & Partial<Props>
 ): preact.VNode;
 
-export function Link(props: {activeClassName?: string} & JSX.HTMLAttributes): preact.VNode;
+export function Link(props: {activeClassName?: string} & preact.JSX.HTMLAttributes): preact.VNode;
+
+declare module 'preact' {
+    export interface Attributes extends RoutableProps {}
+}
 
 export default Router;
