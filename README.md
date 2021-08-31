@@ -147,7 +147,7 @@ Sometimes it's necessary to bypass preact-router's link handling and let the bro
 This can be accomplished by adding a `dataset-native` boolean attribute to any link:
 
 ```html
-<a href="/foo" dataset-native>Foo</a>
+<a href="/foo" data-native>Foo</a>
 ```
 
 ### Detecting Route Changes

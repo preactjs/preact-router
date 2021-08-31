@@ -113,7 +113,7 @@ function delegateLinkHandler(e) {
 	let t = e.target;
 	do {
 		if (String(t.nodeName).toUpperCase()==='A' && t.getAttribute('href')) {
-			if (t.hasAttribute('dataset-native') || t.hasAttribute('native')) return;
+			if (t.hasAttribute('data-native') || t.hasAttribute('native')) return;
 			// if link is handled by the router, prevent browser defaults
 			if (routeFromLink(t)) {
 				return prevent(e);
