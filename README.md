@@ -45,8 +45,8 @@ If there is an error rendering the destination route, a 404 will be displayed.
 Any URL parameters get passed to the component as `props`.
 
 Defining what component(s) to load for a given URL is easy and declarative.
-You can even mix-and-match URL parameters and normal `props`.
-You can also make params optional by adding a `?` to it.
+Querystring and `:parameter` values are passed to the matched component as props.
+ Parameters can be made optional by adding a `?`, or turned into a wildcard match by adding `*` (zero or more characters) or `+` (one or more characters):
 
 ```js
 <Router>
@@ -54,7 +54,9 @@ You can also make params optional by adding a `?` to it.
   <B path="/b" id="42" />
   <C path="/c/:id" />
   <C path="/d/:optional?/:params?" />
-  <D default />
+  <D path="/e/:remaining_path*" />
+  <E path="/f/:remaining_path+" />
+  <F default />
 </Router>
 ```
 
@@ -235,7 +237,7 @@ render(<Main />, document.body);
 
 ### Programmatically Triggering Route
 
-Its possible to programmatically trigger a route to a page (like `window.location = '/page-2'`)
+It's possible to programmatically trigger a route to a page (like `window.location = '/page-2'`)
 
 ```js
 import { route } from 'preact-router';
@@ -243,6 +245,48 @@ import { route } from 'preact-router';
 route('/page-2')  // appends a history entry
 
 route('/page-3', true)  // replaces the current history entry
+```
+
+### Nested Routers
+
+The `<Router>` is a self-contained component that renders based on the page URL. When nested a Router inside of another Router, the inner Router does not share or observe the outer's URL or matches. Instead, inner routes must include the full path to be matched against the page's URL:
+
+```js
+import { h, render } from 'preact';
+import Router from 'preact-router';
+
+function Profile(props) {
+    // `props.rest` is the rest of the URL after "/profile/"
+    return (
+      <div>
+        <h1>Profile</h1>
+        <Router>
+          <MyProfile path="/profile/me" />
+          <UserProfile path="/profile/:user" />
+        </Router>
+      </div>
+    );
+}
+const MyProfile = () => (<h2>My Profile</h2>);
+const UserProfile = (props) => (<h2>{props.user}</h2>);
+
+function App() {
+  return (
+    <div>
+      <Router>
+        <Home path="/" />
+        <Profile path="/profile/:rest*" />
+      </Router>
+      <nav>
+        <a href="/">Home</a>
+        <a href="/profile/me">My Profile</a>
+        <a href="/profile/alice">Alice's Profile</a>
+      </nav>
+    </div>
+  );
+}
+
+render(<App />, document.body);
 ```
 
 ### License
