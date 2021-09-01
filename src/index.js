@@ -229,15 +229,19 @@ class Router extends Component {
 		let current = active[0] || null;
 
 		let previous = this.previousUrl;
+		let previousRoute = this.previousRoute;
 		if (url!==previous) {
 			this.previousUrl = url;
+			this.previousRoute = current;
 			if (typeof onChange==='function') {
 				onChange({
 					router: this,
 					url,
 					previous,
+					previousRoute,
 					active,
-					current
+					current,
+					currentRoute: current
 				});
 			}
 		}
