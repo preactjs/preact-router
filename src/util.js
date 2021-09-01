@@ -30,12 +30,12 @@ export function exec(url, route, opts) {
 				flags = (route[i].match(/[+*?]+$/) || EMPTY)[0] || '',
 				plus = ~flags.indexOf('+'),
 				star = ~flags.indexOf('*'),
-				val = url[i] || '';
+				val = url[i];
 			if (!val && !star && (flags.indexOf('?')<0 || plus)) {
 				ret = false;
 				break;
 			}
-			matches[param] = decodeURIComponent(val);
+			matches[param] = decodeURIComponent(val) || undefined;
 			if (plus || star) {
 				matches[param] = url.slice(i).map(decodeURIComponent).join('/');
 				break;
