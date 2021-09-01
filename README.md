@@ -141,6 +141,32 @@ render(
 )
 ```
 
+`<Link>` accepts an optional `path` prop so you can choose to apply the active class for any arbitrary URL pattern that does not exactly match the link's `href` prop. This is excellent for nested navigation.
+
+```js
+import { Router } from 'preact-router';
+import { Link } from 'preact-router/match';
+
+render(
+  <div>
+    <nav>
+      <Link activeClassName="active" href="/foo" path="/foo/:biz?">Foo</Link>
+    </nav>
+    <Router>
+      <div path="/foo/:bar?">
+        This is the Foo route.
+        <Link activeClassName="active" href="/foo">Bar</Link>
+	<Link activeClassName="active" href="/foo/biz">Biz</Link>
+	<Link activeClassName="active" href="/foo/baz">Baz</Link>
+	<Router>
+	  <div path="/foo">This is the Foo Bar route.</div>
+          <div path="/foo/biz">This is the Foo Biz route.</div>
+          <div path="/foo/baz">This is the Foo Baz route.</div>
+      </div>
+    </Router>
+  </div>
+)
+```
 
 ### Default Link Behavior
 
