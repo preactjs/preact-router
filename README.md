@@ -63,24 +63,25 @@ Querystring and `:parameter` values are passed to the matched component as props
 
 ### Lazy Loading
 
-Lazy loading (code splitting) with `preact-router` can be implemented easily using the [AsyncRoute](https://www.npmjs.com/package/preact-async-route) module:
-
+Lazy loading (code splitting) with `preact-router` can be implemented using the `lazy`-component.
 ```js
-import AsyncRoute from 'preact-async-route';
-<Router>
-  <Home path="/" />
-  <AsyncRoute
-    path="/friends"
-    getComponent={ () => import('./friends').then(module => module.default) }
-  />
-  <AsyncRoute
-    path="/friends/:id"
-    getComponent={ () => import('./friend').then(module => module.default) }
-    loading={ () => <div>loading...</div> }
-  />
-</Router>
-```
+import { lazy, Suspense } from "preact/compat";
+import { Router } from "preact-router";
 
+const Home = lazy(() => import("./home"));
+
+function App() {
+  return (
+    <div>
+      <Suspense fallback={<div>Loading...</div>}>
+        <Router>
+          <Home path="/" />
+        </Router>
+      </Suspense>
+    </div>
+  );
+}
+```
 
 ### Active Matching & Links
 
