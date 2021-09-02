@@ -70,7 +70,10 @@ export function useRouter<RouteParams extends Record<string, string | undefined>
 ];
 
 declare module 'preact' {
-    export interface Attributes extends RoutableProps {}
+    namespace JSX {
+        interface IntrinsicAttributes extends RoutableProps {}
+    }
+    interface Attributes extends RoutableProps {}
 }
 
 export default Router;
