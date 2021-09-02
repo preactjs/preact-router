@@ -7,10 +7,12 @@ export function toBeCloneOf(util) {
 			const clonedRoute = cloneElement(expected, { url, matches, ...matches });
 			const result = {};
 			result.pass = util.equals(actual, clonedRoute);
-			result.message = `Expected ${serialize(actual)} ${result.pass?' not':''}to equal ${serialize(clonedRoute)}`;
+			result.message = `Expected ${serialize(actual)} ${
+				result.pass ? ' not' : ''
+			}to equal ${serialize(clonedRoute)}`;
 			return result;
 		}
-	}
+	};
 }
 
 function serialize(vnode, prefix = '') {
@@ -20,16 +22,17 @@ function serialize(vnode, prefix = '') {
 	for (let prop in vnode.props) {
 		const v = vnode.props[prop];
 		if (prop === 'children') {
-			children = toChildArray(v).reduce((str, v) => `${str}\n${serialize(v, `${prefix  }  `)}`, '')
-		}
-		else {
+			children = toChildArray(v).reduce(
+				(str, v) => `${str}\n${serialize(v, `${prefix}  `)}`,
+				''
+			);
+		} else {
 			str += ` ${prop}=${JSON.stringify(v)}`;
 		}
 	}
 	if (children) {
 		str += `${children}\n${prefix}</${type}>`;
-	}
-	else {
+	} else {
 		str += ' />';
 	}
 	return str;

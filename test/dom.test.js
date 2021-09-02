@@ -16,34 +16,45 @@ function fireEvent(on, type) {
 describe('dom', () => {
 	let scratch, $, mount;
 
-	beforeAll( () => {
+	beforeAll(() => {
 		scratch = document.createElement('div');
 		document.body.appendChild(scratch);
 		$ = s => scratch.querySelector(s);
-		mount = jsx => {render(jsx, scratch); return scratch.lastChild;};
+		mount = jsx => {
+			render(jsx, scratch);
+			return scratch.lastChild;
+		};
 	});
 
-	beforeEach( () => {
+	beforeEach(() => {
 		// manually reset the URL before every test
 		history.replaceState(null, null, '/');
 		fireEvent(window, 'popstate');
 	});
 
-	afterEach( () => {
+	afterEach(() => {
 		mount(<Empty />);
 		scratch.innerHTML = '';
 	});
 
-	afterAll( () => {
+	afterAll(() => {
 		document.body.removeChild(scratch);
 	});
 
 	describe('<Link />', () => {
 		it('should render a normal link', () => {
 			expect(
-				mount(<Link href="/foo" bar="baz">hello</Link>).outerHTML
+				mount(
+					<Link href="/foo" bar="baz">
+						hello
+					</Link>
+				).outerHTML
 			).toEqual(
-				mount(<a href="/foo" bar="baz">hello</a>).outerHTML
+				mount(
+					<a href="/foo" bar="baz">
+						hello
+					</a>
+				).outerHTML
 			);
 		});
 
@@ -62,7 +73,9 @@ describe('dom', () => {
 				$('a').click();
 			});
 			expect(onChange).toHaveBeenCalled();
-			expect(onChange).toHaveBeenCalledWith(jasmine.objectContaining({ url:'/foo' }));
+			expect(onChange).toHaveBeenCalledWith(
+				jasmine.objectContaining({ url: '/foo' })
+			);
 		});
 	});
 
@@ -83,7 +96,9 @@ describe('dom', () => {
 			});
 			// fireEvent($('a'), 'click');
 			expect(onChange).toHaveBeenCalled();
-			expect(onChange).toHaveBeenCalledWith(jasmine.objectContaining({ url:'/foo' }));
+			expect(onChange).toHaveBeenCalledWith(
+				jasmine.objectContaining({ url: '/foo' })
+			);
 		});
 
 		it('should not intercept non-preact elements', () => {
@@ -110,7 +125,9 @@ describe('dom', () => {
 			class A {
 				componentWillMount() {}
 				componentWillUnmount() {}
-				render(){ return <div />; }
+				render() {
+					return <div />;
+				}
 			}
 			const componentWillMount = spyOn(A.prototype, 'componentWillMount');
 			const componentWillUnmount = spyOn(A.prototype, 'componentWillUnmount');
@@ -137,11 +154,15 @@ describe('dom', () => {
 				componentWillMount() {
 					route('/b');
 				}
-				render(){ return <div class="a" />; }
+				render() {
+					return <div class="a" />;
+				}
 			}
 			class B {
-				componentWillMount(){}
-				render(){ return <div class="b" />; }
+				componentWillMount() {}
+				render() {
+					return <div class="b" />;
+				}
 			}
 			const mountA = spyOn(A.prototype, 'componentWillMount');
 			const mountB = spyOn(B.prototype, 'componentWillMount');
@@ -171,11 +192,13 @@ describe('dom', () => {
 
 		it('should not carry over the previous value of a query parameter', () => {
 			class A {
-				render({ bar }){ return <p>bar is {bar}</p>; }
+				render({ bar }) {
+					return <p>bar is {bar}</p>;
+				}
 			}
 			let routerRef;
 			mount(
-				<Router ref={r => routerRef = r}>
+				<Router ref={r => (routerRef = r)}>
 					<A path="/foo" />
 				</Router>
 			);
@@ -202,9 +225,15 @@ describe('dom', () => {
 					spy3 = jasmine.createSpy('spy3');
 
 				const components = () => [
-					<Match key="match-1" path="/foo">{spy1}</Match>,
-					<Match key="match-2" path="/bar">{spy2}</Match>,
-					<Match key="match-3" path="/bar/:param">{spy3}</Match>,
+					<Match key="match-1" path="/foo">
+						{spy1}
+					</Match>,
+					<Match key="match-2" path="/bar">
+						{spy2}
+					</Match>,
+					<Match key="match-3" path="/bar/:param">
+						{spy3}
+					</Match>
 				];
 				mount(
 					<div>
@@ -218,9 +247,21 @@ describe('dom', () => {
 					</div>
 				);
 
-				expect(spy1).withContext('spy1 /').toHaveBeenCalledWith(jasmine.objectContaining({ matches: false, path:'/', url:'/' }));
-				expect(spy2).withContext('spy2 /').toHaveBeenCalledWith(jasmine.objectContaining({ matches: false, path:'/', url:'/' }));
-				expect(spy3).withContext('spy3 /').toHaveBeenCalledWith(jasmine.objectContaining({ matches: false, path:'/', url:'/' }));
+				expect(spy1)
+					.withContext('spy1 /')
+					.toHaveBeenCalledWith(
+						jasmine.objectContaining({ matches: false, path: '/', url: '/' })
+					);
+				expect(spy2)
+					.withContext('spy2 /')
+					.toHaveBeenCalledWith(
+						jasmine.objectContaining({ matches: false, path: '/', url: '/' })
+					);
+				expect(spy3)
+					.withContext('spy3 /')
+					.toHaveBeenCalledWith(
+						jasmine.objectContaining({ matches: false, path: '/', url: '/' })
+					);
 
 				spy1.calls.reset();
 				spy2.calls.reset();
@@ -232,9 +273,33 @@ describe('dom', () => {
 
 				await sleep(10);
 
-				expect(spy1).withContext('spy1 /foo').toHaveBeenCalledWith(jasmine.objectContaining({ matches: true, path:'/foo', url:'/foo' }));
-				expect(spy2).withContext('spy2 /foo').toHaveBeenCalledWith(jasmine.objectContaining({ matches: false, path:'/foo', url:'/foo' }));
-				expect(spy3).withContext('spy3 /foo').toHaveBeenCalledWith(jasmine.objectContaining({ matches: false, path:'/foo', url:'/foo' }));
+				expect(spy1)
+					.withContext('spy1 /foo')
+					.toHaveBeenCalledWith(
+						jasmine.objectContaining({
+							matches: true,
+							path: '/foo',
+							url: '/foo'
+						})
+					);
+				expect(spy2)
+					.withContext('spy2 /foo')
+					.toHaveBeenCalledWith(
+						jasmine.objectContaining({
+							matches: false,
+							path: '/foo',
+							url: '/foo'
+						})
+					);
+				expect(spy3)
+					.withContext('spy3 /foo')
+					.toHaveBeenCalledWith(
+						jasmine.objectContaining({
+							matches: false,
+							path: '/foo',
+							url: '/foo'
+						})
+					);
 				spy1.calls.reset();
 				spy2.calls.reset();
 				spy3.calls.reset();
@@ -245,9 +310,33 @@ describe('dom', () => {
 
 				await sleep(10);
 
-				expect(spy1).withContext('spy1 /foo?bar=5').toHaveBeenCalledWith(jasmine.objectContaining({ matches: true, path:'/foo', url:'/foo?bar=5' }));
-				expect(spy2).withContext('spy2 /foo?bar=5').toHaveBeenCalledWith(jasmine.objectContaining({ matches: false, path:'/foo', url:'/foo?bar=5' }));
-				expect(spy3).withContext('spy3 /foo?bar=5').toHaveBeenCalledWith(jasmine.objectContaining({ matches: false, path:'/foo', url:'/foo?bar=5' }));
+				expect(spy1)
+					.withContext('spy1 /foo?bar=5')
+					.toHaveBeenCalledWith(
+						jasmine.objectContaining({
+							matches: true,
+							path: '/foo',
+							url: '/foo?bar=5'
+						})
+					);
+				expect(spy2)
+					.withContext('spy2 /foo?bar=5')
+					.toHaveBeenCalledWith(
+						jasmine.objectContaining({
+							matches: false,
+							path: '/foo',
+							url: '/foo?bar=5'
+						})
+					);
+				expect(spy3)
+					.withContext('spy3 /foo?bar=5')
+					.toHaveBeenCalledWith(
+						jasmine.objectContaining({
+							matches: false,
+							path: '/foo',
+							url: '/foo?bar=5'
+						})
+					);
 				spy1.calls.reset();
 				spy2.calls.reset();
 				spy3.calls.reset();
@@ -258,9 +347,33 @@ describe('dom', () => {
 
 				await sleep(10);
 
-				expect(spy1).withContext('spy1 /bar').toHaveBeenCalledWith(jasmine.objectContaining({ matches: false, path:'/bar', url:'/bar' }));
-				expect(spy2).withContext('spy2 /bar').toHaveBeenCalledWith(jasmine.objectContaining({ matches: true, path:'/bar', url:'/bar' }));
-				expect(spy3).withContext('spy3 /bar').toHaveBeenCalledWith(jasmine.objectContaining({ matches: false, path:'/bar', url:'/bar' }));
+				expect(spy1)
+					.withContext('spy1 /bar')
+					.toHaveBeenCalledWith(
+						jasmine.objectContaining({
+							matches: false,
+							path: '/bar',
+							url: '/bar'
+						})
+					);
+				expect(spy2)
+					.withContext('spy2 /bar')
+					.toHaveBeenCalledWith(
+						jasmine.objectContaining({
+							matches: true,
+							path: '/bar',
+							url: '/bar'
+						})
+					);
+				expect(spy3)
+					.withContext('spy3 /bar')
+					.toHaveBeenCalledWith(
+						jasmine.objectContaining({
+							matches: false,
+							path: '/bar',
+							url: '/bar'
+						})
+					);
 				spy1.calls.reset();
 				spy2.calls.reset();
 				spy3.calls.reset();
@@ -271,17 +384,50 @@ describe('dom', () => {
 
 				await sleep(10);
 
-				expect(spy1).withContext('spy1 /bar/123').toHaveBeenCalledWith(jasmine.objectContaining({ matches: false, path:'/bar/:param', url:'/bar/123' }));
-				expect(spy2).withContext('spy2 /bar/123').toHaveBeenCalledWith(jasmine.objectContaining({ matches: false, path:'/bar/:param', url:'/bar/123' }));
-				expect(spy3).withContext('spy3 /bar/123').toHaveBeenCalledWith(jasmine.objectContaining({ matches: true, path:'/bar/:param', url:'/bar/123' }));
+				expect(spy1)
+					.withContext('spy1 /bar/123')
+					.toHaveBeenCalledWith(
+						jasmine.objectContaining({
+							matches: false,
+							path: '/bar/:param',
+							url: '/bar/123'
+						})
+					);
+				expect(spy2)
+					.withContext('spy2 /bar/123')
+					.toHaveBeenCalledWith(
+						jasmine.objectContaining({
+							matches: false,
+							path: '/bar/:param',
+							url: '/bar/123'
+						})
+					);
+				expect(spy3)
+					.withContext('spy3 /bar/123')
+					.toHaveBeenCalledWith(
+						jasmine.objectContaining({
+							matches: true,
+							path: '/bar/:param',
+							url: '/bar/123'
+						})
+					);
 			});
 		});
 
 		describe('<Link>', () => {
 			it('should render with active class when active', async () => {
 				const components = () => [
-					<ActiveLink key="link-1" activeClassName="active" path="/foo">foo</ActiveLink>,
-					<ActiveLink key="link-2" activeClassName="active" class="bar" path="/bar">bar</ActiveLink>,
+					<ActiveLink key="link-1" activeClassName="active" path="/foo">
+						foo
+					</ActiveLink>,
+					<ActiveLink
+						key="link-2"
+						activeClassName="active"
+						class="bar"
+						path="/bar"
+					>
+						bar
+					</ActiveLink>
 				];
 
 				mount(
@@ -297,19 +443,25 @@ describe('dom', () => {
 
 				await sleep(1);
 
-				expect(scratch.innerHTML).toEqual('<div><a class="active">foo</a><a class="bar">bar</a></div>');
+				expect(scratch.innerHTML).toEqual(
+					'<div><a class="active">foo</a><a class="bar">bar</a></div>'
+				);
 
 				route('/foo?bar=5');
 
 				await sleep(1);
 
-				expect(scratch.innerHTML).toEqual('<div><a class="active">foo</a><a class="bar">bar</a></div>');
+				expect(scratch.innerHTML).toEqual(
+					'<div><a class="active">foo</a><a class="bar">bar</a></div>'
+				);
 
 				route('/bar');
 
 				await sleep(1);
 
-				expect(scratch.innerHTML).toEqual('<div><a class="">foo</a><a class="bar active">bar</a></div>');
+				expect(scratch.innerHTML).toEqual(
+					'<div><a class="">foo</a><a class="bar active">bar</a></div>'
+				);
 			});
 		});
 	});

@@ -3,7 +3,7 @@
 [![NPM](https://img.shields.io/npm/v/preact-router.svg)](https://www.npmjs.com/package/preact-router)
 [![travis-ci](https://travis-ci.org/developit/preact-router.svg)](https://travis-ci.org/developit/preact-router)
 
-Connect your [Preact] components up to that address bar.
+Connect your [Preact](https://github.com/preactjs/preact) components up to that address bar.
 
 `preact-router` provides a `<Router />` component that conditionally renders its children when the URL matches their `path`. It also automatically wires up `<a />` elements to the router.
 
@@ -13,9 +13,7 @@ Connect your [Preact] components up to that address bar.
 
 #### [See a Real-world Example :arrow_right:](https://jsfiddle.net/developit/qc73v9va/)
 
-
 ---
-
 
 ### Usage Example
 
@@ -25,19 +23,18 @@ import { h, render } from 'preact';
 /** @jsx h */
 
 const Main = () => (
-	<Router>
-		<Home path="/" />
-		<About path="/about" />
-		// Advanced is an optional query
-		<Search path="/search/:query/:advanced?" />
-	</Router>
+  <Router>
+    <Home path="/" />
+    <About path="/about" />
+    // Advanced is an optional query
+    <Search path="/search/:query/:advanced?" />
+  </Router>
 );
 
 render(<Main />, document.body);
 ```
 
 If there is an error rendering the destination route, a 404 will be displayed.
-
 
 ### Handling URLS
 
@@ -46,7 +43,7 @@ Any URL parameters get passed to the component as `props`.
 
 Defining what component(s) to load for a given URL is easy and declarative.
 Querystring and `:parameter` values are passed to the matched component as props.
- Parameters can be made optional by adding a `?`, or turned into a wildcard match by adding `*` (zero or more characters) or `+` (one or more characters):
+Parameters can be made optional by adding a `?`, or turned into a wildcard match by adding `*` (zero or more characters) or `+` (one or more characters):
 
 ```js
 <Router>
@@ -60,7 +57,6 @@ Querystring and `:parameter` values are passed to the matched component as props
 </Router>
 ```
 
-
 ### Lazy Loading
 
 Lazy loading (code splitting) with `preact-router` can be implemented easily using the [AsyncRoute](https://www.npmjs.com/package/preact-async-route) module:
@@ -71,16 +67,15 @@ import AsyncRoute from 'preact-async-route';
   <Home path="/" />
   <AsyncRoute
     path="/friends"
-    getComponent={ () => import('./friends').then(module => module.default) }
+    getComponent={() => import('./friends').then(module => module.default)}
   />
   <AsyncRoute
     path="/friends/:id"
-    getComponent={ () => import('./friend').then(module => module.default) }
-    loading={ () => <div>loading...</div> }
+    getComponent={() => import('./friend').then(module => module.default)}
+    loading={() => <div>loading...</div>}
   />
-</Router>
+</Router>;
 ```
-
 
 ### Active Matching & Links
 
@@ -94,29 +89,21 @@ import Match from 'preact-router/match';
 
 render(
   <div>
-    <Match path="/">
-      { ({ matches, path, url }) => (
-        <pre>{url}</pre>
-      ) }
-    </Match>
+    <Match path="/">{({ matches, path, url }) => <pre>{url}</pre>}</Match>
     <Router>
       <div default>demo fallback route</div>
     </Router>
   </div>
-)
+);
 
 // another example: render only if at a given URL:
 
 render(
   <div>
-    <Match path="/">
-      { ({ matches }) => matches && (
-        <h1>You are Home!</h1>
-      ) }
-    </Match>
+    <Match path="/">{({ matches }) => matches && <h1>You are Home!</h1>}</Match>
     <Router />
   </div>
-)
+);
 ```
 
 `<Link>` is just a normal link, but it automatically adds and removes an "active" classname to itself based on whether it matches the current URL.
@@ -128,19 +115,22 @@ import { Link } from 'preact-router/match';
 render(
   <div>
     <nav>
-      <Link activeClassName="active" href="/">Home</Link>
-      <Link activeClassName="active" href="/foo">Foo</Link>
-      <Link activeClassName="active" href="/bar">Bar</Link>
+      <Link activeClassName="active" href="/">
+        Home
+      </Link>
+      <Link activeClassName="active" href="/foo">
+        Foo
+      </Link>
+      <Link activeClassName="active" href="/bar">
+        Bar
+      </Link>
     </nav>
     <Router>
-      <div default>
-        this is a demo route that always matches
-      </div>
+      <div default>this is a demo route that always matches</div>
     </Router>
   </div>
-)
+);
 ```
-
 
 ### Default Link Behavior
 
@@ -161,9 +151,8 @@ import { render, Component } from 'preact';
 import { Router, route } from 'preact-router';
 
 class App extends Component {
-
   // some method that returns a promise
-  isAuthenticated() { }
+  isAuthenticated() {}
 
   handleRoute = async e => {
     switch (e.url) {
@@ -182,7 +171,6 @@ class App extends Component {
       </Router>
     );
   }
-
 }
 ```
 
@@ -214,7 +202,6 @@ Now to create a redirect within your application, you can add this `Redirect` co
 </Router>
 ```
 
-
 ### Custom History
 
 It's possible to use alternative history bindings, like `/#!/hash-history`:
@@ -225,11 +212,11 @@ import Router from 'preact-router';
 import { createHashHistory } from 'history';
 
 const Main = () => (
-    <Router history={createHashHistory()}>
-        <Home path="/" />
-        <About path="/about" />
-        <Search path="/search/:query" />
-    </Router>
+  <Router history={createHashHistory()}>
+    <Home path="/" />
+    <About path="/about" />
+    <Search path="/search/:query" />
+  </Router>
 );
 
 render(<Main />, document.body);
@@ -242,9 +229,9 @@ It's possible to programmatically trigger a route to a page (like `window.locati
 ```js
 import { route } from 'preact-router';
 
-route('/page-2')  // appends a history entry
+route('/page-2'); // appends a history entry
 
-route('/page-3', true)  // replaces the current history entry
+route('/page-3', true); // replaces the current history entry
 ```
 
 ### Nested Routers
@@ -256,19 +243,19 @@ import { h, render } from 'preact';
 import Router from 'preact-router';
 
 function Profile(props) {
-    // `props.rest` is the rest of the URL after "/profile/"
-    return (
-      <div>
-        <h1>Profile</h1>
-        <Router>
-          <MyProfile path="/profile/me" />
-          <UserProfile path="/profile/:user" />
-        </Router>
-      </div>
-    );
+  // `props.rest` is the rest of the URL after "/profile/"
+  return (
+    <div>
+      <h1>Profile</h1>
+      <Router>
+        <MyProfile path="/profile/me" />
+        <UserProfile path="/profile/:user" />
+      </Router>
+    </div>
+  );
 }
-const MyProfile = () => (<h2>My Profile</h2>);
-const UserProfile = (props) => (<h2>{props.user}</h2>);
+const MyProfile = () => <h2>My Profile</h2>;
+const UserProfile = props => <h2>{props.user}</h2>;
 
 function App() {
   return (
@@ -291,8 +278,4 @@ render(<App />, document.body);
 
 ### License
 
-[MIT]
-
-
-[Preact]: https://github.com/developit/preact
-[MIT]: https://choosealicense.com/licenses/mit/
+[MIT](./LICENSE)
