@@ -1,20 +1,25 @@
-import { cloneElement, createElement, Component, toChildArray } from 'preact';
+import { h, cloneElement, createElement, Component, toChildArray, createContext } from 'preact';
+import { useContext } from 'preact/hooks';
 import { exec, prepareVNodeForRanking, assign, pathRankSort } from './util';
+
+const RouterContext = createContext({});
 
 let customHistory = null;
 
 const ROUTERS = [];
 
-const subscribers = [];
-
 const EMPTY = {};
+
+function useRouter() {
+	return [useContext(RouterContext), route];
+}
 
 function setUrl(url, type='push') {
 	if (customHistory && customHistory[type]) {
 		customHistory[type](url);
 	}
-	else if (typeof history!=='undefined' && history[type+'State']) {
-		history[type+'State'](null, null, url);
+	else if (typeof history!=='undefined' && history[`${type}State`]) {
+		history[`${type}State`](null, null, url);
 	}
 }
 
@@ -66,9 +71,6 @@ function routeTo(url) {
 		if (ROUTERS[i].routeTo(url)===true) {
 			didRoute = true;
 		}
-	}
-	for (let i=subscribers.length; i--; ) {
-		subscribers[i](url);
 	}
 	return didRoute;
 }
@@ -150,6 +152,7 @@ class Router extends Component {
 		this.state = {
 			url: props.url || getCurrentUrl()
 		};
+		this.contextValue = {};
 
 		initEventListeners();
 	}
@@ -216,9 +219,13 @@ class Router extends Component {
 						assign(newProps, matches);
 						delete newProps.ref;
 						delete newProps.key;
-						return cloneElement(vnode, newProps);
+						return {
+							vnode: cloneElement(vnode, newProps),
+							matches
+						};
 					}
-					return vnode;
+
+					return { vnode, matches };
 				}
 			}).filter(Boolean);
 	}
@@ -226,23 +233,30 @@ class Router extends Component {
 	render({ children, onChange }, { url }) {
 		let active = this.getMatchingChildren(toChildArray(children), url, true);
 
-		let current = active[0] || null;
+		let { vnode: current, matches } = active[0] || { vnode: null, matches: null };
 
 		let previous = this.previousUrl;
 		if (url!==previous) {
 			this.previousUrl = url;
+			this.contextValue = {
+				router: this,
+				url,
+				previous,
+				active: active.map(a => a.vnode),
+				current,
+				path: current ? current.props.path : null,
+				matches
+			};
 			if (typeof onChange==='function') {
-				onChange({
-					router: this,
-					url,
-					previous,
-					active,
-					current
-				});
+				onChange(this.contextValue);
 			}
 		}
 
-		return current;
+		return (
+			<RouterContext.Provider value={this.contextValue}>
+				{current}
+			</RouterContext.Provider>
+		);
 	}
 }
 
@@ -252,5 +266,5 @@ const Link = (props) => (
 
 const Route = props => createElement(props.component, props);
 
-export { subscribers, getCurrentUrl, route, Router, Route, Link, exec };
+export { getCurrentUrl, route, Router, Route, Link, exec, useRouter };
 export default Router;

@@ -1,4 +1,4 @@
-import { Router, Link, route } from 'preact-router';
+import { Router, Link, route, Route } from 'preact-router';
 import { Match, Link as ActiveLink } from '../match/src';
 import { h, render } from 'preact';
 import { act } from 'preact/test-utils';
@@ -201,12 +201,20 @@ describe('dom', () => {
 					spy2 = jasmine.createSpy('spy2'),
 					spy3 = jasmine.createSpy('spy3');
 
+				const components = () => [
+					<Match key="match-1" path="/foo">{spy1}</Match>,
+					<Match key="match-2" path="/bar">{spy2}</Match>,
+					<Match key="match-3" path="/bar/:param">{spy3}</Match>,
+				];
 				mount(
 					<div>
-						<Router />
-						<Match path="/foo">{spy1}</Match>
-						<Match path="/bar">{spy2}</Match>
-						<Match path="/bar/:param">{spy3}</Match>
+						<Router>
+							<Route path="/" component={components} />
+							<Route path="/foo" component={components} />
+							<Route path="/bar" component={components} />
+							<Route path="/bar/:param" component={components} />
+							<Route default component={components} />
+						</Router>
 					</div>
 				);
 
@@ -263,19 +271,26 @@ describe('dom', () => {
 
 				await sleep(10);
 
-				expect(spy1).withContext('spy1 /bar/123').toHaveBeenCalledWith(jasmine.objectContaining({ matches: false, path:'/bar/123', url:'/bar/123' }));
-				expect(spy2).withContext('spy2 /bar/123').toHaveBeenCalledWith(jasmine.objectContaining({ matches: false, path:'/bar/123', url:'/bar/123' }));
-				expect(spy3).withContext('spy3 /bar/123').toHaveBeenCalledWith(jasmine.objectContaining({ matches: true, path:'/bar/123', url:'/bar/123' }));
+				expect(spy1).withContext('spy1 /bar/123').toHaveBeenCalledWith(jasmine.objectContaining({ matches: false, path:'/bar/:param', url:'/bar/123' }));
+				expect(spy2).withContext('spy2 /bar/123').toHaveBeenCalledWith(jasmine.objectContaining({ matches: false, path:'/bar/:param', url:'/bar/123' }));
+				expect(spy3).withContext('spy3 /bar/123').toHaveBeenCalledWith(jasmine.objectContaining({ matches: true, path:'/bar/:param', url:'/bar/123' }));
 			});
 		});
 
 		describe('<Link>', () => {
 			it('should render with active class when active', async () => {
+				const components = () => [
+					<ActiveLink key="link-1" activeClassName="active" path="/foo">foo</ActiveLink>,
+					<ActiveLink key="link-2" activeClassName="active" class="bar" path="/bar">bar</ActiveLink>,
+				];
+
 				mount(
 					<div>
-						<Router />
-						<ActiveLink activeClassName="active" path="/foo">foo</ActiveLink>
-						<ActiveLink activeClassName="active" class="bar" path="/bar">bar</ActiveLink>
+						<Router>
+							<Route path="/foo" component={components} />
+							<Route path="/bar" component={components} />
+							<Route default component={components} />
+						</Router>
 					</div>
 				);
 				route('/foo');

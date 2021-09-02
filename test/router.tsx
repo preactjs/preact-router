@@ -1,5 +1,5 @@
 import { h, render, Component, FunctionalComponent } from 'preact';
-import Router, { Route, RoutableProps } from '../';
+import Router, { Route, RoutableProps, useRouter } from '../';
 
 class ClassComponent extends Component<{}, {}> {
     render() {
@@ -33,4 +33,29 @@ function RouterWithRoutes() {
             <Route path="/b" component={SomeFunctionalComponent} />
         </Router>
     );
+}
+
+function UseRouterFn() {
+    const [
+        {
+            active,
+            current,
+            matches,
+            path,
+            router,
+            url,
+            previous
+        },
+        route
+    ] = useRouter()
+
+    const [
+        {
+            matches: typedMatches,
+        }
+    ] = useRouter<{id: string}>()
+    const id = typedMatches.id
+
+    route('/foo')
+    route({ url: '/bar', replace: true })
 }

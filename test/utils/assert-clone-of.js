@@ -20,7 +20,7 @@ function serialize(vnode, prefix = '') {
 	for (let prop in vnode.props) {
 		const v = vnode.props[prop];
 		if (prop === 'children') {
-			children = toChildArray(v).reduce((str, v) => `${str}\n${serialize(v, prefix + '  ')}`, '')
+			children = toChildArray(v).reduce((str, v) => `${str}\n${serialize(v, `${prefix  }  `)}`, '')
 		}
 		else {
 			str += ` ${prop}=${JSON.stringify(v)}`;

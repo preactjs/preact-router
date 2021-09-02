@@ -1,39 +1,22 @@
-import { h, Component } from 'preact';
-import { subscribers, getCurrentUrl, Link as StaticLink, exec } from 'preact-router';
+import { h } from 'preact';
+import { Link as StaticLink, exec, useRouter } from 'preact-router';
 
-export class Match extends Component {
-	componentDidMount() {
-		this.update = url => {
-			this.nextUrl = url;
-			this.setState({});
-		};
-		subscribers.push(this.update);
-	}
-	componentWillUnmount() {
-		subscribers.splice(subscribers.indexOf(this.update)>>>0, 1);
-	}
-	render(props) {
-		let url = this.nextUrl || getCurrentUrl(),
-			path = url.replace(/\?.+$/,'');
-		this.nextUrl = null;
-		return props.children({
-			url,
-			path,
-			matches: exec(path, props.path, {}) !== false
-		});
-	}
+export function Match(props) {
+	const [{ url, path }] = useRouter();
+	return props.children({
+		url,
+		path,
+		matches: !!url && !!path && exec(path, props.path, {}) !== false
+	});
 }
 
-export function Link({ class: c, className, activeClass, activeClassName, path, ...props }) {
+export function Link({ class: c, className, activeClass, activeClassName, path: linkPath, ...props }) {
 	const inactive = [c, className].filter(Boolean).join(' ');
 	const active = [c, className, activeClass, activeClassName].filter(Boolean).join(' ');
-	return (
-		<Match path={path || props.href}>
-			{ ({ matches }) => (
-				<StaticLink {...props} class={matches ? active : inactive} />
-			) }
-		</Match>
-	);
+	const path = useRouter()[0].path || props.href;
+	const matches = !!path && exec(path, linkPath, {}) !== false;
+
+	return <StaticLink {...props} class={matches ? active : inactive} />
 }
 
 export default Match;
