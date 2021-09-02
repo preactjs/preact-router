@@ -33,15 +33,15 @@ describe('dist', () => {
 			let router = new Router({});
 
 			expect(
-				router.render({ children }, { url:'/foo' }).props.children
+				router.render({ children }, { url: '/foo' }).props.children
 			).toBeCloneOf(children[1], { url: '/foo' });
 
 			expect(
-				router.render({ children }, { url:'/' }).props.children
+				router.render({ children }, { url: '/' }).props.children
 			).toBeCloneOf(children[0]);
 
 			expect(
-				router.render({ children }, { url:'/foo/bar' }).props.children
+				router.render({ children }, { url: '/foo/bar' }).props.children
 			).toBeCloneOf(children[2]);
 		});
 	});

@@ -10,13 +10,22 @@ export function Match(props) {
 	});
 }
 
-export function Link({ class: c, className, activeClass, activeClassName, path: linkPath, ...props }) {
+export function Link({
+	class: c,
+	className,
+	activeClass,
+	activeClassName,
+	path: linkPath,
+	...props
+}) {
 	const inactive = [c, className].filter(Boolean).join(' ');
-	const active = [c, className, activeClass, activeClassName].filter(Boolean).join(' ');
+	const active = [c, className, activeClass, activeClassName]
+		.filter(Boolean)
+		.join(' ');
 	const path = useRouter()[0].path || props.href;
 	const matches = !!path && exec(path, linkPath, {}) !== false;
 
-	return <StaticLink {...props} class={matches ? active : inactive} />
+	return <StaticLink {...props} class={matches ? active : inactive} />;
 }
 
 export default Match;

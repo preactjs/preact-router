@@ -1,4 +1,12 @@
-import { getCurrentUrl, route, Router, Route, Link, exec, useRouter } from './index';
+import {
+	getCurrentUrl,
+	route,
+	Router,
+	Route,
+	Link,
+	exec,
+	useRouter
+} from './index';
 
 Router.getCurrentUrl = getCurrentUrl;
 Router.route = route;

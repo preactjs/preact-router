@@ -36,25 +36,18 @@ describe('preact-router', () => {
 				<foo path="/foo/bar" />
 			];
 
-			render(
-				(
-					<Router ref={ref => (router = ref)}>
-						{children}
-					</Router>
-				),
-				scratch
-			);
+			render(<Router ref={ref => (router = ref)}>{children}</Router>, scratch);
 
 			expect(
-				router.render({ children }, { url:'/foo' }).props.children
+				router.render({ children }, { url: '/foo' }).props.children
 			).toBeCloneOf(children[1]);
 
 			expect(
-				router.render({ children }, { url:'/' }).props.children
+				router.render({ children }, { url: '/' }).props.children
 			).toBeCloneOf(children[0]);
 
 			expect(
-				router.render({ children }, { url:'/foo/bar' }).props.children
+				router.render({ children }, { url: '/foo/bar' }).props.children
 			).toBeCloneOf(children[2]);
 		});
 
@@ -65,71 +58,49 @@ describe('preact-router', () => {
 				<foo path="/foo/:bar/:baz" />
 			];
 
-			render(
-				(
-					<Router ref={ref => (router = ref)}>
-						{children}
-					</Router>
-				),
-				scratch
-			);
-
+			render(<Router ref={ref => (router = ref)}>{children}</Router>, scratch);
 
 			expect(
-				router.render({ children }, { url:'/foo' }).props.children
+				router.render({ children }, { url: '/foo' }).props.children
 			).toBeCloneOf(children[0]);
 
 			expect(
-				router.render({ children }, { url:'/foo/bar' }).props.children
-			).toBeCloneOf(children[1], { matches: { bar:'bar' }, url:'/foo/bar' });
+				router.render({ children }, { url: '/foo/bar' }).props.children
+			).toBeCloneOf(children[1], { matches: { bar: 'bar' }, url: '/foo/bar' });
 
 			expect(
-				router.render({ children }, { url:'/foo/bar/baz' }).props.children
-			).toBeCloneOf(children[2], { matches: { bar:'bar', baz:'baz' }, url:'/foo/bar/baz' });
+				router.render({ children }, { url: '/foo/bar/baz' }).props.children
+			).toBeCloneOf(children[2], {
+				matches: { bar: 'bar', baz: 'baz' },
+				url: '/foo/bar/baz'
+			});
 		});
 
 		it('should support default routes', () => {
-			let children = [
-				<foo default />,
-				<foo path="/" />,
-				<foo path="/foo" />
-			];
+			let children = [<foo default />, <foo path="/" />, <foo path="/foo" />];
 
-			render(
-				(
-					<Router ref={ref => (router = ref)}>
-						{children}
-					</Router>
-				),
-				scratch
-			);
+			render(<Router ref={ref => (router = ref)}>{children}</Router>, scratch);
 
 			expect(
-				router.render({ children }, { url:'/foo' }).props.children
+				router.render({ children }, { url: '/foo' }).props.children
 			).toBeCloneOf(children[2]);
 
 			expect(
-				router.render({ children }, { url:'/' }).props.children
+				router.render({ children }, { url: '/' }).props.children
 			).toBeCloneOf(children[1]);
 
 			expect(
-				router.render({ children }, { url:'/asdf/asdf' }).props.children
-			).toBeCloneOf(children[0], { matches: {}, url:'/asdf/asdf' });
+				router.render({ children }, { url: '/asdf/asdf' }).props.children
+			).toBeCloneOf(children[0], { matches: {}, url: '/asdf/asdf' });
 		});
 
 		it('should support initial route prop', () => {
-			let children = [
-				<foo default />,
-				<foo path="/" />,
-				<foo path="/foo" />
-			];
+			let children = [<foo default />, <foo path="/" />, <foo path="/foo" />];
 
 			render(
-				(
-					<Router url="/foo"  ref={ref => (router = ref)}>
-						{children}
-					</Router>
-				),
+				<Router url="/foo" ref={ref => (router = ref)}>
+					{children}
+				</Router>,
 				scratch
 			);
 
@@ -139,23 +110,20 @@ describe('preact-router', () => {
 
 			render(null, scratch);
 
-			render(
-				(
-					<Router ref={ref => (router = ref)}>
-						{children}
-					</Router>
-				),
-				scratch
-			);
+			render(<Router ref={ref => (router = ref)}>{children}</Router>, scratch);
 
-			expect(router.state.url).toBe(location.pathname + (location.search || ''));
+			expect(router.state.url).toBe(
+				location.pathname + (location.search || '')
+			);
 		});
 
 		it('should support custom history', () => {
 			let push = jasmine.createSpy('push');
 			let replace = jasmine.createSpy('replace');
 			let listen = jasmine.createSpy('listen');
-			let getCurrentLocation = jasmine.createSpy('getCurrentLocation', () => ({pathname: '/initial'})).and.callThrough();
+			let getCurrentLocation = jasmine
+				.createSpy('getCurrentLocation', () => ({ pathname: '/initial' }))
+				.and.callThrough();
 
 			let children = [
 				<index path="/" />,
@@ -164,11 +132,12 @@ describe('preact-router', () => {
 			];
 
 			render(
-				(
-					<Router history={{ push, replace, getCurrentLocation, listen }} ref={ref => (router = ref)}>
-						{children}
-					</Router>
-				),
+				<Router
+					history={{ push, replace, getCurrentLocation, listen }}
+					ref={ref => (router = ref)}
+				>
+					{children}
+				</Router>,
 				scratch
 			);
 
@@ -199,29 +168,27 @@ describe('preact-router', () => {
 			];
 
 			render(
-				(
-					<Router onChange={onChange} ref={ref => (router = ref)}>
-						{children}
-					</Router>
-				),
+				<Router onChange={onChange} ref={ref => (router = ref)}>
+					{children}
+				</Router>,
 				scratch
 			);
 
 			router.render(router.props, { url: '/' });
 			expect(onChange).toHaveBeenCalledWith(
 				jasmine.objectContaining({ path: '/' })
-			)
+			);
 
 			router.render(router.props, { url: '/foo/67' });
 			expect(onChange).toHaveBeenCalledWith(
 				jasmine.objectContaining({ path: '/foo/:id' })
-			)
+			);
 
 			router.render(router.props, { url: '/bar/bazparam/boo/bibiparam' });
 			expect(onChange).toHaveBeenCalledWith(
 				jasmine.objectContaining({ path: '/bar/:baz/boo/:bibi' })
-			)
-		})
+			);
+		});
 	});
 
 	describe('route()', () => {
@@ -233,12 +200,10 @@ describe('preact-router', () => {
 			document.body.appendChild(scratch);
 
 			render(
-				(
-					<Router url="/foo" ref={ref => (router = ref)}>
-						<foo path="/" />
-						<foo path="/foo" />
-					</Router>
-				),
+				<Router url="/foo" ref={ref => (router = ref)}>
+					<foo path="/" />
+					<foo path="/foo" />
+				</Router>,
 				scratch
 			);
 
@@ -271,10 +236,7 @@ describe('preact-router', () => {
 
 		it('should return true for fallback route', () => {
 			let oldChildren = router.props.children;
-			router.props.children = [
-				<foo default />,
-				...oldChildren
-			];
+			router.props.children = [<foo default />, ...oldChildren];
 
 			router.routeTo.calls.reset();
 			expect(route('/asdf')).toBe(true);
@@ -288,10 +250,10 @@ describe('preact-router', () => {
 		let router;
 
 		it('should return route() as first param', () => {
-			const [, routeFromHook] = useRouter()
-			expect(routeFromHook).toBeInstanceOf(Function)
-			expect(routeFromHook).toBe(route)
-		})
+			const [, routeFromHook] = useRouter();
+			expect(routeFromHook).toBeInstanceOf(Function);
+			expect(routeFromHook).toBe(route);
+		});
 
 		it('should return valid router informations', async () => {
 			scratch = document.createElement('div');
@@ -299,24 +261,20 @@ describe('preact-router', () => {
 
 			const FunctionalComponent = ({ path, shouldMatch }) => {
 				const [
-					{
-						router: routerFromHook,
-						url,
-						path: pathFromHook,
-						matches
-					}
+					{ router: routerFromHook, url, path: pathFromHook, matches }
 					// eslint-disable-next-line react-hooks/rules-of-hooks
-				] = useRouter()
+				] = useRouter();
 
-				expect(routerFromHook).toBe(router)
-				expect(url).toBe(router.state.url)
-				expect(pathFromHook).toBe(path)
+				expect(routerFromHook).toBe(router);
+				expect(url).toBe(router.state.url);
+				expect(pathFromHook).toBe(path);
 
-				Object.keys(shouldMatch)
-					.forEach(key => expect(matches[key]).toBe(shouldMatch[key]))
+				Object.keys(shouldMatch).forEach(key =>
+					expect(matches[key]).toBe(shouldMatch[key])
+				);
 
-				return <div />
-			}
+				return <div />;
+			};
 
 			const children = [
 				<FunctionalComponent
@@ -329,14 +287,7 @@ describe('preact-router', () => {
 				/>
 			];
 
-			render(
-				(
-					<Router ref={ref => (router = ref)}>
-						{children}
-					</Router>
-				),
-				scratch
-			);
+			render(<Router ref={ref => (router = ref)}>{children}</Router>, scratch);
 
 			route('/foo/45/barparam');
 			await sleep(1);
@@ -346,6 +297,6 @@ describe('preact-router', () => {
 
 			document.body.removeChild(scratch);
 			router.componentWillUnmount();
-		})
-	})
+		});
+	});
 });
