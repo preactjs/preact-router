@@ -39,7 +39,9 @@ describe('Custom History', () => {
 
 			location.hash = '';
 			render(<Main />, scratch);
-			expect(Home).toHaveBeenCalledWith(
+			await sleep(1);
+			expect(Home).toHaveBeenCalled();
+			expect(Home.calls.first().args[0]).toEqual(
 				jasmine.objectContaining({ path: '/' })
 			);
 			Home.calls.reset();
@@ -47,23 +49,29 @@ describe('Custom History', () => {
 			location.hash = '/about';
 			await sleep(1);
 			expect(Home).not.toHaveBeenCalled();
-			expect(About).toHaveBeenCalledWith(
+			expect(About).toHaveBeenCalled();
+			expect(About.calls.first().args[0]).toEqual(
 				jasmine.objectContaining({ path: '/about' })
 			);
 			About.calls.reset();
 
-			location.hash = '/about/foo';
+			location.hash = '/search/foo';
 			await sleep(1);
 			expect(Home).not.toHaveBeenCalled();
 			expect(About).not.toHaveBeenCalled();
-			expect(Search).toHaveBeenCalledWith(
-				jasmine.objectContaining({ path: '/about/foo', query: 'foo' })
+			expect(Search).toHaveBeenCalled();
+			expect(Search.calls.first().args[0]).toEqual(
+				jasmine.objectContaining({
+					path: '/search/:query',
+					url: '/search/foo',
+					query: 'foo'
+				})
 			);
 
 			route('/');
 
 			await sleep(1);
-			expect(location.hash).toEqual('/');
+			expect(location.hash).toEqual('#/');
 			expect(Home).toHaveBeenCalled();
 		});
 	});
