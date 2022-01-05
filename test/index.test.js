@@ -250,12 +250,20 @@ describe('preact-router', () => {
 		let router;
 
 		it('should return route() as first param', () => {
-			const [, routeFromHook] = useRouter();
-			expect(routeFromHook).toBeInstanceOf(Function);
-			expect(routeFromHook).toBe(route);
+			let useRouterValue;
+			const C = () => {
+				useRouterValue = useRouter();
+				return null;
+			};
+			let scratch = document.createElement('div');
+			render(<C />, scratch);
+			expect(useRouterValue).toBeInstanceOf(Array);
+			expect(useRouterValue[1]).toBeInstanceOf(Function);
+			expect(useRouterValue[1]).toBe(route);
+			render(null, scratch);
 		});
 
-		it('should return valid router informations', async () => {
+		it('should return valid router information', async () => {
 			scratch = document.createElement('div');
 			document.body.appendChild(scratch);
 

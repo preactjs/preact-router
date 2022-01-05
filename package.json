@@ -4,24 +4,26 @@
 	"version": "3.2.1",
 	"description": "Connect your components up to that address bar.",
 	"main": "dist/preact-router.js",
+	"module": "dist/preact-router.module.js",
+	"jsnext:main": "dist/preact-router.module.js",
 	"umd:main": "dist/preact-router.umd.js",
 	"unpkg": "dist/preact-router.umd.js",
-	"jsnext:main": "dist/preact-router.es.js",
-	"module": "dist/preact-router.es.js",
 	"exports": {
 		".": {
-			"import": "./dist/preact-router.es.js",
+			"module": "./dist/preact-router.module.js",
+			"import": "./dist/preact-router.module.js",
 			"require": "./dist/preact-router.js"
 		},
+		"./package.json": "./package.json",
 		"./match": {
-			"import": "./match/index.es.js",
+			"module": "./match/index.module.js",
+			"import": "./match/index.module.js",
 			"require": "./match/index.js"
 		},
-		"./package.json": "./package.json",
-		"./": "./"
+		"./match/package.json": "./match/package.json"
 	},
 	"scripts": {
-		"build": "microbundle -f es,modern && microbundle src/cjs.js -f cjs,umd && (cd match && npm run build)",
+		"build": "microbundle -f es --no-generateTypes && microbundle src/cjs.js -f cjs,umd --no-generateTypes && (cd match && npm run build)",
 		"test": "npm-run-all lint build test:unit test:ts",
 		"lint": "eslint src test",
 		"fix": "npm run lint -- --fix",
@@ -32,7 +34,6 @@
 		"format": "prettier --write ."
 	},
 	"files": [
-		"src",
 		"dist",
 		"match",
 		"index.d.ts"
@@ -79,20 +80,21 @@
 	},
 	"devDependencies": {
 		"@babel/plugin-transform-react-jsx": "^7.9.1",
+		"@types/jasmine": "^3.10.3",
 		"chai": "^3.5.0",
 		"copyfiles": "^1.0.0",
 		"eslint": "^6.8.0",
 		"eslint-config-preact": "^1.1.1",
-		"history": "^5.1.0",
+		"history": "^5.2.0",
 		"husky": "^7.0.2",
 		"karmatic": "^2.1.0",
 		"lint-staged": "^11.1.2",
-		"microbundle": "^0.12.0-next.8",
+		"microbundle": "^0.14.2",
 		"mkdirp": "^0.5.3",
 		"mocha": "^5.2.0",
 		"npm-merge-driver-install": "^1.1.1",
 		"npm-run-all": "^3.0.0",
-		"preact": "^10.3.4",
+		"preact": "^10.6.4",
 		"prettier": "^2.3.2",
 		"rimraf": "^2.5.1",
 		"sinon": "^7.1.0",

@@ -6,13 +6,21 @@ export function toBeCloneOf(util) {
 			const { matches = {}, url = expected.props.path } = opts || {};
 			const clonedRoute = cloneElement(expected, { url, matches, ...matches });
 			const result = {};
-			result.pass = util.equals(actual, clonedRoute);
+			result.pass = util.equals(cleanVNode(actual), cleanVNode(clonedRoute));
 			result.message = `Expected ${serialize(actual)} ${
 				result.pass ? ' not' : ''
 			}to equal ${serialize(clonedRoute)}`;
 			return result;
 		}
 	};
+}
+
+function cleanVNode(vnode) {
+	const clone = Object.assign({}, vnode);
+	delete clone.id;
+	delete clone.constructor;
+	delete clone.__v;
+	return clone;
 }
 
 function serialize(vnode, prefix = '') {
