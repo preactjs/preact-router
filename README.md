@@ -136,7 +136,7 @@ render(
 
 Sometimes it's necessary to bypass preact-router's link handling and let the browser perform routing on its own.
 
-This can be accomplished by adding a `dataset-native` boolean attribute to any link:
+This can be accomplished by adding a `data-native` boolean attribute to any link:
 
 ```html
 <a href="/foo" data-native>Foo</a>
