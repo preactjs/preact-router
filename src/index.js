@@ -6,19 +6,34 @@ import {
 	toChildArray,
 	createContext
 } from 'preact';
-import { useContext } from 'preact/hooks';
+import { useContext, useState, useEffect } from 'preact/hooks';
 import { exec, prepareVNodeForRanking, assign, pathRankSort } from './util';
 
-const RouterContext = createContext({});
-
+const EMPTY = {};
+const ROUTERS = [];
+const SUBS = [];
 let customHistory = null;
 
-const ROUTERS = [];
+const GLOBAL_ROUTE_CONTEXT = {
+	url: getCurrentUrl()
+};
 
-const EMPTY = {};
+const RouterContext = createContext(GLOBAL_ROUTE_CONTEXT);
 
 function useRouter() {
-	return [useContext(RouterContext), route];
+	const ctx = useContext(RouterContext);
+	// Note: this condition can't change without a remount, so it's a safe conditional hook call
+	if (ctx === GLOBAL_ROUTE_CONTEXT) {
+		// eslint-disable-next-line react-hooks/rules-of-hooks
+		const update = useState()[1];
+		// eslint-disable-next-line react-hooks/rules-of-hooks
+		useEffect(() => {
+			SUBS.push(update);
+			return () => SUBS.splice(SUBS.indexOf(update), 1);
+			// eslint-disable-next-line react-hooks/exhaustive-deps
+		}, []);
+	}
+	return [ctx, route];
 }
 
 function setUrl(url, type = 'push') {
@@ -231,34 +246,39 @@ class Router extends Component {
 	}
 
 	render({ children, onChange }, { url }) {
-		let active = this.getMatchingChildren(toChildArray(children), url, true);
+		let ctx = this._contextValue;
 
 		let { vnode: current, matches } = active[0] || {
 			vnode: null,
 			matches: null
 		};
 
-		let previous = this.previousUrl;
-		if (url !== previous) {
-			this.previousUrl = url;
-			this.contextValue = {
-				router: this,
+		if (url !== (ctx && ctx.url)) {
+			let newCtx = {
 				url,
-				previous,
-				active: active.map(a => a.vnode),
+				previous: ctx && ctx.url,
 				current,
 				path: current ? current.props.path : null,
 				matches
 			};
+
+			// only copy simple properties to the global context:
+			assign(GLOBAL_ROUTE_CONTEXT, (ctx = this._contextValue = newCtx));
+
+			// these are only available within the subtree of a Router:
+			ctx.router = this;
+			ctx.active = current ? [current] : [];
+
+			// notify useRouter subscribers outside this subtree:
+			for (let i = SUBS.length; i--; ) SUBS[i]({});
+
 			if (typeof onChange === 'function') {
-				onChange(this.contextValue);
+				onChange(ctx);
 			}
 		}
 
 		return (
-			<RouterContext.Provider value={this.contextValue}>
-				{current}
-			</RouterContext.Provider>
+			<RouterContext.Provider value={ctx}>{current}</RouterContext.Provider>
 		);
 	}
 }
