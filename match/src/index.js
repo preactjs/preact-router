@@ -2,30 +2,31 @@ import { h } from 'preact';
 import { Link as StaticLink, exec, useRouter } from 'preact-router';
 
 export function Match(props) {
-	const [{ url, path }] = useRouter();
+	const router = useRouter()[0];
 	return props.children({
-		url,
-		path,
-		matches: !!url && !!path && exec(path, props.path, {}) !== false
+		url: router.url,
+		path: router.path,
+		matches: exec(router.path || router.url, props.path, {}) !== false
 	});
 }
 
 export function Link({
-	class: c,
 	className,
 	activeClass,
 	activeClassName,
-	path: linkPath,
+	path,
 	...props
 }) {
-	const inactive = [c, className].filter(Boolean).join(' ');
-	const active = [c, className, activeClass, activeClassName]
-		.filter(Boolean)
-		.join(' ');
-	const path = useRouter()[0].path || props.href;
-	const matches = !!path && exec(path, linkPath, {}) !== false;
+	const router = useRouter()[0];
+	const matches =
+		(path && router.path && exec(router.path, path, {})) ||
+		exec(router.url, props.href, {});
 
-	return <StaticLink {...props} class={matches ? active : inactive} />;
+	let inactive = props.class || className || '';
+	let active = (matches && (activeClass || activeClassName)) || '';
+	props.class = inactive + (inactive && active && ' ') + active;
+
+	return <StaticLink {...props} />;
 }
 
 export default Match;
