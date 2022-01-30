@@ -1,7 +1,7 @@
 # preact-router
 
 [![NPM](https://img.shields.io/npm/v/preact-router.svg)](https://www.npmjs.com/package/preact-router)
-[![travis-ci](https://travis-ci.org/developit/preact-router.svg)](https://travis-ci.org/developit/preact-router)
+[![Build status](https://github.com/preactjs/preact-router/actions/workflows/node.js.yml/badge.svg)](https://github.com/preactjs/preact-router/actions/workflows/node.js.yml)
 
 Connect your [Preact](https://github.com/preactjs/preact) components up to that address bar.
 
