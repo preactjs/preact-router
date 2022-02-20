@@ -268,7 +268,16 @@ assign(RouterProto, {
 	}
 });
 
-const Link = props => h('a', assign({ onClick: delegateLinkHandler }, props));
+const Link = props => {
+	const linkIsActive = getCurrentUrl() === props.href;
+
+	// We don't need activeclassname attribute in DOM elements and we'll re-add className
+	const { className, class: rawClass, activeClassName, activeClass, ...propsWithoutClass } = props;
+
+	propsWithoutClass.className = `${className || rawClass} ${linkIsActive ? activeClassName || activeClass : ""}`;
+
+	return h('a', assign({ onClick: delegateLinkHandler }, propsWithoutClass));
+};
 
 const Route = props => h(props.component, props);
 

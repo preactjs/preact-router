@@ -73,7 +73,7 @@ export function Route<Props>(
 ): preact.VNode;
 
 export function Link(
-	props: { activeClassName?: string } & preact.JSX.HTMLAttributes
+	props: { activeClassName?: string, activeClass?: string } & preact.JSX.HTMLAttributes
 ): preact.VNode;
 
 export function useRouter<
