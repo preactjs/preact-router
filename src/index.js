@@ -274,7 +274,7 @@ const Link = props => {
 	// We don't need activeclassname attribute in DOM elements and we'll re-add className
 	const { className, class: rawClass, activeClassName, activeClass, ...propsWithoutClass } = props;
 
-	propsWithoutClass.className = `${className || rawClass} ${linkIsActive ? activeClassName || activeClass : ""}`;
+	propsWithoutClass.className = `${className || rawClass || ""} ${linkIsActive ? activeClassName || activeClass : ""}`;
 
 	return h('a', assign({ onClick: delegateLinkHandler }, propsWithoutClass));
 };
