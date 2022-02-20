@@ -106,7 +106,7 @@ render(
 );
 ```
 
-`<Link>` is just a normal link, but it automatically adds and removes an "active" classname to itself based on whether it matches the current URL. You can use either `activeClassName` or `activeClass` properties for active classes.
+`<Link>` is just a normal link, but it automatically adds and removes an "active" classname to itself based on whether it matches the current URL.
 
 ```js
 import { Router } from 'preact-router';
