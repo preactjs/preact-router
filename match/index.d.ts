@@ -1,6 +1,6 @@
 import * as preact from 'preact';
 
-import { Link as StaticLink, RoutableProps } from '..';
+import { RoutableProps } from '..';
 
 type MatchInfo = {
 	url: string;
