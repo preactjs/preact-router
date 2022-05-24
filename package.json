@@ -4,20 +4,20 @@
 	"version": "4.0.1",
 	"description": "Connect your components up to that address bar.",
 	"main": "dist/preact-router.js",
-	"module": "dist/preact-router.module.js",
-	"jsnext:main": "dist/preact-router.module.js",
+	"module": "dist/preact-router.mjs",
+	"jsnext:main": "dist/preact-router.mjs",
 	"umd:main": "dist/preact-router.umd.js",
 	"unpkg": "dist/preact-router.umd.js",
 	"exports": {
 		".": {
-			"module": "./dist/preact-router.module.js",
-			"import": "./dist/preact-router.module.js",
+			"module": "./dist/preact-router.mjs",
+			"import": "./dist/preact-router.mjs",
 			"require": "./dist/preact-router.js"
 		},
 		"./package.json": "./package.json",
 		"./match": {
-			"module": "./match/index.module.js",
-			"import": "./match/index.module.js",
+			"module": "./match/index.mjs",
+			"import": "./match/index.mjs",
 			"require": "./match/index.js"
 		},
 		"./match/package.json": "./match/package.json"
