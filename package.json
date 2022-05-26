@@ -4,26 +4,26 @@
 	"version": "4.0.1",
 	"description": "Connect your components up to that address bar.",
 	"main": "dist/preact-router.js",
-	"module": "dist/preact-router.mjs",
-	"jsnext:main": "dist/preact-router.mjs",
+	"module": "dist/preact-router.module.js",
+	"jsnext:main": "dist/preact-router.module.js",
 	"umd:main": "dist/preact-router.umd.js",
 	"unpkg": "dist/preact-router.umd.js",
 	"exports": {
 		".": {
-			"module": "./dist/preact-router.mjs",
+			"module": "./dist/preact-router.module.js",
 			"import": "./dist/preact-router.mjs",
 			"require": "./dist/preact-router.js"
 		},
 		"./package.json": "./package.json",
 		"./match": {
-			"module": "./match/index.mjs",
+			"module": "./match/index.module.js",
 			"import": "./match/index.mjs",
 			"require": "./match/index.js"
 		},
 		"./match/package.json": "./match/package.json"
 	},
 	"scripts": {
-		"build": "microbundle -f es --no-generateTypes && microbundle src/cjs.js -f cjs,umd --no-generateTypes && (cd match && npm run build)",
+		"build": "microbundle -f es --no-generateTypes && copyfiles dist/preact-router.module.js dist/preact-router.mjs && microbundle src/cjs.js -f cjs,umd --no-generateTypes && (cd match && npm run build && copyfiles index.module.js index.mjs)",
 		"test": "npm-run-all lint build test:unit test:ts",
 		"lint": "eslint src test",
 		"fix": "npm run lint -- --fix",
