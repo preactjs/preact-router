@@ -10,20 +10,21 @@
 	"unpkg": "dist/preact-router.umd.js",
 	"exports": {
 		".": {
-			"module": "./dist/preact-router.module.js",
-			"import": "./dist/preact-router.module.js",
+			"module": "./dist/preact-router.mjs",
+			"import": "./dist/preact-router.mjs",
 			"require": "./dist/preact-router.js"
 		},
 		"./package.json": "./package.json",
 		"./match": {
-			"module": "./match/index.module.js",
-			"import": "./match/index.module.js",
+			"module": "./match/index.mjs",
+			"import": "./match/index.mjs",
 			"require": "./match/index.js"
 		},
 		"./match/package.json": "./match/package.json"
 	},
 	"scripts": {
 		"build": "microbundle -f es --no-generateTypes && microbundle src/cjs.js -f cjs,umd --no-generateTypes && (cd match && npm run build)",
+		"postbuild": "cp dist/preact-router.module.js dist/preact-router.mjs && cp match/index.module.js match/index.mjs",
 		"test": "npm-run-all lint build test:unit test:ts",
 		"lint": "eslint src test",
 		"fix": "npm run lint -- --fix",
