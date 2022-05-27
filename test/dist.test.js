@@ -2,7 +2,7 @@ import { h } from 'preact';
 import { toBeCloneOf } from './utils/assert-clone-of';
 // import '../test_helpers/assert-clone-of';
 
-const router = require('../dist/preact-router');
+const router = require('../dist/preact-router.js');
 const { Router, Link, route } = router;
 
 describe('dist', () => {
