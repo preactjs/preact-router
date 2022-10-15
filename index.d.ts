@@ -17,9 +17,8 @@ export interface CustomHistory {
 	replace(path: string): void;
 }
 
-export interface RoutableProps {
+export interface RoutableProps extends Pick<HTMLAttributes<HTMLElement>, 'default'> {
 	path?: string;
-	default?: boolean;
 }
 
 export interface RouterOnChangeArgs<
