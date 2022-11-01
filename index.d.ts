@@ -22,11 +22,10 @@ export interface RoutableProps {
 	default?: boolean;
 }
 
+type DefaultParams = Record<string, string | undefined> | null;
+
 export interface RouterOnChangeArgs<
-	RouteParams extends Record<string, string | undefined> | null = Record<
-		string,
-		string | undefined
-	> | null
+	RouteParams extends DefaultParams = DefaultParams
 > {
 	router: Router;
 	url: string;
@@ -37,12 +36,8 @@ export interface RouterOnChangeArgs<
 	matches: RouteParams;
 }
 
-export interface RouterProps<
-	RouteParams extends Record<string, string | undefined> | null = Record<
-		string,
-		string | undefined
-	> | null
-> extends RoutableProps {
+export interface RouterProps<RouteParams extends DefaultParams = DefaultParams>
+	extends RoutableProps {
 	history?: CustomHistory;
 	static?: boolean;
 	url?: string;
@@ -72,22 +67,14 @@ export function Route<Props>(
 	props: RouteProps<Props> & Partial<Props>
 ): preact.VNode;
 
-export function Link(
-	props: { activeClassName?: string } & preact.JSX.HTMLAttributes
-): preact.VNode;
+export interface LinkProps
+	extends Omit<preact.JSX.HTMLAttributes<HTMLAnchorElement>, 'onClick'> {}
+
+export function Link(props: LinkProps): preact.VNode;
 
 export function useRouter<
-	RouteParams extends Record<string, string | undefined> | null = Record<
-		string,
-		string | undefined
-	> | null
->(): [
-	RouterOnChangeArgs<RouteParams>,
-	(
-		urlOrOptions: string | { url: string; replace?: boolean },
-		replace?: boolean
-	) => boolean
-];
+	RouteParams extends DefaultParams = DefaultParams
+>(): [RouterOnChangeArgs<RouteParams>, typeof route];
 
 declare module 'preact' {
 	export interface Attributes extends RoutableProps {}
