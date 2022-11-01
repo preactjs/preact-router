@@ -1,6 +1,5 @@
 import { h } from 'preact';
-import { Link, RoutableProps } from '../';
-import { Match } from '../match';
+import { Match, Link } from '../match';
 
 function ChildComponent({}: {}) {
 	return <div></div>;
@@ -11,6 +10,10 @@ function LinkComponent({}: {}) {
 		<div>
 			<Link href="/a" />
 			<Link activeClassName="active" href="/b" />
+			<Link activeClass="active" href="/c">
+				This is some text
+			</Link>
+			<Link path="d" />
 		</div>
 	);
 }
