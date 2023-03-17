@@ -19,7 +19,6 @@ export interface CustomHistory {
 
 export interface RoutableProps {
 	path?: string;
-	default?: boolean;
 }
 
 export interface RouterOnChangeArgs<
