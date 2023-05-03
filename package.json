@@ -10,17 +10,17 @@
 	"unpkg": "dist/preact-router.umd.js",
 	"exports": {
 		".": {
+			"types": "./index.d.ts",
 			"module": "./dist/preact-router.mjs",
 			"import": "./dist/preact-router.mjs",
-			"require": "./dist/preact-router.js",
-			"types": "./index.d.ts"
+			"require": "./dist/preact-router.js"
 		},
 		"./package.json": "./package.json",
 		"./match": {
+			"types": "./match/index.d.ts",
 			"module": "./match/index.mjs",
 			"import": "./match/index.mjs",
-			"require": "./match/index.js",
-			"types": "./match/index.d.ts"
+			"require": "./match/index.js"
 		},
 		"./match/package.json": "./match/package.json"
 	},
