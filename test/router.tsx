@@ -1,5 +1,5 @@
-import { h, render, Component, FunctionalComponent } from 'preact';
-import Router, { Route, RoutableProps, useRouter } from '../';
+import { h, Component, FunctionalComponent } from 'preact';
+import Router, { Link, Route, useRouter } from '../';
 
 class ClassComponent extends Component<{}, {}> {
 	render() {
@@ -10,6 +10,17 @@ class ClassComponent extends Component<{}, {}> {
 const SomeFunctionalComponent: FunctionalComponent<{}> = ({}) => {
 	return <div></div>;
 };
+
+function LinkComponent({}: {}) {
+	return (
+		<div>
+			<Link href="/a" />
+			<Link class="link" href="/b">
+				This is some text
+			</Link>
+		</div>
+	);
+}
 
 function RouterWithComponents() {
 	return (
