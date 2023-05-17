@@ -3,7 +3,7 @@ import * as preact from 'preact';
 export function route(url: string, replace?: boolean): boolean;
 export function route(options: { url: string; replace?: boolean }): boolean;
 
-export function exec(url: string, route: string, opts: { default?: boolean }): boolean;
+export function exec(url: string, route: string, opts: { default?: boolean }): false | Record<string, string | undefined>;
 
 export function getCurrentUrl(): string;
 
@@ -53,11 +53,6 @@ export interface RouterProps<
 
 export class Router extends preact.Component<RouterProps, {}> {
 	canRoute(url: string): boolean;
-	getMatchingChildren(
-		children: preact.VNode[],
-		url: string,
-		invoke: boolean
-	): preact.VNode[];
 	routeTo(url: string): boolean;
 	render(props: RouterProps, {}): preact.VNode;
 }
@@ -75,7 +70,7 @@ export function Route<Props>(
 ): preact.VNode;
 
 export function Link(
-	props: { activeClassName?: string } & preact.JSX.HTMLAttributes
+	props: preact.JSX.HTMLAttributes<HTMLAnchorElement>
 ): preact.VNode;
 
 export function useRouter<
