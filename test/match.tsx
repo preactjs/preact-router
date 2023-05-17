@@ -1,6 +1,5 @@
 import { h } from 'preact';
-import { Link, RoutableProps } from '../';
-import { Match } from '../match';
+import { Link, Match } from '../match';
 
 function ChildComponent({}: {}) {
 	return <div></div>;
