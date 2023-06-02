@@ -117,7 +117,7 @@ describe('preact-router', () => {
 			);
 		});
 
-		it('should support custom history', () => {
+		it('should support custom history with state', () => {
 			let push = jasmine.createSpy('push');
 			let replace = jasmine.createSpy('replace');
 			let listen = jasmine.createSpy('listen');
@@ -149,11 +149,16 @@ describe('preact-router', () => {
 
 			route('/foo');
 			expect(push).toHaveBeenCalledTimes(1);
-			expect(push).toHaveBeenCalledWith('/foo');
+			expect(push).toHaveBeenCalledWith('/foo', null);
+
+			push.calls.reset();
+			route('/foo', false, { foo: 'bar' });
+			expect(push).toHaveBeenCalledTimes(1);
+			expect(push).toHaveBeenCalledWith('/foo', { foo: 'bar' });
 
 			route('/bar', true);
 			expect(replace).toHaveBeenCalledTimes(1);
-			expect(replace).toHaveBeenCalledWith('/bar');
+			expect(replace).toHaveBeenCalledWith('/bar', null);
 
 			router.componentWillUnmount();
 		});
