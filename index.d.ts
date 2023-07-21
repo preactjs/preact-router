@@ -21,7 +21,7 @@ export interface CustomHistory {
 
 export interface RoutableProps {
 	path?: string;
-	default?: boolean;
+	default?: boolean | preact.JSX.SignalLike<boolean | undefined>;
 }
 
 export interface RouterOnChangeArgs<
