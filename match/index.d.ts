@@ -8,7 +8,7 @@ export type MatchChildrenProps = {
 	path: string;
 }
 
-export class Match extends preact.Component<RoutableProps & { children: (MatchChildrenProps) => preact.ComponentChildren }, {}> {
+export class Match extends preact.Component<Omit<RoutableProps, 'children'> & { children: (MatchChildrenProps) => preact.ComponentChildren }, {}> {
 	render(): preact.VNode;
 }
 
