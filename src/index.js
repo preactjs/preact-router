@@ -9,7 +9,7 @@ const EMPTY = {};
 
 // hangs off all elements created by preact
 const ATTR_KEY = typeof Symbol!=='undefined' ? Symbol.for('preactattr') : '__preactattr_';
-
+console.log("heyyyyyyyyyyyyyyyyyyy");
 
 function isPreactElement(node) {
 	return ATTR_KEY in node;
