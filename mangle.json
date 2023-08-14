@@ -1,0 +1,18 @@
+{
+  "minify": {
+    "mangle": {
+      "properties": {
+        "regex": "^_[^_]"
+      }
+    }
+  },
+  "props": {
+    "cname": 6,
+    "props": {
+      "$_getMatchingChild": "g",
+      "$_updating": "p",
+      "$_unlisten": "u",
+      "$_contextValue": "c"
+    }
+  }
+}
