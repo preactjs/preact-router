@@ -65,8 +65,12 @@ export interface RouteProps<Props> extends RoutableProps {
 	component: AnyComponent<Props>;
 }
 
+/**
+ * As route accepts additional props (`path` and `default`),
+ * it's better to avoid those props in your components.
+ */
 export function Route<Props>(
-	props: RouteProps<Props> & Partial<Props>
+	props: RouteProps<Props> & Props
 ): preact.VNode;
 
 export function Link(
