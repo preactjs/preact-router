@@ -36,6 +36,10 @@ render(<Main />, document.body);
 
 If there is an error rendering the destination route, a 404 will be displayed.
 
+#### Caveats
+
+Because the `path` and `default` props are used by the router, it's best to avoid using those props for your component(s) as they will conflict.
+
 ### Handling URLS
 
 :information_desk_person: Pages are just regular components that get mounted when you navigate to a certain URL.
@@ -274,6 +278,26 @@ function App() {
 }
 
 render(<App />, document.body);
+```
+
+### `Route` Component
+
+Alternatively to adding the router props (`path`, `default`) directly to your component, you may want to use the `Route` component we provide instead. This tends to appease TypeScript, while still passing down the routing props into your component for use.
+
+```js
+import { Router, Route } from 'preact-router';
+
+function App() {
+  let users = getUsers();
+
+  return (
+    <Router>
+      <Route path="/" component={Home} />
+      {/* Route will accept any props of `component` type */}
+      <Route path="/users" component={Users} users={users}   />
+    </Router>
+  );
+}
 ```
 
 ### License
