@@ -281,38 +281,24 @@ function App() {
 render(<App />, document.body);
 ```
 
-### Typescript Routes
+### `Route` Component
 
-In some cases, depending on your TypeScript configuration, you may encounter
-an error that prevents you from passing the `path` or `default` props to your components:
+Alternatively to adding the router props (`path`, `default`) directly to your component, you may want to use the `Route` component we provide instead. This tends to appease TypeScript, while still passing down the routing props into your component for use.
 
-```tsx
-error TS2322: Type '{ path: string; myProps: MyProps }' is not assignable to type 'IntrinsicAttributes & MyProps'.
-  Property 'path' does not exist on type 'IntrinsicAttributes & MyProps'.
-
-      <MyComponent path="/component"
-                         ~~~~
-```
-
-In such cases, you can wrap your components in `<Route />`. This will also accept your component's
-props. Keep in mind that both `path` and `default` props are passed down to your component.
-
-```tsx
-import {Router, Route} from 'preact-router';
+```js
+import { Router, Route } from 'preact-router';
 
 function App() {
   let users = getUsers();
 
   return (
     <Router>
-      <Route component={Home} path="/" />
+      <Route path="/" component={Home} />
       {/* Route will accept any props of `component` type */}
-      <Route component={Users} users={users} path="/users"  />
+      <Route path="/users" component={Users} users={users}   />
     </Router>
   );
 }
-```
-
 ### License
 
 [MIT](./LICENSE)
