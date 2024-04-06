@@ -38,8 +38,7 @@ If there is an error rendering the destination route, a 404 will be displayed.
 
 #### Caveats
 
-Because the `path` and `default` props are used by the router, it's better to avoid
-same props in your components.
+Because the `path` and `default` props are used by the router, it's best to avoid using those props for your component(s) as they will conflict.
 
 ### Handling URLS
 
