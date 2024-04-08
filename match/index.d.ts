@@ -2,7 +2,13 @@ import * as preact from 'preact';
 
 import { Link as StaticLink, RoutableProps } from '..';
 
-export class Match extends preact.Component<RoutableProps, {}> {
+export type MatchChildrenProps = {
+	matches: boolean;
+	url: string;
+	path: string;
+}
+
+export class Match extends preact.Component<Omit<RoutableProps, 'children'> & { children: (MatchChildrenProps) => preact.ComponentChildren }, {}> {
 	render(): preact.VNode;
 }
 
