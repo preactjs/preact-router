@@ -3,6 +3,9 @@
 [![NPM](https://img.shields.io/npm/v/preact-router.svg)](https://www.npmjs.com/package/preact-router)
 [![Build status](https://github.com/preactjs/preact-router/actions/workflows/node.js.yml/badge.svg)](https://github.com/preactjs/preact-router/actions/workflows/node.js.yml)
 
+> [!WARNING]
+> `preact-router` unfortunately no longer sees active development! It's completely stable and so you can rely upon it for all existing apps, but for newer ones, we'd recommend using [`preact-iso`](https://github.com/preact-iso) for your routing needs instead. It offers a very similar API while integrating a bit better Suspense and lazy loading, with potentially more useful hooks. Thanks to all the contributors and users over the years!
+
 Connect your [Preact](https://github.com/preactjs/preact) components up to that address bar.
 
 `preact-router` provides a `<Router />` component that conditionally renders its children when the URL matches their `path`. It also automatically wires up `<a />` elements to the router.
