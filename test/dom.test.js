@@ -118,6 +118,25 @@ describe('dom', () => {
 			expect(onChange).not.toHaveBeenCalled();
 			expect(location.href).toContain('#foo');
 		});
+
+		it('should not intercept links inside contenteditable', () => {
+			let onChange = jasmine.createSpy();
+			mount(
+				<div>
+					<div contenteditable>
+						<a href="#foo">foo</a>
+					</div>
+					<Router onChange={onChange}>
+						<div default />
+					</Router>
+				</div>
+			);
+			onChange.calls.reset();
+			act(() => {
+				$('a').click();
+			});
+			expect(onChange).not.toHaveBeenCalled();
+		});
 	});
 
 	describe('Router', () => {
